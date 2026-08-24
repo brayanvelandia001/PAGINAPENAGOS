@@ -226,7 +226,7 @@ function Header({
 
 
         talk:
-          "Hablemosss",
+          "Hablemos prueba",
 
 
         openMenu:
