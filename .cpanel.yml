@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/pko30a4lrwah/public_html/react.penagos.com/
+    - /bin/cp -R dist/* $DEPLOYPATH
