@@ -2,4 +2,6 @@
 deployment:
   tasks:
     - export DEPLOYPATH=/home/pko30a4lrwah/public_html/react.penagos.com/
+    - npm install
+    - npm run build
     - /bin/cp -R dist/* $DEPLOYPATH
