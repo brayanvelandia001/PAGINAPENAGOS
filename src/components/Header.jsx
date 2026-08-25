@@ -226,7 +226,7 @@ function Header({
 
 
         talk:
-          "Hablemos prueba",
+          "Hablemos",
 
 
         openMenu:
@@ -996,41 +996,6 @@ function Header({
               lg:flex
             "
           >
-
-
-            {/* BUSCAR */}
-
-            <button
-              type="button"
-              aria-label={t.search}
-
-              className="
-                flex
-                h-11
-                w-11
-                cursor-pointer
-                items-center
-                justify-center
-                rounded-full
-                border
-                border-slate-200
-                text-[#07133d]
-                transition-all
-                duration-200
-                hover:border-[#302b80]
-                hover:bg-[#302b80]
-                hover:text-white
-              "
-            >
-
-              <Search
-                size={19}
-                strokeWidth={2}
-              />
-
-            </button>
-
-
 
             {/* =================================================
                 BOTÓN HABLEMOS

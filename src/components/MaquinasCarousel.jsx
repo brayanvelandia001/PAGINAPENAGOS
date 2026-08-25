@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useRef,
   useState
 } from "react";
 
@@ -9,14 +10,18 @@ import {
 } from "swiper/react";
 
 import {
-  Autoplay
+  Autoplay,
+  Navigation
 } from "swiper/modules";
 
 import {
-  X
+  X,
+  ChevronLeft,
+  ChevronRight
 } from "lucide-react";
 
 import "swiper/css";
+import "swiper/css/navigation";
 
 
 function MaquinasCarousel({
@@ -34,6 +39,17 @@ function MaquinasCarousel({
     cargando,
     setCargando
   ] = useState(true);
+
+
+  /*
+  ================================================================
+  REFERENCIAS PARA LAS FLECHAS
+  ================================================================
+  */
+
+  const botonAnteriorRef = useRef(null);
+
+  const botonSiguienteRef = useRef(null);
 
 
   /*
@@ -243,12 +259,6 @@ function MaquinasCarousel({
         .toLowerCase();
 
 
-    /*
-    ============================================================
-    PALABRAS CLARAS DE INGLÉS
-    ============================================================
-    */
-
     const palabrasIngles = [
       "-english",
       "-ingles",
@@ -274,12 +284,6 @@ function MaquinasCarousel({
 
     }
 
-
-    /*
-    ============================================================
-    PALABRAS CLARAS DE ESPAÑOL
-    ============================================================
-    */
 
     const palabrasEspanol = [
       "-spanish",
@@ -310,7 +314,7 @@ function MaquinasCarousel({
 
     /*
     ============================================================
-    5. SI WPML EXPONE IDIOMA EN OTRA PROPIEDAD
+    5. WPML
     ============================================================
     */
 
@@ -354,12 +358,6 @@ function MaquinasCarousel({
 
     }
 
-
-    /*
-    ============================================================
-    NO SE PUDO DETERMINAR
-    ============================================================
-    */
 
     return null;
 
@@ -458,23 +456,11 @@ function MaquinasCarousel({
             await response.json();
 
 
-          /*
-          ========================================================
-          AGREGAR
-          ========================================================
-          */
-
           todosLosProductos = [
             ...todosLosProductos,
             ...data
           ];
 
-
-          /*
-          ========================================================
-          PÁGINAS
-          ========================================================
-          */
 
           const totalPaginas =
             parseInt(
@@ -519,54 +505,6 @@ function MaquinasCarousel({
 
         /*
         ============================================================
-        MOSTRAR IDIOMA DETECTADO DE CADA PRODUCTO
-        ============================================================
-        */
-
-        todosLosProductos.forEach(
-          (producto) => {
-
-            const idioma =
-              obtenerIdiomaProducto(
-                producto
-              );
-
-
-            console.log(
-              "PRODUCTO / IDIOMA:",
-              {
-                id:
-                  producto.id,
-
-                nombre:
-                  producto.name,
-
-                slug:
-                  producto.slug,
-
-                idiomaDetectado:
-                  idioma,
-
-                language:
-                  producto.language,
-
-                lang:
-                  producto.lang,
-
-                wpml_language:
-                  producto.wpml_language,
-
-                categorias:
-                  producto.categories
-              }
-            );
-
-          }
-        );
-
-
-        /*
-        ============================================================
         FILTRAR POR IDIOMA
         ============================================================
         */
@@ -574,12 +512,6 @@ function MaquinasCarousel({
         const productosFiltrados =
           todosLosProductos.filter(
             (producto) => {
-
-              /*
-              ======================================================
-              DEBE TENER IMAGEN
-              ======================================================
-              */
 
               const tieneImagen =
                 Array.isArray(
@@ -597,23 +529,11 @@ function MaquinasCarousel({
               }
 
 
-              /*
-              ======================================================
-              DETECTAR IDIOMA
-              ======================================================
-              */
-
               const idiomaProducto =
                 obtenerIdiomaProducto(
                   producto
                 );
 
-
-              /*
-              ======================================================
-              SI CONOCEMOS EL IDIOMA
-              ======================================================
-              */
 
               if (
                 idiomaProducto
@@ -627,31 +547,11 @@ function MaquinasCarousel({
               }
 
 
-              /*
-              ======================================================
-              SI NO CONOCEMOS EL IDIOMA
-              ======================================================
-
-              IMPORTANTE:
-
-              No dejamos pasar automáticamente el producto.
-
-              De esta forma evitamos que aparezcan productos
-              españoles dentro de inglés y viceversa.
-              ======================================================
-              */
-
               return false;
 
             }
           );
 
-
-        /*
-        ============================================================
-        RESULTADO
-        ============================================================
-        */
 
         console.log(
           "===================================="
@@ -717,18 +617,11 @@ function MaquinasCarousel({
     cargarProductos();
 
 
-    /*
-    ================================================================
-    CANCELAR PETICIÓN SI CAMBIA EL IDIOMA
-    ================================================================
-    */
-
     return () => {
 
       cancelado = true;
 
     };
-
 
   }, [
     language,
@@ -770,7 +663,6 @@ function MaquinasCarousel({
         manejarEscape
       );
 
-
       document.body.style.overflow =
         "hidden";
 
@@ -796,7 +688,7 @@ function MaquinasCarousel({
 
   /*
   ================================================================
-  LIMPIAR HTML
+  LIMPIAR DESCRIPCIÓN
   ================================================================
   */
 
@@ -882,6 +774,8 @@ function MaquinasCarousel({
 
     <section
       className="
+        w-full
+        overflow-x-hidden
         bg-white
         py-20
       "
@@ -890,7 +784,9 @@ function MaquinasCarousel({
       <div
         className="
           mx-auto
+          w-full
           max-w-[1380px]
+          min-w-0
           px-6
           lg:px-10
         "
@@ -934,12 +830,14 @@ function MaquinasCarousel({
               No hay productos disponibles.
             </p>
 
-            <p className="
-              mt-2
-              text-xs
-              font-normal
-              text-slate-400
-            ">
+            <p
+              className="
+                mt-2
+                text-xs
+                font-normal
+                text-slate-400
+              "
+            >
 
               Idioma:
               {" "}
@@ -951,172 +849,356 @@ function MaquinasCarousel({
 
         ) : (
 
-          <Swiper
+          /*
+          ==========================================================
+          CONTENEDOR DEL CARRUSEL + FLECHAS
+          ==========================================================
+          */
 
-            modules={[
-              Autoplay
-            ]}
-
-            loop={
-              productos.length > 4
-            }
-
-            autoplay={{
-
-              delay: 2500,
-
-              disableOnInteraction:
-                false,
-
-              pauseOnMouseEnter:
-                true
-
-            }}
-
-            speed={1200}
-
-            spaceBetween={30}
-
-            slidesPerView={1}
-
-            breakpoints={{
-
-              640: {
-
-                slidesPerView: 2
-
-              },
-
-              1024: {
-
-                slidesPerView: 4
-
-              }
-
-            }}
-
+          <div
             className="
-              cursor-grab
+              relative
+              w-full
+              min-w-0
+              overflow-hidden
+              px-1
+              sm:px-8
+              lg:px-10
             "
           >
 
-            {productos.map(
-              (
-                producto
-              ) => {
+            {/* ====================================================
+                FLECHA IZQUIERDA
+            ==================================================== */}
 
-                const imagen =
-                  obtenerImagen(
-                    producto
-                  );
+            <button
+              ref={botonAnteriorRef}
+              type="button"
+              aria-label="Producto anterior"
+              className="
+                absolute
+                left-0
+                top-1/2
+                z-20
+                flex
+                h-11
+                w-11
+                -translate-y-1/2
+                cursor-pointer
+                items-center
+                justify-center
+                rounded-full
+                border
+                border-slate-200
+                bg-white
+                text-[#302b80]
+                shadow-lg
+                transition-all
+                duration-300
+                hover:scale-110
+                hover:border-[#00a4e4]
+                hover:bg-[#00a4e4]
+                hover:text-white
+                active:scale-95
+                focus:outline-none
+                focus:ring-2
+                focus:ring-[#00a4e4]/30
+                max-sm:h-9
+                max-sm:w-9
+              "
+            >
+
+              <ChevronLeft
+                size={22}
+                strokeWidth={2}
+              />
+
+            </button>
 
 
-                return (
+            {/* ====================================================
+                FLECHA DERECHA
+            ==================================================== */}
 
-                  <SwiperSlide
-                    key={
-                      producto.id
-                    }
-                  >
+            <button
+              ref={botonSiguienteRef}
+              type="button"
+              aria-label="Producto siguiente"
+              className="
+                absolute
+                right-0
+                top-1/2
+                z-20
+                flex
+                h-11
+                w-11
+                -translate-y-1/2
+                cursor-pointer
+                items-center
+                justify-center
+                rounded-full
+                border
+                border-slate-200
+                bg-white
+                text-[#302b80]
+                shadow-lg
+                transition-all
+                duration-300
+                hover:scale-110
+                hover:border-[#00a4e4]
+                hover:bg-[#00a4e4]
+                hover:text-white
+                active:scale-95
+                focus:outline-none
+                focus:ring-2
+                focus:ring-[#00a4e4]/30
+                max-sm:h-9
+                max-sm:w-9
+              "
+            >
 
-                    <div
+              <ChevronRight
+                size={22}
+                strokeWidth={2}
+              />
+
+            </button>
+
+
+            {/* ====================================================
+                SWIPER
+            ==================================================== */}
+
+            <Swiper
+
+              modules={[
+                Autoplay,
+                Navigation
+              ]}
+
+              onBeforeInit={(swiper) => {
+
+                swiper.params.navigation.prevEl =
+                  botonAnteriorRef.current;
+
+                swiper.params.navigation.nextEl =
+                  botonSiguienteRef.current;
+
+              }}
+
+              navigation={{
+                prevEl:
+                  botonAnteriorRef.current,
+
+                nextEl:
+                  botonSiguienteRef.current
+              }}
+
+              loop={
+                productos.length > 4
+              }
+
+              autoplay={{
+
+                delay: 1500,
+
+                disableOnInteraction:
+                  false,
+
+                pauseOnMouseEnter:
+                  true
+
+              }}
+
+              speed={1200}
+
+              spaceBetween={30}
+
+              slidesPerView={1}
+
+              breakpoints={{
+
+                640: {
+
+                  slidesPerView: 2,
+
+                  spaceBetween: 24
+
+                },
+
+                1024: {
+
+                  slidesPerView: 4,
+
+                  spaceBetween: 30
+
+                }
+
+              }}
+
+              className="
+                !w-full
+                !overflow-hidden
+                cursor-grab
+              "
+            >
+
+              {productos.map(
+                (
+                  producto
+                ) => {
+
+                  const imagen =
+                    obtenerImagen(
+                      producto
+                    );
+
+
+                  return (
+
+                    <SwiperSlide
+                      key={
+                        producto.id
+                      }
+
                       className="
-                        group
-                        overflow-hidden
-                        rounded-3xl
-                        border
-                        border-slate-200
-                        bg-white
-                        shadow-sm
-                        transition
-                        duration-300
-                        hover:-translate-y-2
-                        hover:shadow-xl
+                        !h-auto
+                        !box-border
                       "
                     >
 
-                      <div
-                        onClick={() =>
-                          setProductoSeleccionado(
-                            producto
-                          )
-                        }
+                      {/* ==================================================
+                          TARJETA
+                      ================================================== */}
 
+                      <div
                         className="
+                          group
                           flex
-                          h-[240px]
-                          cursor-pointer
-                          items-center
-                          justify-center
-                          p-6
+                          h-[350px]
+                          w-full
+                          min-w-0
+                          flex-col
+                          overflow-hidden
+                          rounded-3xl
+                          border
+                          border-slate-200
+                          bg-white
+                          shadow-sm
+                          transition-all
+                          duration-300
+                          hover:-translate-y-2
+                          hover:shadow-xl
                         "
                       >
 
-                        {imagen && (
+                        {/* =================================================
+                            ÁREA DE IMAGEN
+                        ================================================= */}
 
-                          <img
-                            src={
-                              imagen.src
-                            }
+                        <div
+                          onClick={() =>
+                            setProductoSeleccionado(
+                              producto
+                            )
+                          }
 
-                            alt={
-                              imagen.alt ||
-                              producto.name
-                            }
-
-                            className="
-                              max-h-full
-                              max-w-full
-                              object-contain
-                              transition
-                              duration-500
-                              group-hover:scale-110
-                            "
-                          />
-
-                        )}
-
-                      </div>
-
-
-                      <div
-                        className="
-                          border-t
-                          border-slate-100
-                          p-5
-                          text-center
-                        "
-                      >
-
-                        <h3
                           className="
-                            text-sm
-                            font-extrabold
-                            uppercase
-                            text-[#07133d]
-                            transition
-                            group-hover:text-[#302b80]
+                            flex
+                            h-[270px]
+                            min-h-[270px]
+                            w-full
+                            cursor-pointer
+                            items-center
+                            justify-center
+                            overflow-hidden
+                            p-6
                           "
                         >
 
-                          {
-                            producto.name
-                          }
+                          {imagen && (
 
-                        </h3>
+                            <img
+                              src={
+                                imagen.src
+                              }
+
+                              alt={
+                                imagen.alt ||
+                                producto.name
+                              }
+
+                              className="
+                                max-h-full
+                                max-w-full
+                                object-contain
+                                transition-transform
+                                duration-500
+                                group-hover:scale-110
+                              "
+                            />
+
+                          )}
+
+                        </div>
+
+
+                        {/* =================================================
+                            NOMBRE
+                        ================================================= */}
+
+                        <div
+                          className="
+                            flex
+                            h-[80px]
+                            min-h-[80px]
+                            items-center
+                            justify-center
+                            border-t
+                            border-slate-100
+                            bg-white
+                            px-5
+                            py-4
+                            text-center
+                          "
+                        >
+
+                          <h3
+                            className="
+                              line-clamp-2
+                              w-full
+                              overflow-hidden
+                              text-sm
+                              font-extrabold
+                              uppercase
+                              leading-5
+                              text-[#07133d]
+                              transition-colors
+                              duration-300
+                              group-hover:text-[#302b80]
+                            "
+                          >
+
+                            {
+                              producto.name
+                            }
+
+                          </h3>
+
+                        </div>
 
                       </div>
 
-                    </div>
+                    </SwiperSlide>
 
-                  </SwiperSlide>
+                  );
 
-                );
+                }
+              )}
 
-              }
-            )}
+            </Swiper>
 
-          </Swiper>
+          </div>
 
         )}
 
@@ -1143,6 +1225,7 @@ function MaquinasCarousel({
             flex
             items-center
             justify-center
+            overflow-y-auto
             bg-black/75
             p-4
             backdrop-blur-sm
@@ -1197,7 +1280,9 @@ function MaquinasCarousel({
               "
             >
 
-              <X size={20} />
+              <X
+                size={20}
+              />
 
             </button>
 
@@ -1209,6 +1294,7 @@ function MaquinasCarousel({
                 w-full
                 items-center
                 justify-center
+                overflow-hidden
                 bg-slate-50
                 p-7
                 sm:h-[360px]

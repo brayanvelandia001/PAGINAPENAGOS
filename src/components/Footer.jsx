@@ -78,31 +78,6 @@ function PhoneIcon() {
 }
 
 
-function ChevronIcon() {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      className="
-        h-3
-        w-3
-        transition-transform
-        duration-200
-        group-hover:translate-x-0.5
-      "
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <path
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        d="m9 6 6 6-6 6"
-      />
-    </svg>
-  );
-}
-
-
 function FacebookIcon() {
   return (
     <svg
@@ -164,7 +139,9 @@ function XIcon() {
       className="h-3.5 w-3.5"
     >
       <path
-        d="M18.9 3H22l-6.8 7.8L23 21h-6.1l-4.8-6.3L6.6 21H3.5l7.2-8.3L3 3h6.3l4.4 5.8L18.9 3Zm-1.1 15.8h1.7L8.3 5H6.5l11.3 13.8Z"
+        d="
+          M18.9 3H22l-6.8 7.8L23 21h-6.1l-4.8-6.3L6.6 21H3.5l7.2-8.3L3 3h6.3l4.4 5.8L18.9 3Zm-1.1 15.8h1.7L8.3 5H6.5l11.3 13.8Z
+        "
       />
     </svg>
   );
@@ -231,7 +208,7 @@ function Footer() {
     "http://penagos.com/wp-content/uploads/2020/04/logo1.png";
 
   const sgsLogo =
-    "http://penagos.com/wp-content/uploads/2020/02/Logo-SGS-con-codigo-de-certificado.png";
+    "http://penagos.com/wp-content/uploads/2020/02/SGS.png";
 
   const bascLogo =
     "http://penagos.com/wp-content/uploads/2020/02/BaSc.png";
@@ -253,11 +230,15 @@ function Footer() {
           mx-auto
           max-w-[1280px]
           px-5
-          py-7
+          py-8
           lg:px-8
-          lg:py-8
+          lg:py-9
         "
       >
+
+        {/* ======================================================
+            CONTENIDO PRINCIPAL
+        ====================================================== */}
 
         <div
           className="
@@ -265,31 +246,44 @@ function Footer() {
             grid-cols-1
             gap-8
             sm:grid-cols-2
-            lg:grid-cols-[1.05fr_1.35fr_1.35fr_0.85fr]
+            lg:grid-cols-3
             lg:gap-0
           "
         >
 
 
-          {/* ========================================================
+          {/* ====================================================
               COLUMNA 1
               PENAGOS HERMANOS
-          ======================================================== */}
+          ==================================================== */}
 
           <div
             className="
-              lg:pr-7
+              flex
+              flex-col
+              lg:pr-10
             "
           >
 
-            {/* LOGO PENAGOS + BANDERA COLOMBIA */}
+            {/* LOGO */}
 
             <Link
               to="/"
               className="
                 inline-flex
+                w-fit
+                cursor-pointer
                 items-center
                 gap-3
+                rounded-xl
+                bg-white/70
+                px-3
+                py-2
+                shadow-sm
+                transition-all
+                duration-300
+                hover:bg-white
+                hover:shadow-md
               "
             >
 
@@ -299,6 +293,7 @@ function Footer() {
                 className="
                   h-[42px]
                   w-[150px]
+                  cursor-pointer
                   object-contain
                   object-left
                   transition
@@ -313,15 +308,17 @@ function Footer() {
                 className="
                   h-[22px]
                   w-[34px]
+                  cursor-pointer
                   rounded-sm
                   object-cover
+                  shadow-sm
                 "
               />
 
             </Link>
 
 
-            {/* LÍNEA DECORATIVA */}
+            {/* LÍNEA */}
 
             <div
               className="
@@ -412,6 +409,7 @@ function Footer() {
               <a
                 href="mailto:sales@penagos.com"
                 className="
+                  cursor-pointer
                   text-[10px]
                   text-slate-500
                   transition
@@ -425,7 +423,7 @@ function Footer() {
             </div>
 
 
-            {/* REDES SOCIALES */}
+            {/* REDES */}
 
             <div
               className="
@@ -440,10 +438,20 @@ function Footer() {
                 href="#"
                 aria-label="Facebook"
                 className="
-                  flex h-7 w-7 items-center justify-center
-                  rounded-full border border-slate-300
-                  bg-white text-[#00a4e4] shadow-sm
-                  transition-all duration-200
+                  flex
+                  h-7
+                  w-7
+                  cursor-pointer
+                  items-center
+                  justify-center
+                  rounded-full
+                  border
+                  border-slate-300
+                  bg-white
+                  text-[#00a4e4]
+                  shadow-sm
+                  transition-all
+                  duration-200
                   hover:-translate-y-1
                   hover:border-[#00a4e4]
                   hover:bg-[#00a4e4]
@@ -458,10 +466,20 @@ function Footer() {
                 href="#"
                 aria-label="Instagram"
                 className="
-                  flex h-7 w-7 items-center justify-center
-                  rounded-full border border-slate-300
-                  bg-white text-[#00a4e4] shadow-sm
-                  transition-all duration-200
+                  flex
+                  h-7
+                  w-7
+                  cursor-pointer
+                  items-center
+                  justify-center
+                  rounded-full
+                  border
+                  border-slate-300
+                  bg-white
+                  text-[#00a4e4]
+                  shadow-sm
+                  transition-all
+                  duration-200
                   hover:-translate-y-1
                   hover:border-[#00a4e4]
                   hover:bg-[#00a4e4]
@@ -476,10 +494,20 @@ function Footer() {
                 href="#"
                 aria-label="X"
                 className="
-                  flex h-7 w-7 items-center justify-center
-                  rounded-full border border-slate-300
-                  bg-white text-[#00a4e4] shadow-sm
-                  transition-all duration-200
+                  flex
+                  h-7
+                  w-7
+                  cursor-pointer
+                  items-center
+                  justify-center
+                  rounded-full
+                  border
+                  border-slate-300
+                  bg-white
+                  text-[#00a4e4]
+                  shadow-sm
+                  transition-all
+                  duration-200
                   hover:-translate-y-1
                   hover:border-[#00a4e4]
                   hover:bg-[#00a4e4]
@@ -494,10 +522,20 @@ function Footer() {
                 href="#"
                 aria-label="YouTube"
                 className="
-                  flex h-7 w-7 items-center justify-center
-                  rounded-full border border-slate-300
-                  bg-white text-[#00a4e4] shadow-sm
-                  transition-all duration-200
+                  flex
+                  h-7
+                  w-7
+                  cursor-pointer
+                  items-center
+                  justify-center
+                  rounded-full
+                  border
+                  border-slate-300
+                  bg-white
+                  text-[#00a4e4]
+                  shadow-sm
+                  transition-all
+                  duration-200
                   hover:-translate-y-1
                   hover:border-[#00a4e4]
                   hover:bg-[#00a4e4]
@@ -512,10 +550,20 @@ function Footer() {
                 href="#"
                 aria-label="LinkedIn"
                 className="
-                  flex h-7 w-7 items-center justify-center
-                  rounded-full border border-slate-300
-                  bg-white text-[#00a4e4] shadow-sm
-                  transition-all duration-200
+                  flex
+                  h-7
+                  w-7
+                  cursor-pointer
+                  items-center
+                  justify-center
+                  rounded-full
+                  border
+                  border-slate-300
+                  bg-white
+                  text-[#00a4e4]
+                  shadow-sm
+                  transition-all
+                  duration-200
                   hover:-translate-y-1
                   hover:border-[#00a4e4]
                   hover:bg-[#00a4e4]
@@ -530,37 +578,48 @@ function Footer() {
           </div>
 
 
-
-          {/* ========================================================
+          {/* ====================================================
               COLUMNA 2
-              SUCURSALES PENAGOS
-          ======================================================== */}
+              SUCURSALES COLOMBIA
+          ==================================================== */}
 
           <div
             className="
+              border-slate-300
               lg:border-l
-              lg:border-slate-300
-              lg:px-7
+              lg:px-10
             "
           >
 
-            {/* PENAGOS + COLOMBIA */}
+            {/* LOGO */}
 
-            <div
+            <Link
+              to="/"
               className="
-                flex
-                h-[42px]
+                inline-flex
+                w-fit
+                cursor-pointer
                 items-center
                 gap-3
+                rounded-xl
+                bg-white/70
+                px-3
+                py-2
+                shadow-sm
+                transition-all
+                duration-300
+                hover:bg-white
+                hover:shadow-md
               "
             >
 
               <img
                 src={penagosLogo}
-                alt="Penagos"
+                alt="Penagos Hermanos"
                 className="
-                  h-[34px]
-                  w-[105px]
+                  h-[42px]
+                  w-[150px]
+                  cursor-pointer
                   object-contain
                   object-left
                 "
@@ -570,14 +629,16 @@ function Footer() {
                 src={colombiaFlag}
                 alt="Colombia"
                 className="
-                  h-[18px]
-                  w-[28px]
+                  h-[22px]
+                  w-[34px]
+                  cursor-pointer
                   rounded-sm
                   object-cover
+                  shadow-sm
                 "
               />
 
-            </div>
+            </Link>
 
 
             {/* QUINDÍO */}
@@ -591,10 +652,11 @@ function Footer() {
                 bg-white/50
                 px-3
                 py-2.5
-                transition
+                transition-all
                 duration-200
                 hover:border-[#00a4e4]/30
                 hover:bg-white
+                hover:shadow-sm
               "
             >
 
@@ -627,6 +689,7 @@ function Footer() {
                   <LocationIcon />
                 </span>
 
+
                 <p
                   className="
                     text-[9px]
@@ -649,6 +712,7 @@ function Footer() {
                 className="
                   mt-1.5
                   flex
+                  cursor-pointer
                   items-center
                   gap-1.5
                   text-[9px]
@@ -665,7 +729,6 @@ function Footer() {
             </div>
 
 
-
             {/* HUILA */}
 
             <div
@@ -677,10 +740,11 @@ function Footer() {
                 bg-white/50
                 px-3
                 py-2.5
-                transition
+                transition-all
                 duration-200
                 hover:border-[#00a4e4]/30
                 hover:bg-white
+                hover:shadow-sm
               "
             >
 
@@ -713,6 +777,7 @@ function Footer() {
                   <LocationIcon />
                 </span>
 
+
                 <p
                   className="
                     text-[9px]
@@ -735,6 +800,7 @@ function Footer() {
                 className="
                   mt-1.5
                   flex
+                  cursor-pointer
                   items-center
                   gap-1.5
                   text-[9px]
@@ -753,28 +819,38 @@ function Footer() {
           </div>
 
 
-
-          {/* ========================================================
+          {/* ====================================================
               COLUMNA 3
-              PENAGOS + MONTE ALEGRE + BRASIL
-          ======================================================== */}
+              BRASIL + CERTIFICACIONES
+          ==================================================== */}
 
           <div
             className="
+              border-slate-300
               lg:border-l
-              lg:border-slate-300
-              lg:px-7
+              lg:pl-10
             "
           >
 
-            {/* CABECERA */}
+            {/* ==================================================
+                LOGOS BRASIL
+            ================================================== */}
 
             <div
               className="
                 flex
-                h-[42px]
+                w-fit
                 items-center
                 gap-3
+                rounded-xl
+                bg-white/70
+                px-3
+                py-2
+                shadow-sm
+                transition-all
+                duration-300
+                hover:bg-white
+                hover:shadow-md
               "
             >
 
@@ -782,11 +858,12 @@ function Footer() {
 
               <img
                 src={penagosLogo}
-                alt="Penagos"
+                alt="Penagos Hermanos"
                 className="
-                  h-[34px]
-                  w-[90px]
+                  h-[42px]
+                  w-[150px]
                   shrink-0
+                  cursor-pointer
                   object-contain
                   object-left
                 "
@@ -799,27 +876,47 @@ function Footer() {
                 src={monteAlegreLogo}
                 alt="Monte Alegre"
                 className="
-                  h-[34px]
+                  h-[42px]
                   w-[100px]
                   shrink-0
+                  cursor-pointer
                   object-contain
                 "
               />
 
 
-              {/* BRASIL */}
+              {/* BANDERA BRASIL */}
 
-              <img
-                src={brasilFlag}
-                alt="Brasil"
+              <div
                 className="
-                  h-[20px]
-                  w-[30px]
+                  flex
+                  h-[25px]
+                  w-[38px]
                   shrink-0
-                  rounded-sm
-                  object-cover
+                  items-center
+                  justify-center
+                  overflow-hidden
+                  rounded-[3px]
+                  border
+                  border-slate-200
+                  bg-white
+                  shadow-sm
                 "
-              />
+              >
+
+                <img
+                  src={brasilFlag}
+                  alt="Brasil"
+                  className="
+                    block
+                    h-full
+                    w-full
+                    cursor-pointer
+                    object-cover
+                  "
+                />
+
+              </div>
 
             </div>
 
@@ -877,6 +974,7 @@ function Footer() {
                 href="tel:+551936515623"
                 className="
                   flex
+                  cursor-pointer
                   items-center
                   gap-1.5
                   text-[9px]
@@ -895,6 +993,7 @@ function Footer() {
                 href="tel:+5535516524"
                 className="
                   flex
+                  cursor-pointer
                   items-center
                   gap-1.5
                   text-[9px]
@@ -918,6 +1017,7 @@ function Footer() {
               className="
                 mt-2
                 flex
+                cursor-pointer
                 items-center
                 gap-1.5
                 text-[9px]
@@ -932,21 +1032,28 @@ function Footer() {
             </a>
 
 
-            {/* ====================================================
-                CERTIFICACIONES REALES
-            ==================================================== */}
+            {/* ==================================================
+                CERTIFICACIONES CENTRADAS
+            ================================================== */}
 
             <div
               className="
-                mt-5
+                mt-6
+                flex
+                flex-col
+                items-center
               "
             >
 
+              {/* TÍTULO */}
+
               <div
                 className="
-                  mb-2
+                  mb-3
                   flex
+                  w-full
                   items-center
+                  justify-center
                   gap-2
                 "
               >
@@ -954,9 +1061,11 @@ function Footer() {
                 <span
                   className="
                     h-[2px]
-                    w-5
+                    w-7
                     rounded-full
-                    bg-[#00a4e4]
+                    bg-gradient-to-r
+                    from-[#00a4e4]
+                    to-[#302b80]
                   "
                 />
 
@@ -965,21 +1074,35 @@ function Footer() {
                     text-[8px]
                     font-bold
                     uppercase
-                    tracking-[0.14em]
+                    tracking-[0.16em]
                     text-slate-500
                   "
                 >
                   Certificaciones
                 </span>
 
+                <span
+                  className="
+                    h-[2px]
+                    w-7
+                    rounded-full
+                    bg-gradient-to-r
+                    from-[#302b80]
+                    to-[#00a4e4]
+                  "
+                />
+
               </div>
 
+
+              {/* SELLOS */}
 
               <div
                 className="
                   flex
                   items-center
-                  gap-3
+                  justify-center
+                  gap-5
                 "
               >
 
@@ -987,318 +1110,158 @@ function Footer() {
 
                 <div
                   className="
+                    group
+                    relative
                     flex
-                    h-[48px]
-                    flex-1
+                    h-[76px]
+                    w-[76px]
+                    shrink-0
+                    cursor-pointer
                     items-center
                     justify-center
-                    rounded-xl
+                    rounded-full
                     border
                     border-slate-200
                     bg-white
-                    px-2
-                    py-1.5
-                    shadow-sm
-                    transition
-                    duration-200
-                    hover:-translate-y-0.5
-                    hover:shadow-md
+                    p-2
+                    shadow-[0_5px_18px_rgba(15,23,42,0.08)]
+                    transition-all
+                    duration-300
+                    hover:-translate-y-1
+                    hover:scale-[1.04]
+                    hover:border-[#00a4e4]/60
+                    hover:shadow-[0_12px_28px_rgba(0,164,228,0.20)]
                   "
                 >
+
+                  <div
+                    className="
+                      pointer-events-none
+                      absolute
+                      inset-[4px]
+                      rounded-full
+                      border
+                      border-[#00a4e4]/15
+                      transition-all
+                      duration-300
+                      group-hover:inset-[3px]
+                      group-hover:border-[#00a4e4]/50
+                    "
+                  />
+
+                  <div
+                    className="
+                      pointer-events-none
+                      absolute
+                      inset-0
+                      rounded-full
+                      bg-gradient-to-br
+                      from-[#00a4e4]/5
+                      to-transparent
+                      opacity-0
+                      transition
+                      duration-300
+                      group-hover:opacity-100
+                    "
+                  />
 
                   <img
                     src={sgsLogo}
                     alt="Certificación SGS"
                     className="
-                      max-h-[38px]
-                      max-w-[100px]
+                      relative
+                      z-10
+                      max-h-[52px]
+                      max-w-[52px]
+                      cursor-pointer
                       object-contain
+                      transition
+                      duration-300
+                      group-hover:scale-110
                     "
                   />
 
                 </div>
 
 
-                {/* BaSc */}
+                {/* BASC */}
 
                 <div
                   className="
+                    group
+                    relative
                     flex
-                    h-[48px]
-                    flex-1
+                    h-[76px]
+                    w-[76px]
+                    shrink-0
+                    cursor-pointer
                     items-center
                     justify-center
-                    rounded-xl
+                    rounded-full
                     border
                     border-slate-200
                     bg-white
-                    px-2
-                    py-1.5
-                    shadow-sm
-                    transition
-                    duration-200
-                    hover:-translate-y-0.5
-                    hover:shadow-md
+                    p-2
+                    shadow-[0_5px_18px_rgba(15,23,42,0.08)]
+                    transition-all
+                    duration-300
+                    hover:-translate-y-1
+                    hover:scale-[1.04]
+                    hover:border-[#302b80]/55
+                    hover:shadow-[0_12px_28px_rgba(48,43,128,0.20)]
                   "
                 >
 
+                  <div
+                    className="
+                      pointer-events-none
+                      absolute
+                      inset-[4px]
+                      rounded-full
+                      border
+                      border-[#302b80]/15
+                      transition-all
+                      duration-300
+                      group-hover:inset-[3px]
+                      group-hover:border-[#302b80]/45
+                    "
+                  />
+
+                  <div
+                    className="
+                      pointer-events-none
+                      absolute
+                      inset-0
+                      rounded-full
+                      bg-gradient-to-br
+                      from-[#302b80]/5
+                      to-transparent
+                      opacity-0
+                      transition
+                      duration-300
+                      group-hover:opacity-100
+                    "
+                  />
+
                   <img
                     src={bascLogo}
-                    alt="Certificación BaSc"
+                    alt="Certificación BASC"
                     className="
-                      max-h-[38px]
-                      max-w-[100px]
+                      relative
+                      z-10
+                      max-h-[52px]
+                      max-w-[52px]
+                      cursor-pointer
                       object-contain
+                      transition
+                      duration-300
+                      group-hover:scale-110
                     "
                   />
 
                 </div>
 
               </div>
-
-            </div>
-
-          </div>
-
-
-
-          {/* ========================================================
-              COLUMNA 4
-              ENLACES RÁPIDOS
-          ======================================================== */}
-
-          <div
-            className="
-              lg:border-l
-              lg:border-slate-300
-              lg:pl-7
-            "
-          >
-
-            <h3
-              className="
-                text-[12px]
-                font-semibold
-                text-slate-700
-              "
-            >
-              Enlaces Rápidos
-            </h3>
-
-
-            <div
-              className="
-                mt-3
-                space-y-1
-              "
-            >
-
-              <Link
-                to="/distribuidores"
-                className="
-                  group
-                  flex
-                  items-center
-                  gap-1.5
-                  rounded-md
-                  px-1
-                  py-1
-                  text-[9px]
-                  text-slate-500
-                  transition
-                  duration-200
-                  hover:translate-x-1
-                  hover:bg-white
-                  hover:text-[#007fc2]
-                "
-              >
-                <span className="text-[#00a4e4]">
-                  <ChevronIcon />
-                </span>
-                Distribuidores
-              </Link>
-
-
-              <Link
-                to="/pqrs"
-                className="
-                  group
-                  flex
-                  items-center
-                  gap-1.5
-                  rounded-md
-                  px-1
-                  py-1
-                  text-[9px]
-                  text-slate-500
-                  transition
-                  duration-200
-                  hover:translate-x-1
-                  hover:bg-white
-                  hover:text-[#007fc2]
-                "
-              >
-                <span className="text-[#00a4e4]">
-                  <ChevronIcon />
-                </span>
-                PQRS
-              </Link>
-
-
-              <Link
-                to="/trabaja-con-nosotros"
-                className="
-                  group
-                  flex
-                  items-center
-                  gap-1.5
-                  rounded-md
-                  px-1
-                  py-1
-                  text-[9px]
-                  text-slate-500
-                  transition
-                  duration-200
-                  hover:translate-x-1
-                  hover:bg-white
-                  hover:text-[#007fc2]
-                "
-              >
-                <span className="text-[#00a4e4]">
-                  <ChevronIcon />
-                </span>
-                Trabaja con nosotros
-              </Link>
-
-
-              <Link
-                to="/historia"
-                className="
-                  group
-                  flex
-                  items-center
-                  gap-1.5
-                  rounded-md
-                  px-1
-                  py-1
-                  text-[9px]
-                  text-slate-500
-                  transition
-                  duration-200
-                  hover:translate-x-1
-                  hover:bg-white
-                  hover:text-[#007fc2]
-                "
-              >
-                <span className="text-[#00a4e4]">
-                  <ChevronIcon />
-                </span>
-                Historia
-              </Link>
-
-
-              <Link
-                to="/sagrilaft"
-                className="
-                  group
-                  flex
-                  items-center
-                  gap-1.5
-                  rounded-md
-                  px-1
-                  py-1
-                  text-[9px]
-                  text-slate-500
-                  transition
-                  duration-200
-                  hover:translate-x-1
-                  hover:bg-white
-                  hover:text-[#007fc2]
-                "
-              >
-                <span className="text-[#00a4e4]">
-                  <ChevronIcon />
-                </span>
-                SAGRILAFT
-              </Link>
-
-
-              <Link
-                to="/pte"
-                className="
-                  group
-                  flex
-                  items-center
-                  gap-1.5
-                  rounded-md
-                  px-1
-                  py-1
-                  text-[9px]
-                  text-slate-500
-                  transition
-                  duration-200
-                  hover:translate-x-1
-                  hover:bg-white
-                  hover:text-[#007fc2]
-                "
-              >
-                <span className="text-[#00a4e4]">
-                  <ChevronIcon />
-                </span>
-                PTEE
-              </Link>
-
-
-              <Link
-                to="/picadoras"
-                className="
-                  group
-                  flex
-                  items-center
-                  gap-1.5
-                  rounded-md
-                  px-1
-                  py-1
-                  text-[9px]
-                  text-slate-500
-                  transition
-                  duration-200
-                  hover:translate-x-1
-                  hover:bg-white
-                  hover:text-[#007fc2]
-                "
-              >
-                <span className="text-[#00a4e4]">
-                  <ChevronIcon />
-                </span>
-                Picadoras
-              </Link>
-
-
-              <Link
-                to="/despulpadoras"
-                className="
-                  group
-                  flex
-                  items-center
-                  gap-1.5
-                  rounded-md
-                  px-1
-                  py-1
-                  text-[9px]
-                  text-slate-500
-                  transition
-                  duration-200
-                  hover:translate-x-1
-                  hover:bg-white
-                  hover:text-[#007fc2]
-                "
-              >
-                <span className="text-[#00a4e4]">
-                  <ChevronIcon />
-                </span>
-                Despulpadoras
-              </Link>
 
             </div>
 
@@ -1307,24 +1270,22 @@ function Footer() {
         </div>
 
 
-
-        {/* ============================================================
+        {/* ======================================================
             SEPARADOR
-        ============================================================ */}
+        ====================================================== */}
 
         <div
           className="
-            mt-6
+            mt-7
             border-t
             border-slate-300
           "
         />
 
 
-
-        {/* ============================================================
+        {/* ======================================================
             BARRA INFERIOR
-        ============================================================ */}
+        ====================================================== */}
 
         <div
           className="
@@ -1346,7 +1307,7 @@ function Footer() {
               text-slate-500
             "
           >
-            Penagos Hermanos @ 2024 –
+            Penagos Hermanos © 2024 –
 
             <span
               className="
@@ -1370,6 +1331,7 @@ function Footer() {
             <Link
               to="/proteccion-datos"
               className="
+                cursor-pointer
                 text-[9px]
                 font-semibold
                 text-[#007fc2]
@@ -1397,6 +1359,7 @@ function Footer() {
               type="button"
               className="
                 flex
+                cursor-pointer
                 items-center
                 gap-1
                 text-[9px]
