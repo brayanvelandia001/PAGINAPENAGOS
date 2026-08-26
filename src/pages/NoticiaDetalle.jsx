@@ -23,7 +23,10 @@ import {
 
 
 
-function NoticiaDetalle() {
+function NoticiaDetalle({
+  language,
+  changeLanguage
+}) {
 
 
   const { id } = useParams();
@@ -36,6 +39,67 @@ function NoticiaDetalle() {
   const [error, setError] = useState(false);
 
 
+  const isEnglish = language === "EN";
+
+
+
+  /* ============================================================
+     TEXTOS
+  ============================================================ */
+
+  const textos = {
+
+    es: {
+
+      noPudoCargar:
+        "No pudimos cargar la noticia",
+
+      intentaNuevamente:
+        "Intenta nuevamente en unos segundos.",
+
+      intentar:
+        "Intentar nuevamente",
+
+      volver:
+        "Volver",
+
+      volverNoticias:
+        "Volver a noticias",
+
+      regresarNoticias:
+        "Regresar a noticias"
+
+    },
+
+
+    en: {
+
+      noPudoCargar:
+        "We couldn't load the news article",
+
+      intentaNuevamente:
+        "Please try again in a few seconds.",
+
+      intentar:
+        "Try again",
+
+      volver:
+        "Back",
+
+      volverNoticias:
+        "Back to news",
+
+      regresarNoticias:
+        "Back to news"
+
+    }
+
+  };
+
+
+  const t = isEnglish
+    ? textos.en
+    : textos.es;
 
 
 
@@ -135,121 +199,131 @@ function NoticiaDetalle() {
 
     return (
 
-      <section
-        className="
-          flex
-          min-h-[500px]
-          items-center
-          justify-center
-          bg-white
-          px-6
-        "
-      >
+      <>
 
-        <div
+        <Header
+          language={language}
+          changeLanguage={changeLanguage}
+        />
+
+
+        <section
           className="
             flex
-            w-full
-            flex-col
+            min-h-[500px]
             items-center
             justify-center
+            bg-white
+            px-6
           "
         >
 
-
-          {/* ==================================================
-              LOGO
-          ================================================== */}
-
-          <img
-            src="http://penagos.com/wp-content/uploads/2020/03/Logotipo-Penagos-Hermanos-PNG.png"
-
-            alt="Penagos Hermanos"
-
-            className="
-              w-[210px]
-              object-contain
-              animate-[logoPulseNoticia_2s_ease-in-out_infinite]
-            "
-          />
-
-
-
-          {/* ==================================================
-              BARRA DE CARGA
-          ================================================== */}
-
           <div
             className="
-              mt-8
-              h-[4px]
-              w-[180px]
-              overflow-hidden
-              rounded-full
-              bg-slate-200
+              flex
+              w-full
+              flex-col
+              items-center
+              justify-center
             "
           >
 
-            <div
+
+            {/* ==================================================
+                LOGO
+            ================================================== */}
+
+            <img
+              src="https://penagos.com/wp-content/uploads/2020/03/Logotipo-Penagos-Hermanos-PNG.png"
+
+              alt="Penagos Hermanos"
+
               className="
-                h-full
-                w-1/2
-                rounded-full
-                bg-[#302b80]
-                animate-[loadingNoticia_1.4s_ease-in-out_infinite]
+                w-[210px]
+                object-contain
+                animate-[logoPulseNoticia_2s_ease-in-out_infinite]
               "
             />
+
+
+
+            {/* ==================================================
+                BARRA DE CARGA
+            ================================================== */}
+
+            <div
+              className="
+                mt-8
+                h-[4px]
+                w-[180px]
+                overflow-hidden
+                rounded-full
+                bg-slate-200
+              "
+            >
+
+              <div
+                className="
+                  h-full
+                  w-1/2
+                  rounded-full
+                  bg-[#302b80]
+                  animate-[loadingNoticia_1.4s_ease-in-out_infinite]
+                "
+              />
+
+            </div>
+
 
           </div>
 
 
-        </div>
 
+          {/* ====================================================
+              ANIMACIONES
+          ==================================================== */}
 
+          <style>
+            {`
 
-        {/* ====================================================
-            ANIMACIONES
-        ==================================================== */}
+              @keyframes logoPulseNoticia {
 
-        <style>
-          {`
+                0% {
+                  transform: scale(1);
+                  opacity: 0.70;
+                }
 
-            @keyframes logoPulseNoticia {
+                50% {
+                  transform: scale(1.06);
+                  opacity: 1;
+                }
 
-              0% {
-                transform: scale(1);
-                opacity: 0.70;
+                100% {
+                  transform: scale(1);
+                  opacity: 0.70;
+                }
+
               }
 
-              50% {
-                transform: scale(1.06);
-                opacity: 1;
+
+              @keyframes loadingNoticia {
+
+                0% {
+                  transform: translateX(-120%);
+                }
+
+                100% {
+                  transform: translateX(220%);
+                }
+
               }
 
-              100% {
-                transform: scale(1);
-                opacity: 0.70;
-              }
+            `}
+          </style>
 
-            }
+        </section>
 
-
-            @keyframes loadingNoticia {
-
-              0% {
-                transform: translateX(-120%);
-              }
-
-              100% {
-                transform: translateX(220%);
-              }
-
-            }
-
-          `}
-        </style>
-
-      </section>
+      </>
 
     );
 
@@ -267,160 +341,175 @@ function NoticiaDetalle() {
 
     return (
 
-      <section
-        className="
-          flex
-          min-h-[500px]
-          items-center
-          justify-center
-          bg-white
-          px-6
-        "
-      >
+      <>
 
-        <div
+        <Header
+          language={language}
+          changeLanguage={changeLanguage}
+        />
+
+
+        <section
           className="
             flex
-            w-full
-            flex-col
+            min-h-[500px]
             items-center
-            text-center
+            justify-center
+            bg-white
+            px-6
           "
         >
 
-
-          {/* ==================================================
-              LOGO
-          ================================================== */}
-
-          <img
-            src="http://penagos.com/wp-content/uploads/2020/03/Logotipo-Penagos-Hermanos-PNG.png"
-
-            alt="Penagos Hermanos"
-
-            className="
-              w-[210px]
-              object-contain
-            "
-          />
-
-
-          {/* ==================================================
-              MENSAJE
-          ================================================== */}
-
-          <h2
-            className="
-              mt-8
-              text-2xl
-              font-extrabold
-              text-[#07133d]
-            "
-          >
-
-            No pudimos cargar la noticia
-
-          </h2>
-
-
-          <p
-            className="
-              mt-2
-              text-sm
-              text-slate-500
-            "
-          >
-
-            Intenta nuevamente en unos segundos.
-
-          </p>
-
-
-          {/* ==================================================
-              BOTONES
-          ================================================== */}
-
           <div
             className="
-              mt-6
               flex
+              w-full
               flex-col
               items-center
-              gap-3
-              sm:flex-row
+              text-center
             "
           >
 
 
-            {/* REINTENTAR */}
+            {/* ==================================================
+                LOGO
+            ================================================== */}
 
-            <button
-              type="button"
+            <img
+              src="https://penagos.com/wp-content/uploads/2020/03/Logotipo-Penagos-Hermanos-PNG.png"
 
-              onClick={cargarNoticia}
+              alt="Penagos Hermanos"
 
               className="
-                inline-flex
-                items-center
-                gap-2
-                rounded-full
-                bg-[#302b80]
-                px-6
-                py-3
-                text-sm
-                font-bold
-                text-white
-                transition
-                duration-300
-                hover:bg-[#07133d]
+                w-[210px]
+                object-contain
+              "
+            />
+
+
+            {/* ==================================================
+                MENSAJE
+            ================================================== */}
+
+            <h2
+              className="
+                mt-8
+                text-2xl
+                font-extrabold
+                text-[#07133d]
               "
             >
 
-              <RefreshCw size={16} />
+              {t.noPudoCargar}
 
-              Intentar nuevamente
-
-            </button>
+            </h2>
 
 
-
-            {/* VOLVER */}
-
-            <Link
-              to="/"
-
+            <p
               className="
-                inline-flex
-                items-center
-                gap-2
-                rounded-full
-                border
-                border-[#302b80]
-                px-6
-                py-3
+                mt-2
                 text-sm
-                font-bold
-                text-[#302b80]
-                transition
-                duration-300
-                hover:bg-[#302b80]
-                hover:text-white
+                text-slate-500
               "
             >
 
-              <ArrowLeft size={16} />
+              {t.intentaNuevamente}
 
-              Volver
+            </p>
 
-            </Link>
+
+
+            {/* ==================================================
+                BOTONES
+            ================================================== */}
+
+            <div
+              className="
+                mt-6
+                flex
+                flex-col
+                items-center
+                gap-3
+                sm:flex-row
+              "
+            >
+
+
+              {/* REINTENTAR */}
+
+              <button
+                type="button"
+
+                onClick={cargarNoticia}
+
+                className="
+                  inline-flex
+                  items-center
+                  gap-2
+                  rounded-full
+                  bg-[#302b80]
+                  px-6
+                  py-3
+                  text-sm
+                  font-bold
+                  text-white
+                  transition
+                  duration-300
+                  hover:bg-[#07133d]
+                "
+              >
+
+                <RefreshCw
+                  size={16}
+                />
+
+                {t.intentar}
+
+              </button>
+
+
+
+              {/* VOLVER */}
+
+              <Link
+                to="/blog"
+
+                className="
+                  inline-flex
+                  items-center
+                  gap-2
+                  rounded-full
+                  border
+                  border-[#302b80]
+                  px-6
+                  py-3
+                  text-sm
+                  font-bold
+                  text-[#302b80]
+                  transition
+                  duration-300
+                  hover:bg-[#302b80]
+                  hover:text-white
+                "
+              >
+
+                <ArrowLeft
+                  size={16}
+                />
+
+                {t.volver}
+
+              </Link>
+
+
+            </div>
 
 
           </div>
 
+        </section>
 
-        </div>
-
-      </section>
+      </>
 
     );
 
@@ -446,14 +535,52 @@ function NoticiaDetalle() {
 
 
   /* ============================================================
+     FECHA
+  ============================================================ */
+
+  const fecha = new Date(
+    noticia.date
+  ).toLocaleDateString(
+
+    isEnglish
+      ? "en-US"
+      : "es-CO",
+
+    {
+      day: "numeric",
+      month: "long",
+      year: "numeric"
+    }
+
+  );
+
+
+
+
+
+  /* ============================================================
      NOTICIA
   ============================================================ */
 
   return (
 
-    <>
+    <div
+      className="
+        min-h-screen
+        bg-white
+      "
+    >
 
-      <Header />
+
+      {/* ========================================================
+          HEADER
+      ======================================================== */}
+
+      <Header
+        language={language}
+        changeLanguage={changeLanguage}
+      />
+
 
 
       <main
@@ -479,7 +606,7 @@ function NoticiaDetalle() {
           ================================================== */}
 
           <Link
-            to="/"
+            to="/blog"
 
             className="
               mb-10
@@ -501,9 +628,11 @@ function NoticiaDetalle() {
             "
           >
 
-            <ArrowLeft size={17} />
+            <ArrowLeft
+              size={17}
+            />
 
-            Volver a noticias
+            {t.volverNoticias}
 
           </Link>
 
@@ -572,19 +701,12 @@ function NoticiaDetalle() {
               "
             >
 
-              <CalendarDays size={17} />
+              <CalendarDays
+                size={17}
+              />
 
 
-              {new Date(
-                noticia.date
-              ).toLocaleDateString(
-                "es-CO",
-                {
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric"
-                }
-              )}
+              {fecha}
 
             </div>
 
@@ -647,7 +769,7 @@ function NoticiaDetalle() {
             >
 
               <Link
-                to="/"
+                to="/blog"
 
                 className="
                   inline-flex
@@ -664,9 +786,11 @@ function NoticiaDetalle() {
                 "
               >
 
-                <ArrowLeft size={18} />
+                <ArrowLeft
+                  size={18}
+                />
 
-                Regresar a noticias
+                {t.regresarNoticias}
 
               </Link>
 
@@ -681,8 +805,7 @@ function NoticiaDetalle() {
 
       </main>
 
-
-    </>
+    </div>
 
   );
 

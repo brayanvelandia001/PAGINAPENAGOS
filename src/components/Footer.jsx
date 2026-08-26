@@ -193,7 +193,57 @@ function LinkedinIcon() {
 // FOOTER
 // ============================================================
 
-function Footer() {
+function Footer({
+  language
+}) {
+
+  const isEnglish = language === "EN";
+
+
+  const t = {
+
+    certificaciones: isEnglish
+      ? "Certifications"
+      : "Certificaciones",
+
+    sucursalQuindio: isEnglish
+      ? "Quindío Branch"
+      : "Sucursal Quindío",
+
+    sucursalHuila: isEnglish
+      ? "Huila Branch"
+      : "Sucursal Huila",
+
+    certificacionSGS: isEnglish
+      ? "SGS Certification"
+      : "Certificación SGS",
+
+    certificadoBASC: isEnglish
+      ? "BASC Certificate"
+      : "Certificado BASC",
+
+    proteccionDatos: isEnglish
+      ? "Personal Data Protection"
+      : "Protección de Datos Personales",
+
+    derechos: isEnglish
+      ? "ALL RIGHTS RESERVED"
+      : "TODOS LOS DERECHOS RESERVADOS",
+
+    colombia: isEnglish
+      ? "Colombia"
+      : "Colombia",
+
+    brasil: isEnglish
+      ? "Brazil"
+      : "Brasil",
+
+    penagosHermanos: "Penagos Hermanos",
+
+    monteAlegre: "Monte Alegre"
+
+  };
+
 
   const penagosLogo =
     "http://penagos.com/wp-content/uploads/2020/03/Logotipo-Penagos-Hermanos-PNG.png";
@@ -236,10 +286,6 @@ function Footer() {
         "
       >
 
-        {/* ======================================================
-            CONTENIDO PRINCIPAL
-        ====================================================== */}
-
         <div
           className="
             grid
@@ -251,11 +297,7 @@ function Footer() {
           "
         >
 
-
-          {/* ====================================================
-              COLUMNA 1
-              PENAGOS HERMANOS
-          ==================================================== */}
+          {/* COLUMNA 1 */}
 
           <div
             className="
@@ -265,60 +307,40 @@ function Footer() {
             "
           >
 
-            {/* LOGO */}
-
-            <Link
-              to="/"
+            <div
               className="
                 inline-flex
                 w-fit
-                cursor-pointer
                 items-center
                 gap-3
-                rounded-xl
-                bg-white/70
-                px-3
-                py-2
-                shadow-sm
-                transition-all
-                duration-300
-                hover:bg-white
-                hover:shadow-md
               "
             >
 
               <img
                 src={penagosLogo}
-                alt="Penagos Hermanos"
+                alt={t.penagosHermanos}
                 className="
                   h-[42px]
                   w-[150px]
-                  cursor-pointer
                   object-contain
                   object-left
-                  transition
-                  duration-300
-                  hover:scale-[1.03]
                 "
               />
 
               <img
                 src={colombiaFlag}
-                alt="Colombia"
+                alt={t.colombia}
                 className="
                   h-[22px]
                   w-[34px]
-                  cursor-pointer
                   rounded-sm
                   object-cover
                   shadow-sm
                 "
               />
 
-            </Link>
+            </div>
 
-
-            {/* LÍNEA */}
 
             <div
               className="
@@ -332,8 +354,6 @@ function Footer() {
               "
             />
 
-
-            {/* DIRECCIÓN */}
 
             <div
               className="
@@ -378,8 +398,6 @@ function Footer() {
             </div>
 
 
-            {/* CORREO */}
-
             <div
               className="
                 mt-2.5
@@ -423,8 +441,6 @@ function Footer() {
             </div>
 
 
-            {/* REDES */}
-
             <div
               className="
                 mt-4
@@ -435,7 +451,9 @@ function Footer() {
             >
 
               <a
-                href="#"
+                href="https://www.facebook.com/penagoscompany/"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Facebook"
                 className="
                   flex
@@ -463,7 +481,9 @@ function Footer() {
 
 
               <a
-                href="#"
+                href="https://www.instagram.com/penagoscompany/"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Instagram"
                 className="
                   flex
@@ -491,7 +511,9 @@ function Footer() {
 
 
               <a
-                href="#"
+                href="https://twitter.com/penagoscompany/"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="X"
                 className="
                   flex
@@ -519,7 +541,9 @@ function Footer() {
 
 
               <a
-                href="#"
+                href="https://www.youtube.com/channel/UC0RWQ6bpF75tCfGLUo38X0g"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="YouTube"
                 className="
                   flex
@@ -547,7 +571,9 @@ function Footer() {
 
 
               <a
-                href="#"
+                href="https://www.linkedin.com/company/penagoscompany/"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="LinkedIn"
                 className="
                   flex
@@ -578,10 +604,7 @@ function Footer() {
           </div>
 
 
-          {/* ====================================================
-              COLUMNA 2
-              SUCURSALES COLOMBIA
-          ==================================================== */}
+          {/* COLUMNA 2 */}
 
           <div
             className="
@@ -591,35 +614,21 @@ function Footer() {
             "
           >
 
-            {/* LOGO */}
-
-            <Link
-              to="/"
+            <div
               className="
                 inline-flex
                 w-fit
-                cursor-pointer
                 items-center
                 gap-3
-                rounded-xl
-                bg-white/70
-                px-3
-                py-2
-                shadow-sm
-                transition-all
-                duration-300
-                hover:bg-white
-                hover:shadow-md
               "
             >
 
               <img
                 src={penagosLogo}
-                alt="Penagos Hermanos"
+                alt={t.penagosHermanos}
                 className="
                   h-[42px]
                   w-[150px]
-                  cursor-pointer
                   object-contain
                   object-left
                 "
@@ -627,21 +636,20 @@ function Footer() {
 
               <img
                 src={colombiaFlag}
-                alt="Colombia"
+                alt={t.colombia}
                 className="
                   h-[22px]
                   w-[34px]
-                  cursor-pointer
                   rounded-sm
                   object-cover
                   shadow-sm
                 "
               />
 
-            </Link>
+            </div>
 
 
-            {/* QUINDÍO */}
+            {/* SUCURSAL QUINDÍO */}
 
             <div
               className="
@@ -667,7 +675,7 @@ function Footer() {
                   text-slate-700
                 "
               >
-                Sucursal Quindío
+                {t.sucursalQuindio}
               </p>
 
 
@@ -729,7 +737,7 @@ function Footer() {
             </div>
 
 
-            {/* HUILA */}
+            {/* SUCURSAL HUILA */}
 
             <div
               className="
@@ -755,7 +763,7 @@ function Footer() {
                   text-slate-700
                 "
               >
-                Sucursal Huila
+                {t.sucursalHuila}
               </p>
 
 
@@ -819,10 +827,7 @@ function Footer() {
           </div>
 
 
-          {/* ====================================================
-              COLUMNA 3
-              BRASIL + CERTIFICACIONES
-          ==================================================== */}
+          {/* COLUMNA 3 */}
 
           <div
             className="
@@ -832,60 +837,39 @@ function Footer() {
             "
           >
 
-            {/* ==================================================
-                LOGOS BRASIL
-            ================================================== */}
-
             <div
               className="
                 flex
                 w-fit
                 items-center
                 gap-3
-                rounded-xl
-                bg-white/70
-                px-3
-                py-2
-                shadow-sm
-                transition-all
-                duration-300
-                hover:bg-white
-                hover:shadow-md
               "
             >
 
-              {/* PENAGOS */}
-
               <img
                 src={penagosLogo}
-                alt="Penagos Hermanos"
+                alt={t.penagosHermanos}
                 className="
                   h-[42px]
                   w-[150px]
                   shrink-0
-                  cursor-pointer
                   object-contain
                   object-left
                 "
               />
 
 
-              {/* MONTE ALEGRE */}
-
               <img
                 src={monteAlegreLogo}
-                alt="Monte Alegre"
+                alt={t.monteAlegre}
                 className="
                   h-[42px]
                   w-[100px]
                   shrink-0
-                  cursor-pointer
                   object-contain
                 "
               />
 
-
-              {/* BANDERA BRASIL */}
 
               <div
                 className="
@@ -906,12 +890,11 @@ function Footer() {
 
                 <img
                   src={brasilFlag}
-                  alt="Brasil"
+                  alt={t.brasil}
                   className="
                     block
                     h-full
                     w-full
-                    cursor-pointer
                     object-cover
                   "
                 />
@@ -921,7 +904,7 @@ function Footer() {
             </div>
 
 
-            {/* DIRECCIÓN */}
+            {/* DIRECCIÓN BRASIL */}
 
             <div
               className="
@@ -961,7 +944,7 @@ function Footer() {
             </div>
 
 
-            {/* TELÉFONOS */}
+            {/* TELÉFONOS BRASIL */}
 
             <div
               className="
@@ -1010,7 +993,7 @@ function Footer() {
             </div>
 
 
-            {/* CORREO */}
+            {/* CORREO BRASIL */}
 
             <a
               href="mailto:contato@montealegre.com.br"
@@ -1032,9 +1015,7 @@ function Footer() {
             </a>
 
 
-            {/* ==================================================
-                CERTIFICACIONES CENTRADAS
-            ================================================== */}
+            {/* CERTIFICACIONES */}
 
             <div
               className="
@@ -1044,8 +1025,6 @@ function Footer() {
                 items-center
               "
             >
-
-              {/* TÍTULO */}
 
               <div
                 className="
@@ -1069,6 +1048,7 @@ function Footer() {
                   "
                 />
 
+
                 <span
                   className="
                     text-[8px]
@@ -1078,8 +1058,9 @@ function Footer() {
                     text-slate-500
                   "
                 >
-                  Certificaciones
+                  {t.certificaciones}
                 </span>
+
 
                 <span
                   className="
@@ -1095,8 +1076,6 @@ function Footer() {
               </div>
 
 
-              {/* SELLOS */}
-
               <div
                 className="
                   flex
@@ -1108,7 +1087,11 @@ function Footer() {
 
                 {/* SGS */}
 
-                <div
+                <a
+                  href="https://www.sgs.com/es-co/productos-y-clientes-certificados"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={t.certificacionSGS}
                   className="
                     group
                     relative
@@ -1149,6 +1132,7 @@ function Footer() {
                     "
                   />
 
+
                   <div
                     className="
                       pointer-events-none
@@ -1165,15 +1149,15 @@ function Footer() {
                     "
                   />
 
+
                   <img
                     src={sgsLogo}
-                    alt="Certificación SGS"
+                    alt={t.certificacionSGS}
                     className="
                       relative
                       z-10
                       max-h-[52px]
                       max-w-[52px]
-                      cursor-pointer
                       object-contain
                       transition
                       duration-300
@@ -1181,12 +1165,16 @@ function Footer() {
                     "
                   />
 
-                </div>
+                </a>
 
 
                 {/* BASC */}
 
-                <div
+                <a
+                  href="https://penagos.com/wp-content/uploads/2024/09/2024-Certificado-BASC.pdf"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={t.certificadoBASC}
                   className="
                     group
                     relative
@@ -1227,6 +1215,7 @@ function Footer() {
                     "
                   />
 
+
                   <div
                     className="
                       pointer-events-none
@@ -1243,15 +1232,15 @@ function Footer() {
                     "
                   />
 
+
                   <img
                     src={bascLogo}
-                    alt="Certificación BASC"
+                    alt={t.certificadoBASC}
                     className="
                       relative
                       z-10
                       max-h-[52px]
                       max-w-[52px]
-                      cursor-pointer
                       object-contain
                       transition
                       duration-300
@@ -1259,7 +1248,7 @@ function Footer() {
                     "
                   />
 
-                </div>
+                </a>
 
               </div>
 
@@ -1270,9 +1259,7 @@ function Footer() {
         </div>
 
 
-        {/* ======================================================
-            SEPARADOR
-        ====================================================== */}
+        {/* SEPARADOR */}
 
         <div
           className="
@@ -1283,9 +1270,7 @@ function Footer() {
         />
 
 
-        {/* ======================================================
-            BARRA INFERIOR
-        ====================================================== */}
+        {/* BARRA INFERIOR */}
 
         <div
           className="
@@ -1315,21 +1300,23 @@ function Footer() {
                 text-slate-600
               "
             >
-              {" "}TODOS LOS DERECHOS RESERVADOS
+              {" "}
+              {t.derechos}
             </span>
           </p>
 
+
+          {/* PROTECCIÓN DE DATOS */}
 
           <div
             className="
               flex
               items-center
-              gap-4
             "
           >
 
             <Link
-              to="/proteccion-datos"
+              to="/proteccion-de-datos-personales"
               className="
                 cursor-pointer
                 text-[9px]
@@ -1340,39 +1327,8 @@ function Footer() {
                 hover:text-[#302b80]
               "
             >
-              Protección de Datos Personales
+              {t.proteccionDatos}
             </Link>
-
-
-            <span
-              className="
-                hidden
-                h-3
-                w-px
-                bg-slate-300
-                sm:block
-              "
-            />
-
-
-            <button
-              type="button"
-              className="
-                flex
-                cursor-pointer
-                items-center
-                gap-1
-                text-[9px]
-                font-semibold
-                text-slate-500
-                transition
-                duration-200
-                hover:text-[#302b80]
-              "
-            >
-              🇺🇸
-              EN
-            </button>
 
           </div>
 
@@ -1383,6 +1339,7 @@ function Footer() {
     </footer>
 
   );
+
 }
 
 

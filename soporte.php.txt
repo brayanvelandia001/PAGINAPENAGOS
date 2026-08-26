@@ -1,0 +1,238 @@
+<?php
+
+header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Allow-Origin: https://penagos.com");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
+
+if ($_SERVER["REQUEST_METHOD"] === "OPTIONS") {
+    http_response_code(200);
+    exit;
+}
+
+if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+    http_response_code(405);
+
+    echo json_encode([
+        "success" => false,
+        "message" => "Metodo no permitido."
+    ]);
+
+    exit;
+}
+
+/*
+|--------------------------------------------------------------------------
+| RECIBIR DATOS
+|--------------------------------------------------------------------------
+*/
+
+$nombre = trim($_POST["nombre"] ?? "");
+$apellidos = trim($_POST["apellidos"] ?? "");
+$email = trim($_POST["email"] ?? "");
+$telefono = trim($_POST["telefono"] ?? "");
+$pais = trim($_POST["pais"] ?? "");
+$ciudad = trim($_POST["ciudad"] ?? "");
+$descripcion = trim($_POST["descripcion"] ?? "");
+$terminos = $_POST["terminos"] ?? "";
+
+
+/*
+|--------------------------------------------------------------------------
+| VALIDACIONES
+|--------------------------------------------------------------------------
+*/
+
+if (
+    empty($nombre) ||
+    empty($apellidos) ||
+    empty($email) ||
+    empty($telefono) ||
+    empty($pais) ||
+    empty($ciudad) ||
+    empty($descripcion)
+) {
+    http_response_code(400);
+
+    echo json_encode([
+        "success" => false,
+        "message" => "Todos los campos obligatorios deben estar completos."
+    ]);
+
+    exit;
+}
+
+
+if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    http_response_code(400);
+
+    echo json_encode([
+        "success" => false,
+        "message" => "El correo electronico no es valido."
+    ]);
+
+    exit;
+}
+
+
+if (!$terminos) {
+    http_response_code(400);
+
+    echo json_encode([
+        "success" => false,
+        "message" => "Debe aceptar los terminos y condiciones."
+    ]);
+
+    exit;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| CONFIGURACION DEL CORREO
+|--------------------------------------------------------------------------
+*/
+
+$destinatario = "bvelandia@penagos.com";
+
+$asunto = "Nueva solicitud de Servicio y Post Venta";
+
+
+/*
+|--------------------------------------------------------------------------
+| CONTENIDO DEL CORREO
+|--------------------------------------------------------------------------
+*/
+
+$mensaje = "
+<html>
+<head>
+    <meta charset='UTF-8'>
+</head>
+
+<body style='font-family: Arial, sans-serif; color: #333;'>
+
+    <h2 style='color: #2563eb;'>
+        Nueva solicitud de Servicio y Post Venta
+    </h2>
+
+    <hr>
+
+    <h3>Datos del cliente</h3>
+
+    <p>
+        <strong>Nombre:</strong>
+        " . htmlspecialchars($nombre) . "
+    </p>
+
+    <p>
+        <strong>Apellidos:</strong>
+        " . htmlspecialchars($apellidos) . "
+    </p>
+
+    <p>
+        <strong>Correo:</strong>
+        " . htmlspecialchars($email) . "
+    </p>
+
+    <p>
+        <strong>Telefono:</strong>
+        " . htmlspecialchars($telefono) . "
+    </p>
+
+    <p>
+        <strong>Pais:</strong>
+        " . htmlspecialchars($pais) . "
+    </p>
+
+    <p>
+        <strong>Ciudad:</strong>
+        " . htmlspecialchars($ciudad) . "
+    </p>
+
+    <h3>Descripcion de la solicitud</h3>
+
+    <div style='
+        background: #f3f4f6;
+        padding: 15px;
+        border-radius: 8px;
+    '>
+        " . nl2br(htmlspecialchars($descripcion)) . "
+    </div>
+
+    <br>
+
+    <p>
+        <strong>Terminos aceptados:</strong>
+        Si
+    </p>
+
+    <hr>
+
+    <p style='font-size: 12px; color: #777;'>
+        Este mensaje fue generado automaticamente desde el formulario
+        de Servicio y Post Venta de Penagos.
+    </p>
+
+</body>
+</html>
+";
+
+
+/*
+|--------------------------------------------------------------------------
+| CABECERAS
+|--------------------------------------------------------------------------
+*/
+
+$headers = [];
+
+$headers[] = "MIME-Version: 1.0";
+$headers[] = "Content-Type: text/html; charset=UTF-8";
+
+$headers[] = "From: Web Penagos <servicioalcliente@penagos.com>";
+
+$headers[] = "Reply-To: " . $email;
+
+
+/*
+|--------------------------------------------------------------------------
+| ENVIAR CORREO
+|--------------------------------------------------------------------------
+*/
+
+$enviado = mail(
+    $destinatario,
+    $asunto,
+    $mensaje,
+    implode("\r\n", $headers)
+);
+
+
+/*
+|--------------------------------------------------------------------------
+| RESPUESTA
+|--------------------------------------------------------------------------
+*/
+
+if ($enviado) {
+
+    http_response_code(200);
+
+    echo json_encode([
+        "success" => true,
+        "message" => "Solicitud enviada correctamente."
+    ]);
+
+} else {
+
+    http_response_code(500);
+
+    echo json_encode([
+        "success" => false,
+        "message" => "No fue posible enviar la solicitud."
+    ]);
+}
+
+exit;
+?>

@@ -24,16 +24,36 @@ import "swiper/css";
 import "swiper/css/navigation";
 
 
+
 function MaquinasCarousel({
-  language
+  language,
+  onMaquinasListas
 }) {
 
-  const [productos, setProductos] = useState([]);
+
+  /* ==========================================================
+     PRODUCTOS
+  ========================================================== */
+
+  const [
+    productos,
+    setProductos
+  ] = useState([]);
+
+
+  /* ==========================================================
+     PRODUCTO SELECCIONADO
+  ========================================================== */
 
   const [
     productoSeleccionado,
     setProductoSeleccionado
   ] = useState(null);
+
+
+  /* ==========================================================
+     CARGANDO
+  ========================================================== */
 
   const [
     cargando,
@@ -41,22 +61,21 @@ function MaquinasCarousel({
   ] = useState(true);
 
 
-  /*
-  ================================================================
-  REFERENCIAS PARA LAS FLECHAS
-  ================================================================
-  */
+  /* ==========================================================
+     REFERENCIAS DE LAS FLECHAS
+  ========================================================== */
 
-  const botonAnteriorRef = useRef(null);
+  const botonAnteriorRef =
+    useRef(null);
 
-  const botonSiguienteRef = useRef(null);
+  const botonSiguienteRef =
+    useRef(null);
 
 
-  /*
-  ================================================================
-  IDIOMA ACTUAL
-  ================================================================
-  */
+
+  /* ==========================================================
+     IDIOMA ACTUAL
+  ========================================================== */
 
   const idiomaActual =
     language === "EN"
@@ -64,21 +83,19 @@ function MaquinasCarousel({
       : "ES";
 
 
-  /*
-  ================================================================
-  DETECTAR IDIOMA DEL PRODUCTO
-  ================================================================
-  */
+
+  /* ==========================================================
+     DETECTAR IDIOMA DEL PRODUCTO
+  ========================================================== */
 
   const obtenerIdiomaProducto = (
     producto
   ) => {
 
-    /*
-    ============================================================
-    1. CAMPOS DIRECTOS
-    ============================================================
-    */
+
+    /* ========================================================
+       1. CAMPOS DIRECTOS
+    ======================================================== */
 
     const idiomaDirecto =
       producto.lang ||
@@ -126,11 +143,10 @@ function MaquinasCarousel({
     }
 
 
-    /*
-    ============================================================
-    2. OBJETO DE IDIOMA
-    ============================================================
-    */
+
+    /* ========================================================
+       2. OBJETO LANGUAGE
+    ======================================================== */
 
     if (
       producto.language &&
@@ -183,11 +199,10 @@ function MaquinasCarousel({
     }
 
 
-    /*
-    ============================================================
-    3. TAXONOMÍAS / CATEGORÍAS
-    ============================================================
-    */
+
+    /* ========================================================
+       3. CATEGORÍAS
+    ======================================================== */
 
     if (
       Array.isArray(
@@ -206,15 +221,9 @@ function MaquinasCarousel({
 
 
         if (
-          textoCategoria.includes(
-            "español"
-          ) ||
-          textoCategoria.includes(
-            "espanol"
-          ) ||
-          textoCategoria.includes(
-            "spanish"
-          ) ||
+          textoCategoria.includes("español") ||
+          textoCategoria.includes("espanol") ||
+          textoCategoria.includes("spanish") ||
           textoCategoria === "es"
         ) {
 
@@ -224,15 +233,9 @@ function MaquinasCarousel({
 
 
         if (
-          textoCategoria.includes(
-            "english"
-          ) ||
-          textoCategoria.includes(
-            "inglés"
-          ) ||
-          textoCategoria.includes(
-            "ingles"
-          ) ||
+          textoCategoria.includes("english") ||
+          textoCategoria.includes("inglés") ||
+          textoCategoria.includes("ingles") ||
           textoCategoria === "en"
         ) {
 
@@ -245,11 +248,10 @@ function MaquinasCarousel({
     }
 
 
-    /*
-    ============================================================
-    4. SLUG
-    ============================================================
-    */
+
+    /* ========================================================
+       4. SLUG
+    ======================================================== */
 
     const slug =
       (
@@ -260,16 +262,21 @@ function MaquinasCarousel({
 
 
     const palabrasIngles = [
+
       "-english",
       "-ingles",
       "-inglés",
+
       "_english",
       "_ingles",
       "_en",
+
       "/en/",
+
       "english-",
       "ingles-",
       "inglés-"
+
     ];
 
 
@@ -286,17 +293,23 @@ function MaquinasCarousel({
 
 
     const palabrasEspanol = [
+
       "-spanish",
       "-espanol",
       "-español",
+
       "_spanish",
       "_espanol",
       "_español",
+
       "_es",
+
       "/es/",
+
       "spanish-",
       "espanol-",
       "español-"
+
     ];
 
 
@@ -312,11 +325,10 @@ function MaquinasCarousel({
     }
 
 
-    /*
-    ============================================================
-    5. WPML
-    ============================================================
-    */
+
+    /* ========================================================
+       5. WPML
+    ======================================================== */
 
     if (
       producto._links
@@ -325,29 +337,25 @@ function MaquinasCarousel({
       const linksTexto =
         JSON.stringify(
           producto._links
-        ).toLowerCase();
+        )
+        .toLowerCase();
 
 
       if (
-        linksTexto.includes(
-          "language"
-        )
+        linksTexto.includes("language")
       ) {
 
         if (
-          linksTexto.includes(
-            "en"
-          )
+          linksTexto.includes("en")
         ) {
 
           return "EN";
 
         }
 
+
         if (
-          linksTexto.includes(
-            "es"
-          )
+          linksTexto.includes("es")
         ) {
 
           return "ES";
@@ -364,69 +372,74 @@ function MaquinasCarousel({
   };
 
 
-  /*
-  ================================================================
-  CARGAR PRODUCTOS
-  ================================================================
-  */
+
+  /* ==========================================================
+     CARGAR PRODUCTOS
+  ========================================================== */
 
   useEffect(() => {
+
 
     let cancelado = false;
 
 
-    const cargarProductos = async () => {
-
-      try {
-
-        setCargando(true);
-
-        setProductos([]);
-
-        setProductoSeleccionado(null);
+    const controlador =
+      new AbortController();
 
 
-        console.log(
-          "===================================="
-        );
-
-        console.log(
-          "IDIOMA DEL HEADER:",
-          language
-        );
-
-        console.log(
-          "IDIOMA DEL CARRUSEL:",
-          idiomaActual
-        );
-
-        console.log(
-          "===================================="
-        );
+    const cargarProductos =
+      async () => {
 
 
-        let todosLosProductos = [];
-
-        let pagina = 1;
-
-        let hayMasPaginas = true;
+        try {
 
 
-        /*
-        ==========================================================
-        OBTENER TODAS LAS PÁGINAS
-        ==========================================================
-        */
+          setCargando(true);
 
-        while (
-          hayMasPaginas &&
-          !cancelado
-        ) {
+
+          setProductos([]);
+
+
+          setProductoSeleccionado(
+            null
+          );
+
+
+          console.log(
+            "===================================="
+          );
+
+          console.log(
+            "IDIOMA DEL HEADER:",
+            language
+          );
+
+          console.log(
+            "IDIOMA DEL CARRUSEL:",
+            idiomaActual
+          );
+
+          console.log(
+            "CARGANDO PRODUCTOS..."
+          );
+
+          console.log(
+            "===================================="
+          );
+
+
+
+          /* ==================================================
+             UNA SOLA CONSULTA
+
+             Antes estabas recorriendo todas las páginas.
+
+             Ahora solicitamos hasta 100 productos de una vez.
+          ================================================== */
 
           const url =
-            `https://penagos.com/wp-json/wc/store/v1/products` +
-            `?per_page=100` +
-            `&page=${pagina}`;
+            "https://penagos.com/wp-json/wc/store/v1/products" +
+            "?per_page=100";
 
 
           console.log(
@@ -437,8 +450,18 @@ function MaquinasCarousel({
 
           const response =
             await fetch(
-              url
+              url,
+              {
+                signal:
+                  controlador.signal
+              }
             );
+
+
+          console.log(
+            "RESPUESTA HTTP:",
+            response.status
+          );
 
 
           if (
@@ -456,189 +479,251 @@ function MaquinasCarousel({
             await response.json();
 
 
-          todosLosProductos = [
-            ...todosLosProductos,
-            ...data
-          ];
+          if (
+            cancelado
+          ) {
+
+            return;
+
+          }
 
 
-          const totalPaginas =
-            parseInt(
-              response.headers.get(
-                "X-WP-TotalPages"
-              ) || "1",
-              10
+          console.log(
+            "TOTAL PRODUCTOS RECIBIDOS:",
+            data.length
+          );
+
+
+
+          /* ==================================================
+             FILTRAR PRODUCTOS
+          ================================================== */
+
+          const productosFiltrados =
+            data.filter(
+              (
+                producto
+              ) => {
+
+
+                /* ==============================================
+                   DEBE TENER IMAGEN
+                ============================================== */
+
+                const tieneImagen =
+                  Array.isArray(
+                    producto.images
+                  ) &&
+                  producto.images.length > 0;
+
+
+                if (
+                  !tieneImagen
+                ) {
+
+                  return false;
+
+                }
+
+
+
+                /* ==============================================
+                   DETECTAR IDIOMA
+                ============================================== */
+
+                const idiomaProducto =
+                  obtenerIdiomaProducto(
+                    producto
+                  );
+
+
+                console.log(
+                  "PRODUCTO:",
+                  producto.name,
+                  "| IDIOMA:",
+                  idiomaProducto
+                );
+
+
+
+                /* ==============================================
+                   SI TIENE IDIOMA
+                ============================================== */
+
+                if (
+                  idiomaProducto
+                ) {
+
+                  return (
+                    idiomaProducto ===
+                    idiomaActual
+                  );
+
+                }
+
+
+
+                /* ==============================================
+                   SI NO PODEMOS DETECTAR IDIOMA
+
+                   NO LO MOSTRAMOS.
+                ============================================== */
+
+                return false;
+
+              }
             );
 
 
+
+          console.log(
+            "===================================="
+          );
+
+          console.log(
+            `PRODUCTOS ${idiomaActual}:`,
+            productosFiltrados.length
+          );
+
+          console.log(
+            productosFiltrados
+          );
+
+          console.log(
+            "===================================="
+          );
+
+
+
           if (
-            pagina >=
-            totalPaginas
+            !cancelado
           ) {
 
-            hayMasPaginas =
-              false;
+            setProductos(
+              productosFiltrados
+            );
 
-          } else {
+          }
 
-            pagina++;
+
+        } catch (
+          error
+        ) {
+
+
+          /* ==================================================
+             ABORT
+          ================================================== */
+
+          if (
+            error.name ===
+            "AbortError"
+          ) {
+
+            return;
+
+          }
+
+
+          console.error(
+            "ERROR CARGANDO PRODUCTOS:",
+            error
+          );
+
+
+          if (
+            !cancelado
+          ) {
+
+            setProductos([]);
+
+          }
+
+
+        } finally {
+
+
+          /* ==================================================
+             FINALIZÓ LA CARGA
+
+             ESTO ES LO QUE LE AVISA A APP
+             QUE PUEDE QUITAR EL LOGO.
+          ================================================== */
+
+          if (
+            !cancelado
+          ) {
+
+            setCargando(
+              false
+            );
+
+
+            console.log(
+              "===================================="
+            );
+
+            console.log(
+              "MÁQUINAS TERMINARON DE CARGAR"
+            );
+
+            console.log(
+              "AVISANDO A APP..."
+            );
+
+            console.log(
+              "===================================="
+            );
+
+
+            if (
+              onMaquinasListas
+            ) {
+
+              onMaquinasListas();
+
+            }
 
           }
 
         }
 
-
-        if (
-          cancelado
-        ) {
-
-          return;
-
-        }
-
-
-        console.log(
-          "TOTAL PRODUCTOS RECIBIDOS:",
-          todosLosProductos.length
-        );
-
-
-        /*
-        ============================================================
-        FILTRAR POR IDIOMA
-        ============================================================
-        */
-
-        const productosFiltrados =
-          todosLosProductos.filter(
-            (producto) => {
-
-              const tieneImagen =
-                Array.isArray(
-                  producto.images
-                ) &&
-                producto.images.length > 0;
-
-
-              if (
-                !tieneImagen
-              ) {
-
-                return false;
-
-              }
-
-
-              const idiomaProducto =
-                obtenerIdiomaProducto(
-                  producto
-                );
-
-
-              if (
-                idiomaProducto
-              ) {
-
-                return (
-                  idiomaProducto ===
-                  idiomaActual
-                );
-
-              }
-
-
-              return false;
-
-            }
-          );
-
-
-        console.log(
-          "===================================="
-        );
-
-        console.log(
-          `PRODUCTOS ${idiomaActual}:`,
-          productosFiltrados.length
-        );
-
-        console.log(
-          productosFiltrados
-        );
-
-        console.log(
-          "===================================="
-        );
-
-
-        if (
-          !cancelado
-        ) {
-
-          setProductos(
-            productosFiltrados
-          );
-
-        }
-
-      } catch (
-        error
-      ) {
-
-        console.error(
-          "ERROR CARGANDO PRODUCTOS:",
-          error
-        );
-
-
-        if (
-          !cancelado
-        ) {
-
-          setProductos([]);
-
-        }
-
-      } finally {
-
-        if (
-          !cancelado
-        ) {
-
-          setCargando(false);
-
-        }
-
-      }
-
-    };
+      };
 
 
     cargarProductos();
 
 
+
+    /* ========================================================
+       LIMPIEZA
+    ======================================================== */
+
     return () => {
 
       cancelado = true;
 
+      controlador.abort();
+
     };
 
+
   }, [
-    language,
-    idiomaActual
+    language
   ]);
 
 
-  /*
-  ================================================================
-  CERRAR MODAL CON ESCAPE
-  ================================================================
-  */
+
+  /* ==========================================================
+     CERRAR MODAL CON ESCAPE
+  ========================================================== */
 
   useEffect(() => {
 
+
     const manejarEscape =
       (event) => {
+
 
         if (
           event.key ===
@@ -658,10 +743,12 @@ function MaquinasCarousel({
       productoSeleccionado
     ) {
 
+
       document.addEventListener(
         "keydown",
         manejarEscape
       );
+
 
       document.body.style.overflow =
         "hidden";
@@ -671,31 +758,34 @@ function MaquinasCarousel({
 
     return () => {
 
+
       document.removeEventListener(
         "keydown",
         manejarEscape
       );
+
 
       document.body.style.overflow =
         "";
 
     };
 
+
   }, [
     productoSeleccionado
   ]);
 
 
-  /*
-  ================================================================
-  LIMPIAR DESCRIPCIÓN
-  ================================================================
-  */
+
+  /* ==========================================================
+     LIMPIAR DESCRIPCIÓN
+  ========================================================== */
 
   const limpiarDescripcion =
     (
       descripcion
     ) => {
+
 
       if (
         !descripcion
@@ -738,18 +828,19 @@ function MaquinasCarousel({
     };
 
 
-  /*
-  ================================================================
-  OBTENER IMAGEN
-  ================================================================
-  */
+
+  /* ==========================================================
+     OBTENER IMAGEN
+  ========================================================== */
 
   const obtenerImagen =
     (
       producto
     ) => {
 
+
       if (
+        !producto ||
         !producto.images ||
         producto.images.length === 0
       ) {
@@ -764,11 +855,10 @@ function MaquinasCarousel({
     };
 
 
-  /*
-  ================================================================
-  RENDER
-  ================================================================
-  */
+
+  /* ==========================================================
+     RENDER
+  ========================================================== */
 
   return (
 
@@ -792,6 +882,11 @@ function MaquinasCarousel({
         "
       >
 
+
+        {/* ====================================================
+            CARGANDO
+        ==================================================== */}
+
         {cargando ? (
 
           <div
@@ -810,7 +905,13 @@ function MaquinasCarousel({
 
           </div>
 
+
         ) : productos.length === 0 ? (
+
+
+          /* ==================================================
+             SIN PRODUCTOS
+          ================================================== */
 
           <div
             className="
@@ -827,8 +928,11 @@ function MaquinasCarousel({
           >
 
             <p>
+
               No hay productos disponibles.
+
             </p>
+
 
             <p
               className="
@@ -847,13 +951,13 @@ function MaquinasCarousel({
 
           </div>
 
+
         ) : (
 
-          /*
-          ==========================================================
-          CONTENEDOR DEL CARRUSEL + FLECHAS
-          ==========================================================
-          */
+
+          /* ==================================================
+             CARRUSEL
+          ================================================== */
 
           <div
             className="
@@ -867,14 +971,20 @@ function MaquinasCarousel({
             "
           >
 
-            {/* ====================================================
+
+            {/* ==================================================
                 FLECHA IZQUIERDA
-            ==================================================== */}
+            ================================================== */}
 
             <button
-              ref={botonAnteriorRef}
+              ref={
+                botonAnteriorRef
+              }
+
               type="button"
+
               aria-label="Producto anterior"
+
               className="
                 absolute
                 left-0
@@ -916,14 +1026,20 @@ function MaquinasCarousel({
             </button>
 
 
-            {/* ====================================================
+
+            {/* ==================================================
                 FLECHA DERECHA
-            ==================================================== */}
+            ================================================== */}
 
             <button
-              ref={botonSiguienteRef}
+              ref={
+                botonSiguienteRef
+              }
+
               type="button"
+
               aria-label="Producto siguiente"
+
               className="
                 absolute
                 right-0
@@ -965,9 +1081,10 @@ function MaquinasCarousel({
             </button>
 
 
-            {/* ====================================================
+
+            {/* ==================================================
                 SWIPER
-            ==================================================== */}
+            ================================================== */}
 
             <Swiper
 
@@ -976,7 +1093,10 @@ function MaquinasCarousel({
                 Navigation
               ]}
 
-              onBeforeInit={(swiper) => {
+
+              onBeforeInit={(
+                swiper
+              ) => {
 
                 swiper.params.navigation.prevEl =
                   botonAnteriorRef.current;
@@ -986,6 +1106,7 @@ function MaquinasCarousel({
 
               }}
 
+
               navigation={{
                 prevEl:
                   botonAnteriorRef.current,
@@ -994,9 +1115,11 @@ function MaquinasCarousel({
                   botonSiguienteRef.current
               }}
 
+
               loop={
                 productos.length > 4
               }
+
 
               autoplay={{
 
@@ -1010,11 +1133,15 @@ function MaquinasCarousel({
 
               }}
 
+
               speed={1200}
+
 
               spaceBetween={30}
 
+
               slidesPerView={1}
+
 
               breakpoints={{
 
@@ -1036,6 +1163,7 @@ function MaquinasCarousel({
 
               }}
 
+
               className="
                 !w-full
                 !overflow-hidden
@@ -1043,10 +1171,12 @@ function MaquinasCarousel({
               "
             >
 
+
               {productos.map(
                 (
                   producto
                 ) => {
+
 
                   const imagen =
                     obtenerImagen(
@@ -1067,9 +1197,10 @@ function MaquinasCarousel({
                       "
                     >
 
-                      {/* ==================================================
+
+                      {/* ======================================
                           TARJETA
-                      ================================================== */}
+                      ====================================== */}
 
                       <div
                         className="
@@ -1092,9 +1223,10 @@ function MaquinasCarousel({
                         "
                       >
 
-                        {/* =================================================
-                            ÁREA DE IMAGEN
-                        ================================================= */}
+
+                        {/* ==================================
+                            IMAGEN
+                        ================================== */}
 
                         <div
                           onClick={() =>
@@ -1128,6 +1260,10 @@ function MaquinasCarousel({
                                 producto.name
                               }
 
+                              loading="lazy"
+
+                              decoding="async"
+
                               className="
                                 max-h-full
                                 max-w-full
@@ -1143,9 +1279,10 @@ function MaquinasCarousel({
                         </div>
 
 
-                        {/* =================================================
+
+                        {/* ==================================
                             NOMBRE
-                        ================================================= */}
+                        ================================== */}
 
                         <div
                           className="
@@ -1189,6 +1326,7 @@ function MaquinasCarousel({
 
                       </div>
 
+
                     </SwiperSlide>
 
                   );
@@ -1205,9 +1343,10 @@ function MaquinasCarousel({
       </div>
 
 
-      {/* ==========================================================
+
+      {/* ========================================================
           MODAL
-      ========================================================== */}
+      ======================================================== */}
 
       {productoSeleccionado && (
 
@@ -1232,6 +1371,7 @@ function MaquinasCarousel({
           "
         >
 
+
           <div
             onClick={(e) =>
               e.stopPropagation()
@@ -1247,6 +1387,11 @@ function MaquinasCarousel({
               shadow-2xl
             "
           >
+
+
+            {/* ==============================================
+                BOTÓN CERRAR
+            ============================================== */}
 
             <button
               onClick={() =>
@@ -1286,6 +1431,11 @@ function MaquinasCarousel({
 
             </button>
 
+
+
+            {/* ==============================================
+                IMAGEN MODAL
+            ============================================== */}
 
             <div
               className="
@@ -1330,6 +1480,11 @@ function MaquinasCarousel({
 
             </div>
 
+
+
+            {/* ==============================================
+                INFORMACIÓN
+            ============================================== */}
 
             <div
               className="

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import {
-  Search,
   ChevronDown,
   ArrowRight,
   Wrench,
@@ -13,16 +12,17 @@ import {
 } from "lucide-react";
 
 
+/* ============================================================
+   HEADER
+============================================================ */
+
 function Header({
-  language,
-  changeLanguage
+  language = "ES",
+  changeLanguage = () => {}
 }) {
 
-
   const [languageOpen, setLanguageOpen] = useState(false);
-
   const [mobileOpen, setMobileOpen] = useState(false);
-
 
   const isEnglish = language === "EN";
 
@@ -35,218 +35,125 @@ function Header({
     ? {
 
         welcome: "Welcome to",
+        anniversary: "130 years serving agriculture",
 
-        anniversary:
-          "130 years serving agriculture",
+        support: "Technical support",
+        payments: "Online payments",
 
-        support:
-          "Technical support",
+        about: "About us",
+        farmers: "Penagos Farmers",
+        products: "Our products",
+        plants: "Coffee processing plants",
+        blog: "Our blog",
+        contact: "Contact us",
 
-        payments:
-          "Online payments",
-
-        about:
-          "About us",
-
-        farmers:
-          "Penagos Farmers",
-
-        products:
-          "Our products",
-
-        plants:
-          "Coffee processing plants",
-
-        blog:
-          "Our blog",
-
-        contact:
-          "Contact us",
-
-
-        productsIntro:
-          "Our products",
-
-        productivity:
-          "Solutions to drive productivity",
+        productsIntro: "Our products",
+        productivity: "Solutions to drive productivity",
 
         productsDescription:
           "Technology and equipment for coffee processing and post-harvest operations.",
 
+        viewAll: "View all products",
+        viewProducts: "View products",
 
-        viewAll:
-          "View all products",
-
-        viewProducts:
-          "View products",
-
-
-        coffeeBenefit:
-          "Coffee processing",
-
+        coffeeBenefit: "Coffee processing",
         coffeeBenefitDescription:
           "Equipment for wet coffee processing.",
 
-
-        drying:
-          "Coffee drying",
-
+        drying: "Coffee drying",
         dryingDescription:
           "Solutions for efficient coffee drying.",
 
-
-        threshing:
-          "Coffee hulling",
-
+        threshing: "Coffee hulling",
         threshingDescription:
           "Technology for high-performance coffee hulling.",
 
-
-        agricultural:
-          "Agricultural equipment",
-
+        agricultural: "Agricultural equipment",
         agriculturalDescription:
           "Machinery and solutions for agricultural operations.",
 
-
-        spareParts:
-          "Spare parts",
-
+        spareParts: "Spare parts",
         sparePartsDescription:
           "Original spare parts and specialized support.",
 
+        talk: "Let's talk",
 
-        talk:
-          "Let's talk",
+        openMenu: "Open menu",
+        closeMenu: "Close menu",
 
-
-        openMenu:
-          "Open menu",
-
-        closeMenu:
-          "Close menu",
-
-        search:
-          "Search",
-
-
-        spanish:
-          "Español",
-
-        english:
-          "English",
+        spanish: "Español",
+        english: "English",
 
       }
 
     : {
 
-        welcome:
-          "Bienvenido a",
+        welcome: "Bienvenido a",
+        anniversary: "130 años al servicio de la agricultura",
 
-        anniversary:
-          "130 años al servicio de la agricultura",
+        support: "Soporte técnico",
+        payments: "Pagos en línea",
 
+        about: "Quiénes somos",
+        farmers: "Agricultores Penagos",
+        products: "Nuestros productos",
+        plants: "Centrales de procesamiento de café",
+        blog: "Nuestro blog",
+        contact: "Contáctenos",
 
-        support:
-          "Soporte técnico",
-
-        payments:
-          "Pagos en línea",
-
-
-        about:
-          "Quiénes somos",
-
-        farmers:
-          "Agricultores Penagos",
-
-        products:
-          "Nuestros productos",
-
-        plants:
-          "Centrales de procesamiento de café",
-
-        blog:
-          "Nuestro blog",
-
-        contact:
-          "Contáctenos",
-
-
-        productsIntro:
-          "Nuestros productos",
-
+        productsIntro: "Nuestros productos",
         productivity:
           "Soluciones para impulsar la productividad",
 
         productsDescription:
           "Tecnología y equipos para el procesamiento y beneficio del café.",
 
+        viewAll: "Ver todos los productos",
+        viewProducts: "Ver productos",
 
-        viewAll:
-          "Ver todos los productos",
-
-        viewProducts:
-          "Ver productos",
-
-
-        coffeeBenefit:
-          "Beneficio de café",
-
+        coffeeBenefit: "Beneficio de café",
         coffeeBenefitDescription:
           "Equipos para beneficio húmedo del café.",
 
-
-        drying:
-          "Secado de café",
-
+        drying: "Secado de café",
         dryingDescription:
           "Soluciones para un secado eficiente.",
 
-
-        threshing:
-          "Trilla de café",
-
+        threshing: "Trilla de café",
         threshingDescription:
           "Tecnología para alto rendimiento.",
 
-
-        agricultural:
-          "Equipos agrícolas",
-
+        agricultural: "Equipos agrícolas",
         agriculturalDescription:
           "Maquinaria para el trabajo del campo.",
 
-
-        spareParts:
-          "Repuestos",
-
+        spareParts: "Repuestos",
         sparePartsDescription:
           "Repuestos y soporte especializado.",
 
+        talk: "Hablemos",
 
-        talk:
-          "Hablemos",
+        openMenu: "Abrir menú",
+        closeMenu: "Cerrar menú",
 
-
-        openMenu:
-          "Abrir menú",
-
-        closeMenu:
-          "Cerrar menú",
-
-        search:
-          "Buscar",
-
-
-        spanish:
-          "Español",
-
-        english:
-          "English",
+        spanish: "Español",
+        english: "English",
 
       };
 
+
+  /* ============================================================
+     CERRAR MENÚ MOBILE
+  ============================================================ */
+
+  const cerrarMobile = () => {
+    setMobileOpen(false);
+  };
+
+
+  /* ============================================================
+     HEADER
+  ============================================================ */
 
   return (
 
@@ -258,7 +165,6 @@ function Header({
       ======================================================== */}
 
       <div className="border-b border-slate-200 bg-[#F1F3F5]">
-
 
         <div
           className="
@@ -272,7 +178,6 @@ function Header({
             lg:px-10
           "
         >
-
 
           {/* ====================================================
               MENSAJE
@@ -288,12 +193,7 @@ function Header({
 
             {t.welcome}{" "}
 
-            <span
-              className="
-                font-bold
-                text-[#302b80]
-              "
-            >
+            <span className="font-bold text-[#302b80]">
               Penagos
             </span>
 
@@ -317,14 +217,12 @@ function Header({
             "
           >
 
-
             {/* SOPORTE */}
 
-            <a
-              href="#soporte"
+            <Link
+              to="/soporte-tecnico"
               className="
                 flex
-                cursor-pointer
                 items-center
                 gap-2
                 text-[#475569]
@@ -343,27 +241,18 @@ function Header({
                 {t.support}
               </span>
 
-            </a>
+            </Link>
 
 
-            {/* SEPARADOR */}
-
-            <span
-              className="
-                h-4
-                w-px
-                bg-slate-300
-              "
-            />
+            <span className="h-4 w-px bg-slate-300" />
 
 
             {/* PAGOS */}
 
-            <a
-              href="#pagos"
+            <Link
+              to="/pagos"
               className="
                 flex
-                cursor-pointer
                 items-center
                 gap-2
                 text-[#475569]
@@ -382,37 +271,23 @@ function Header({
                 {t.payments}
               </span>
 
-            </a>
+            </Link>
 
 
-            {/* SEPARADOR */}
-
-            <span
-              className="
-                h-4
-                w-px
-                bg-slate-300
-              "
-            />
+            <span className="h-4 w-px bg-slate-300" />
 
 
-            {/* =================================================
-                SELECTOR DE IDIOMA
-            ================================================= */}
+            {/* IDIOMA */}
 
             <div className="relative">
 
-
               <button
                 type="button"
-
                 onClick={() =>
-                  setLanguageOpen(!languageOpen)
+                  setLanguageOpen((prev) => !prev)
                 }
-
                 className="
                   flex
-                  cursor-pointer
                   items-center
                   gap-2
                   text-[#475569]
@@ -420,9 +295,7 @@ function Header({
                   duration-200
                   hover:text-[#302b80]
                 "
-
                 aria-label="Cambiar idioma"
-
                 aria-expanded={languageOpen}
               >
 
@@ -431,33 +304,22 @@ function Header({
                   strokeWidth={2}
                 />
 
-
                 <span className="font-bold">
                   {language}
                 </span>
 
-
                 <ChevronDown
                   size={12}
                   strokeWidth={2}
-
                   className={`
                     transition-transform
                     duration-200
-                    ${
-                      languageOpen
-                        ? "rotate-180"
-                        : ""
-                    }
+                    ${languageOpen ? "rotate-180" : ""}
                   `}
                 />
 
               </button>
 
-
-              {/* =================================================
-                  DROPDOWN IDIOMAS
-              ================================================= */}
 
               {languageOpen && (
 
@@ -478,24 +340,19 @@ function Header({
                   "
                 >
 
-
                   {/* ESPAÑOL */}
 
                   <button
                     type="button"
-
                     onClick={() => {
 
                       changeLanguage("ES");
-
                       setLanguageOpen(false);
 
                     }}
-
                     className="
                       flex
                       w-full
-                      cursor-pointer
                       items-center
                       justify-between
                       rounded-lg
@@ -516,7 +373,6 @@ function Header({
                       {t.spanish}
                     </span>
 
-
                     <span
                       className={
                         language === "ES"
@@ -534,19 +390,15 @@ function Header({
 
                   <button
                     type="button"
-
                     onClick={() => {
 
                       changeLanguage("EN");
-
                       setLanguageOpen(false);
 
                     }}
-
                     className="
                       flex
                       w-full
-                      cursor-pointer
                       items-center
                       justify-between
                       rounded-lg
@@ -567,7 +419,6 @@ function Header({
                       {t.english}
                     </span>
 
-
                     <span
                       className={
                         language === "EN"
@@ -580,21 +431,17 @@ function Header({
 
                   </button>
 
-
                 </div>
 
               )}
 
             </div>
 
-
           </div>
-
 
         </div>
 
       </div>
-
 
 
       {/* ========================================================
@@ -608,7 +455,6 @@ function Header({
           bg-white
         "
       >
-
 
         <div
           className="
@@ -625,23 +471,29 @@ function Header({
 
           {/* ====================================================
               LOGO
+              
+              ESTE LINK ES EL QUE LLEVA AL APP.JSX /
           ==================================================== */}
 
-          <a
-            href="/"
+          <Link
+            to="/"
+            onClick={() => {
+
+              setMobileOpen(false);
+              setLanguageOpen(false);
+
+            }}
+            aria-label="Ir al inicio"
             className="
               flex
               shrink-0
-              cursor-pointer
               items-center
             "
           >
 
             <img
               src="https://penagos.com/wp-content/uploads/2020/03/Logotipo-Penagos-Hermanos-PNG.png"
-
               alt="Penagos Hermanos"
-
               className="
                 w-[155px]
                 object-contain
@@ -652,8 +504,7 @@ function Header({
               "
             />
 
-          </a>
-
+          </Link>
 
 
           {/* ====================================================
@@ -669,12 +520,44 @@ function Header({
             "
           >
 
-
             {/* QUIÉNES SOMOS */}
 
-            <NavLink href="#empresa">
+            <Link
+              to="/quienes-somos"
+              className="
+                group
+                relative
+                px-4
+                py-8
+                text-[13px]
+                font-bold
+                text-[#10152f]
+                transition-all
+                duration-200
+                hover:text-[#302b80]
+              "
+            >
+
               {t.about}
-            </NavLink>
+
+              <span
+                className="
+                  absolute
+                  bottom-5
+                  left-4
+                  right-4
+                  h-[2px]
+                  origin-left
+                  scale-x-0
+                  rounded-full
+                  bg-[#302b80]
+                  transition-transform
+                  duration-300
+                  group-hover:scale-x-100
+                "
+              />
+
+            </Link>
 
 
             {/* AGRICULTORES */}
@@ -684,19 +567,14 @@ function Header({
             </NavLink>
 
 
-            {/* =================================================
-                PRODUCTOS + MEGA MENU
-            ================================================= */}
+            {/* PRODUCTOS */}
 
             <div className="group relative">
 
-
               <button
                 type="button"
-
                 className="
                   flex
-                  cursor-pointer
                   items-center
                   gap-1
                   px-4
@@ -712,11 +590,9 @@ function Header({
 
                 {t.products}
 
-
                 <ChevronDown
                   size={15}
                   strokeWidth={2}
-
                   className="
                     transition-transform
                     duration-300
@@ -727,10 +603,7 @@ function Header({
               </button>
 
 
-
-              {/* =================================================
-                  MEGA MENU
-              ================================================= */}
+              {/* MEGA MENU */}
 
               <div
                 className="
@@ -755,7 +628,6 @@ function Header({
                 "
               >
 
-
                 <div
                   className="
                     grid
@@ -763,7 +635,6 @@ function Header({
                     gap-8
                   "
                 >
-
 
                   {/* INTRO */}
 
@@ -818,7 +689,6 @@ function Header({
                       className="
                         mt-6
                         inline-flex
-                        cursor-pointer
                         items-center
                         gap-2
                         text-sm
@@ -840,7 +710,6 @@ function Header({
                     </a>
 
                   </div>
-
 
 
                   {/* PRODUCTOS */}
@@ -885,41 +754,31 @@ function Header({
 
                   </div>
 
-
                 </div>
 
-
               </div>
-
 
             </div>
 
 
-
-            {/* =================================================
-                CENTRALES
-            ================================================= */}
+            {/* CENTRALES */}
 
             <NavLink href="#centrales">
 
               {isEnglish ? (
 
                 <>
-
                   Coffee
                   <br />
                   processing plants
-
                 </>
 
               ) : (
 
                 <>
-
                   Centrales de
                   <br />
                   procesamiento de café
-
                 </>
 
               )}
@@ -927,16 +786,13 @@ function Header({
             </NavLink>
 
 
-
             {/* BLOG */}
 
             <Link
               to="/blog"
-
               className="
                 group
                 relative
-                cursor-pointer
                 px-4
                 py-8
                 text-[13px]
@@ -949,7 +805,6 @@ function Header({
             >
 
               {t.blog}
-
 
               <span
                 className="
@@ -971,20 +826,17 @@ function Header({
             </Link>
 
 
-
             {/* CONTACTO */}
 
             <NavLink href="#contacto">
               {t.contact}
             </NavLink>
 
-
           </nav>
 
 
-
           {/* ====================================================
-              ACCIONES DERECHA
+              BOTÓN HABLEMOS
           ==================================================== */}
 
           <div
@@ -997,17 +849,11 @@ function Header({
             "
           >
 
-            {/* =================================================
-                BOTÓN HABLEMOS
-            ================================================= */}
-
             <a
               href="#contacto"
-
               className="
                 group
                 flex
-                cursor-pointer
                 items-center
                 gap-3
                 rounded-full
@@ -1027,7 +873,6 @@ function Header({
             >
 
               {t.talk}
-
 
               <span
                 className="
@@ -1052,9 +897,7 @@ function Header({
 
             </a>
 
-
           </div>
-
 
 
           {/* ====================================================
@@ -1063,17 +906,14 @@ function Header({
 
           <button
             type="button"
-
             onClick={() =>
               setMobileOpen(!mobileOpen)
             }
-
             className="
               ml-auto
               flex
               h-11
               w-11
-              cursor-pointer
               items-center
               justify-center
               rounded-lg
@@ -1087,7 +927,6 @@ function Header({
               hover:text-[#302b80]
               lg:hidden
             "
-
             aria-label={
               mobileOpen
                 ? t.closeMenu
@@ -1103,9 +942,7 @@ function Header({
 
           </button>
 
-
         </div>
-
 
 
         {/* ========================================================
@@ -1126,17 +963,26 @@ function Header({
             "
           >
 
-            <div
-              className="
-                flex
-                flex-col
-              "
-            >
+            <div className="flex flex-col">
 
 
-              <MobileLink href="#empresa">
+              <Link
+                to="/quienes-somos"
+                onClick={cerrarMobile}
+                className="
+                  border-b
+                  border-slate-100
+                  py-4
+                  text-sm
+                  font-bold
+                  text-[#07133d]
+                  transition-all
+                  hover:pl-2
+                  hover:text-[#302b80]
+                "
+              >
                 {t.about}
-              </MobileLink>
+              </Link>
 
 
               <MobileLink href="#agricultores">
@@ -1149,14 +995,47 @@ function Header({
               </MobileLink>
 
 
+              <Link
+                to="/soporte-tecnico"
+                onClick={cerrarMobile}
+                className="
+                  border-b
+                  border-slate-100
+                  py-4
+                  text-sm
+                  font-bold
+                  text-[#07133d]
+                  transition-all
+                  hover:pl-2
+                  hover:text-[#302b80]
+                "
+              >
+                {t.support}
+              </Link>
+
+
               <MobileLink href="#centrales">
                 {t.plants}
               </MobileLink>
 
 
-              <MobileLink href="#blog">
+              <Link
+                to="/blog"
+                onClick={cerrarMobile}
+                className="
+                  border-b
+                  border-slate-100
+                  py-4
+                  text-sm
+                  font-bold
+                  text-[#07133d]
+                  transition-all
+                  hover:pl-2
+                  hover:text-[#302b80]
+                "
+              >
                 {t.blog}
-              </MobileLink>
+              </Link>
 
 
               <MobileLink href="#contacto">
@@ -1164,10 +1043,7 @@ function Header({
               </MobileLink>
 
 
-
-              {/* =================================================
-                  IDIOMA MOBILE
-              ================================================= */}
+              {/* IDIOMA */}
 
               <div
                 className="
@@ -1180,7 +1056,6 @@ function Header({
 
                 <button
                   type="button"
-
                   onClick={() =>
                     changeLanguage(
                       language === "ES"
@@ -1188,11 +1063,9 @@ function Header({
                         : "ES"
                     )
                   }
-
                   className="
                     flex
                     w-full
-                    cursor-pointer
                     items-center
                     justify-between
                     rounded-xl
@@ -1226,11 +1099,7 @@ function Header({
                   </span>
 
 
-                  <span
-                    className="
-                      text-[#302b80]
-                    "
-                  >
+                  <span className="text-[#302b80]">
 
                     {language === "ES"
                       ? "EN"
@@ -1242,23 +1111,18 @@ function Header({
 
               </div>
 
-
             </div>
 
           </div>
 
         )}
 
-
       </div>
-
 
     </header>
 
   );
-
 }
-
 
 
 /* ==============================================================
@@ -1274,11 +1138,9 @@ function NavLink({
 
     <a
       href={href}
-
       className="
         group
         relative
-        cursor-pointer
         px-4
         py-8
         text-[13px]
@@ -1291,7 +1153,6 @@ function NavLink({
     >
 
       {children}
-
 
       <span
         className="
@@ -1317,7 +1178,6 @@ function NavLink({
 }
 
 
-
 /* ==============================================================
    MOBILE LINK
 ============================================================== */
@@ -1331,9 +1191,7 @@ function MobileLink({
 
     <a
       href={href}
-
       className="
-        cursor-pointer
         border-b
         border-slate-100
         py-4
@@ -1341,7 +1199,6 @@ function MobileLink({
         font-bold
         text-[#07133d]
         transition-all
-        duration-200
         hover:pl-2
         hover:text-[#302b80]
       "
@@ -1354,7 +1211,6 @@ function MobileLink({
   );
 
 }
-
 
 
 /* ==============================================================
@@ -1371,10 +1227,8 @@ function ProductItem({
 
     <a
       href="#productos"
-
       className="
         group
-        cursor-pointer
         rounded-xl
         p-3
         transition-all
@@ -1383,9 +1237,6 @@ function ProductItem({
         hover:bg-slate-50
       "
     >
-
-
-      {/* ICONO */}
 
       <div
         className="
@@ -1421,9 +1272,6 @@ function ProductItem({
       </div>
 
 
-
-      {/* TÍTULO */}
-
       <h4
         className="
           text-sm
@@ -1435,14 +1283,9 @@ function ProductItem({
           group-hover:text-[#302b80]
         "
       >
-
         {title}
-
       </h4>
 
-
-
-      {/* DESCRIPCIÓN */}
 
       <p
         className="
@@ -1452,14 +1295,9 @@ function ProductItem({
           text-slate-500
         "
       >
-
         {description}
-
       </p>
 
-
-
-      {/* LINK */}
 
       <span
         className="
@@ -1485,7 +1323,6 @@ function ProductItem({
         />
 
       </span>
-
 
     </a>
 

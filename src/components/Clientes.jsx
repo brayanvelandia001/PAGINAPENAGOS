@@ -75,7 +75,7 @@ function Clientes({
           "No clients found.",
 
         final:
-          "Growing together",
+          "Growing together"
 
       }
 
@@ -100,27 +100,30 @@ function Clientes({
           "No se encontraron clientes.",
 
         final:
-          "Creciendo juntos",
+          "Creciendo juntos"
 
       };
 
 
   /* ============================================================
-     CARGAR TODOS LOS CLIENTES DESDE WORDPRESS
+     CARGAR CLIENTES
 
      IMPORTANTE:
 
-     Los clientes se identifican EXCLUSIVAMENTE
-     por Alternative Text:
+     Ya NO recorremos toda la biblioteca de WordPress.
 
-       cliente-penagos-01
-       cliente-penagos-02
-       cliente-penagos-03
-       cliente-penagos-04
+     Antes:
 
-     NO buscamos por nombre de archivo.
-     NO buscamos por título.
-     NO buscamos máquinas.
+       media?page=1
+       media?page=2
+       media?page=3
+       ...
+
+     Ahora:
+
+       media?search=cliente-penagos
+
+     WordPress hace el filtro directamente.
   ============================================================ */
 
   useEffect(() => {
@@ -144,7 +147,7 @@ function Clientes({
         );
 
         console.log(
-          "BUSCANDO CLIENTES PENAGOS"
+          "🔥 CLIENTES: BUSQUEDA OPTIMIZADA"
         );
 
         console.log(
@@ -153,174 +156,111 @@ function Clientes({
 
 
         /* ======================================================
-           ARRAY DONDE GUARDAREMOS LOS CLIENTES
+           CONSULTA ÚNICA
         ====================================================== */
 
-        const clientesEncontrados = [];
+        const url =
+          "https://penagos.com/wp-json/wp/v2/media" +
+          "?search=cliente-penagos" +
+          "&media_type=image" +
+          "&per_page=100";
+
+
+        console.log(
+          "📡 CONSULTANDO:",
+          url
+        );
 
 
         /* ======================================================
-           PAGINACIÓN WORDPRESS
+           FETCH
         ====================================================== */
 
-        let pagina = 1;
-
-        let totalPaginas = 1;
-
-
-        /* ======================================================
-           CONSULTAR TODAS LAS PÁGINAS
-        ====================================================== */
-
-        while (
-          pagina <= totalPaginas
-        ) {
-
-          console.log(
-            `Consultando página ${pagina} de ${totalPaginas}...`
-          );
-
-
-          /* ====================================================
-             CACHE BUSTER
-          ==================================================== */
-
-          const cacheBuster =
-            Date.now();
-
-
-          const url =
-            `https://penagos.com/wp-json/wp/v2/media?per_page=100&page=${pagina}&_=${cacheBuster}`;
-
-
-          console.log(
-            "URL:",
+        const respuesta =
+          await fetch(
             url
           );
 
 
-          const respuesta =
-            await fetch(
-              url,
-              {
-                cache:
-                  "no-store"
-              }
-            );
+        console.log(
+          "📡 STATUS:",
+          respuesta.status
+        );
 
 
-          console.log(
-            `STATUS PÁGINA ${pagina}:`,
-            respuesta.status
+        /* ======================================================
+           ERROR HTTP
+        ====================================================== */
+
+        if (
+          !respuesta.ok
+        ) {
+
+          throw new Error(
+            `WordPress respondió con HTTP ${respuesta.status}`
           );
 
-
-          /* ====================================================
-             WORDPRESS DEVUELVE 400 SI LA PÁGINA NO EXISTE
-          ==================================================== */
-
-          if (
-            respuesta.status === 400
-          ) {
-
-            console.log(
-              `La página ${pagina} no existe. Terminando búsqueda.`
-            );
-
-            break;
-
-          }
+        }
 
 
-          /* ====================================================
-             OTROS ERRORES
-          ==================================================== */
+        /* ======================================================
+           JSON
+        ====================================================== */
 
-          if (
-            !respuesta.ok
-          ) {
-
-            throw new Error(
-              `Error WordPress: ${respuesta.status}`
-            );
-
-          }
+        const datos =
+          await respuesta.json();
 
 
-          /* ====================================================
-             LEER TOTAL DE PÁGINAS
-          ==================================================== */
-
-          if (
-            pagina === 1
-          ) {
-
-            const encabezadoTotalPaginas =
-              respuesta.headers.get(
-                "X-WP-TotalPages"
-              );
+        console.log(
+          "📦 RESULTADOS WORDPRESS:",
+          datos.length
+        );
 
 
-            if (
-              encabezadoTotalPaginas
-            ) {
+        /* ======================================================
+           SI EL COMPONENTE FUE DESMONTADO
+        ====================================================== */
 
-              totalPaginas =
-                parseInt(
-                  encabezadoTotalPaginas,
-                  10
-                );
+        if (
+          cancelado
+        ) {
 
-            }
+          return;
 
-
-            console.log(
-              "TOTAL DE PÁGINAS WORDPRESS:",
-              totalPaginas
-            );
-
-          }
+        }
 
 
-          /* ====================================================
-             CONVERTIR RESPUESTA A JSON
-          ==================================================== */
+        /* ======================================================
+           VERIFICAR QUE SEA ARRAY
+        ====================================================== */
 
-          const datos =
-            await respuesta.json();
+        if (
+          !Array.isArray(datos)
+        ) {
 
-
-          console.log(
-            `MEDIA EN PÁGINA ${pagina}:`,
-            datos.length
+          throw new Error(
+            "WordPress no devolvió un array."
           );
 
-
-          /* ====================================================
-             SI NO HAY RESULTADOS
-          ==================================================== */
-
-          if (
-            !datos ||
-            datos.length === 0
-          ) {
-
-            console.log(
-              "No hay más imágenes."
-            );
-
-            break;
-
-          }
+        }
 
 
-          /* ====================================================
-             BUSCAR CLIENTES
+        /* ======================================================
+           FILTRAR CLIENTES
 
-             SOLO Alternative Text
-          ==================================================== */
+           SOLO:
 
-          datos.forEach(
+             media_type = image
+
+           Y:
+
+             alt_text empieza por
+
+             cliente-penagos-
+        ====================================================== */
+
+        const clientesEncontrados =
+          datos.filter(
             (
               item
             ) => {
@@ -332,83 +272,20 @@ function Clientes({
                   ?.toLowerCase();
 
 
-              /* ================================================
-                 CLIENTES POTENCIALES
-              ================================================= */
+              return (
 
-              if (
-                alt &&
-                alt.includes(
-                  "cliente-penagos"
-                )
-              ) {
-
-                console.log(
-                  "POSIBLE CLIENTE ENCONTRADO:",
-                  {
-                    id:
-                      item.id,
-
-                    alt:
-                      item.alt_text,
-
-                    tipo:
-                      item.media_type,
-
-                    url:
-                      item.source_url
-                  }
-                );
-
-              }
-
-
-              /* ================================================
-                 FILTRO DEFINITIVO
-              ================================================= */
-
-              if (
+                item?.media_type === "image" &&
 
                 alt &&
 
                 alt.startsWith(
                   "cliente-penagos-"
-                ) &&
+                )
 
-                item?.media_type === "image"
-
-              ) {
-
-                clientesEncontrados.push(
-                  item
-                );
-
-              }
+              );
 
             }
           );
-
-
-          /* ====================================================
-             SIGUIENTE PÁGINA
-          ==================================================== */
-
-          pagina++;
-
-        }
-
-
-        /* ======================================================
-           SI EL COMPONENTE YA FUE DESMONTADO
-        ====================================================== */
-
-        if (
-          cancelado
-        ) {
-
-          return;
-
-        }
 
 
         /* ======================================================
@@ -422,8 +299,11 @@ function Clientes({
                 (
                   cliente
                 ) => [
+
                   cliente.id,
+
                   cliente
+
                 ]
               )
             ).values()
@@ -431,7 +311,12 @@ function Clientes({
 
 
         /* ======================================================
-           ORDENAR POR ALTERNATIVE TEXT
+           ORDENAR
+
+           cliente-penagos-01
+           cliente-penagos-02
+           cliente-penagos-03
+           ...
         ====================================================== */
 
         clientesUnicos.sort(
@@ -465,7 +350,7 @@ function Clientes({
 
 
         /* ======================================================
-           RESULTADOS
+           LOG RESULTADOS
         ====================================================== */
 
         console.log(
@@ -473,16 +358,12 @@ function Clientes({
         );
 
         console.log(
-          "BÚSQUEDA TERMINADA"
+          "✅ CLIENTES ENCONTRADOS:",
+          clientesUnicos.length
         );
 
         console.log(
           "=========================================="
-        );
-
-        console.log(
-          "TOTAL CLIENTES ENCONTRADOS:",
-          clientesUnicos.length
         );
 
 
@@ -494,7 +375,6 @@ function Clientes({
 
             console.log(
               `${index + 1}.`,
-              "ALT:",
               cliente.alt_text,
               "| ID:",
               cliente.id,
@@ -512,7 +392,7 @@ function Clientes({
 
 
         /* ======================================================
-           SI NO ENCONTRÓ NINGUNO
+           SIN RESULTADOS
         ====================================================== */
 
         if (
@@ -520,11 +400,11 @@ function Clientes({
         ) {
 
           console.warn(
-            "NO SE ENCONTRARON CLIENTES."
+            "⚠️ NO SE ENCONTRARON CLIENTES."
           );
 
           console.warn(
-            "Verifica que el Alternative Text sea exactamente:"
+            "Verifica que el Alternative Text sea:"
           );
 
           console.warn(
@@ -537,10 +417,6 @@ function Clientes({
 
           console.warn(
             "cliente-penagos-03"
-          );
-
-          console.warn(
-            "cliente-penagos-04"
           );
 
         }
@@ -556,7 +432,7 @@ function Clientes({
 
 
       } catch (
-        error
+        err
       ) {
 
         console.error(
@@ -564,11 +440,11 @@ function Clientes({
         );
 
         console.error(
-          "ERROR CLIENTES:"
+          "❌ ERROR CARGANDO CLIENTES"
         );
 
         console.error(
-          error
+          err
         );
 
         console.error(
@@ -643,9 +519,9 @@ function Clientes({
     >
 
 
-      {/* ======================================================
+      {/* ========================================================
           DECORACIÓN SUPERIOR
-      ====================================================== */}
+      ======================================================== */}
 
       <div
         className="
@@ -663,9 +539,9 @@ function Clientes({
       />
 
 
-      {/* ======================================================
+      {/* ========================================================
           DECORACIÓN INFERIOR
-      ====================================================== */}
+      ======================================================== */}
 
       <div
         className="
@@ -683,9 +559,9 @@ function Clientes({
       />
 
 
-      {/* ======================================================
+      {/* ========================================================
           LÍNEA SUPERIOR
-      ====================================================== */}
+      ======================================================== */}
 
       <div
         className="
@@ -702,9 +578,9 @@ function Clientes({
       />
 
 
-      {/* ======================================================
+      {/* ========================================================
           CONTENEDOR
-      ====================================================== */}
+      ======================================================== */}
 
       <div
         className="
@@ -717,9 +593,9 @@ function Clientes({
       >
 
 
-        {/* ====================================================
+        {/* ======================================================
             CABECERA
-        ==================================================== */}
+        ====================================================== */}
 
         <div
           className="
@@ -730,9 +606,9 @@ function Clientes({
         >
 
 
-          {/* ==================================================
+          {/* ====================================================
               EYEBROW
-          ================================================== */}
+          ==================================================== */}
 
           <div
             className="
@@ -778,9 +654,9 @@ function Clientes({
           </div>
 
 
-          {/* ==================================================
+          {/* ====================================================
               TÍTULO
-          ================================================== */}
+          ==================================================== */}
 
           <h2
             className="
@@ -832,9 +708,9 @@ function Clientes({
           </h2>
 
 
-          {/* ==================================================
+          {/* ====================================================
               DESCRIPCIÓN
-          ================================================== */}
+          ==================================================== */}
 
           <p
             className="
@@ -855,9 +731,9 @@ function Clientes({
         </div>
 
 
-        {/* ====================================================
+        {/* ======================================================
             ÁREA CLIENTES
-        ==================================================== */}
+        ====================================================== */}
 
         <div
           className="
@@ -867,9 +743,9 @@ function Clientes({
         >
 
 
-          {/* ==================================================
+          {/* ====================================================
               LOADING
-          ================================================== */}
+          ==================================================== */}
 
           {cargando && (
 
@@ -923,9 +799,9 @@ function Clientes({
           )}
 
 
-          {/* ==================================================
+          {/* ====================================================
               ERROR
-          ================================================== */}
+          ==================================================== */}
 
           {!cargando &&
             error && (
@@ -956,9 +832,9 @@ function Clientes({
           )}
 
 
-          {/* ==================================================
-              CARRUSEL CONTINUO
-          ================================================== */}
+          {/* ====================================================
+              CARRUSEL
+          ==================================================== */}
 
           {!cargando &&
             !error &&
@@ -970,9 +846,10 @@ function Clientes({
               "
             >
 
-              {/* =================================================
+
+              {/* ==================================================
                   DEGRADADO IZQUIERDO
-              ================================================= */}
+              ================================================== */}
 
               <div
                 className="
@@ -991,9 +868,9 @@ function Clientes({
               />
 
 
-              {/* =================================================
+              {/* ==================================================
                   DEGRADADO DERECHO
-              ================================================= */}
+              ================================================== */}
 
               <div
                 className="
@@ -1019,18 +896,10 @@ function Clientes({
                 ]}
 
 
-                /* =================================================
-                   LOOP
-                ================================================= */
-
                 loop={
                   true
                 }
 
-
-                /* =================================================
-                   AUTOPLAY CONTINUO
-                ================================================= */
 
                 autoplay={{
 
@@ -1041,44 +910,25 @@ function Clientes({
                     false,
 
                   pauseOnMouseEnter:
-                    true,
+                    true
 
                 }}
 
 
-                /* =================================================
-                   VELOCIDAD
-
-                   Menor número = más rápido
-                   Mayor número = más lento
-                ================================================= */
-
                 speed={
-                  1200
+                  1000
                 }
 
-
-                /* =================================================
-                   ESPACIO
-                ================================================= */
 
                 spaceBetween={
                   18
                 }
 
 
-                /* =================================================
-                   MÓVIL
-                ================================================= */
-
                 slidesPerView={
                   2
                 }
 
-
-                /* =================================================
-                   RESPONSIVE
-                ================================================= */
 
                 breakpoints={{
 
@@ -1088,7 +938,7 @@ function Clientes({
                       2,
 
                     spaceBetween:
-                      18,
+                      18
 
                   },
 
@@ -1099,7 +949,7 @@ function Clientes({
                       3,
 
                     spaceBetween:
-                      20,
+                      20
 
                   },
 
@@ -1110,7 +960,7 @@ function Clientes({
                       4,
 
                     spaceBetween:
-                      22,
+                      22
 
                   },
 
@@ -1121,7 +971,7 @@ function Clientes({
                       5,
 
                     spaceBetween:
-                      24,
+                      24
 
                   },
 
@@ -1132,9 +982,9 @@ function Clientes({
                       6,
 
                     spaceBetween:
-                      26,
+                      26
 
-                  },
+                  }
 
                 }}
 
@@ -1174,9 +1024,9 @@ function Clientes({
           )}
 
 
-          {/* ==================================================
+          {/* ====================================================
               SIN CLIENTES
-          ================================================== */}
+          ==================================================== */}
 
           {!cargando &&
             !error &&
@@ -1200,9 +1050,9 @@ function Clientes({
         </div>
 
 
-        {/* ====================================================
+        {/* ======================================================
             FRASE FINAL
-        ==================================================== */}
+        ====================================================== */}
 
         {!cargando &&
           !error &&
@@ -1281,9 +1131,15 @@ function ClienteCard({
 
   /* ============================================================
      IMAGEN
+
+     Usamos MEDIUM cuando WordPress la tiene.
+
+     Si no existe:
+       usamos source_url original.
   ============================================================ */
 
   const imagen =
+    cliente?.media_details?.sizes?.medium?.source_url ||
     cliente?.source_url;
 
 
@@ -1328,9 +1184,9 @@ function ClienteCard({
     >
 
 
-      {/* ======================================================
+      {/* ========================================================
           BRILLO
-      ====================================================== */}
+      ======================================================== */}
 
       <div
         className="
@@ -1351,9 +1207,9 @@ function ClienteCard({
       />
 
 
-      {/* ======================================================
+      {/* ========================================================
           LÍNEA INFERIOR
-      ====================================================== */}
+      ======================================================== */}
 
       <div
         className="
@@ -1371,9 +1227,9 @@ function ClienteCard({
       />
 
 
-      {/* ======================================================
+      {/* ========================================================
           LOGO
-      ====================================================== */}
+      ======================================================== */}
 
       {imagen && (
 
@@ -1381,13 +1237,19 @@ function ClienteCard({
           src={
             imagen
           }
+
           alt={
             nombre
           }
+
           title={
             nombre
           }
+
           loading="lazy"
+
+          decoding="async"
+
           className="
             relative
             z-10

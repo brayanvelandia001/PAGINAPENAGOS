@@ -19,7 +19,12 @@ import {
 
 
 
-function Noticias() {
+function Noticias({
+  language
+}) {
+
+
+  const isEnglish = language === "EN";
 
 
   const [noticias, setNoticias] = useState([]);
@@ -302,7 +307,11 @@ function Noticias() {
             "
           >
 
-            No pudimos cargar las noticias
+            {
+              isEnglish
+                ? "We couldn't load the news"
+                : "No pudimos cargar las noticias"
+            }
 
           </h2>
 
@@ -315,7 +324,11 @@ function Noticias() {
             "
           >
 
-            Intenta nuevamente en unos segundos.
+            {
+              isEnglish
+                ? "Please try again in a few seconds."
+                : "Intenta nuevamente en unos segundos."
+            }
 
           </p>
 
@@ -349,7 +362,11 @@ function Noticias() {
 
             <RefreshCw size={16} />
 
-            Intentar nuevamente
+            {
+              isEnglish
+                ? "Try again"
+                : "Intentar nuevamente"
+            }
 
           </button>
 
@@ -413,7 +430,11 @@ function Noticias() {
             "
           >
 
-            No hay noticias disponibles
+            {
+              isEnglish
+                ? "No news available"
+                : "No hay noticias disponibles"
+            }
 
           </h2>
 
@@ -444,7 +465,11 @@ function Noticias() {
 
             <RefreshCw size={16} />
 
-            Actualizar
+            {
+              isEnglish
+                ? "Refresh"
+                : "Actualizar"
+            }
 
           </button>
 
@@ -511,7 +536,11 @@ function Noticias() {
             "
           >
 
-            Noticias
+            {
+              isEnglish
+                ? "News"
+                : "Noticias"
+            }
 
           </h2>
 
@@ -525,9 +554,11 @@ function Noticias() {
             "
           >
 
-            Conoce nuestras novedades,
-            proyectos, eventos y avances
-            de Penagos.
+            {
+              isEnglish
+                ? "Discover our latest news, projects, events and advances at Penagos."
+                : "Conoce nuestras novedades, proyectos, eventos y avances de Penagos."
+            }
 
           </p>
 
@@ -645,7 +676,9 @@ function Noticias() {
                   new Date(
                     noticiaPrincipal.date
                   ).toLocaleDateString(
-                    "es-CO",
+                    isEnglish
+                      ? "en-US"
+                      : "es-CO",
                     {
                       day: "numeric",
                       month: "long",
@@ -727,7 +760,11 @@ function Noticias() {
                 "
               >
 
-                Leer noticia completa
+                {
+                  isEnglish
+                    ? "Read full article"
+                    : "Leer noticia completa"
+                }
 
                 <ArrowRight size={18} />
 
@@ -852,7 +889,9 @@ function Noticias() {
                         new Date(
                           noticia.date
                         ).toLocaleDateString(
-                          "es-CO",
+                          isEnglish
+                            ? "en-US"
+                            : "es-CO",
                           {
                             day: "numeric",
                             month: "short",
@@ -906,7 +945,11 @@ function Noticias() {
                       "
                     >
 
-                      Leer noticia
+                      {
+                        isEnglish
+                          ? "Read article"
+                          : "Leer noticia"
+                      }
 
                       <ArrowRight size={15} />
 
