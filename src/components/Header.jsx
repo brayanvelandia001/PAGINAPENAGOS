@@ -277,7 +277,7 @@ function Header({
             <span className="h-4 w-px bg-slate-300" />
 
 
-            {/* IDIOMA */}
+           {/* IDIOMA */}
 
             <div className="relative">
 
@@ -286,6 +286,7 @@ function Header({
                 onClick={() =>
                   setLanguageOpen((prev) => !prev)
                 }
+                style={{ cursor: "pointer" }}
                 className="
                   flex
                   items-center
@@ -345,11 +346,10 @@ function Header({
                   <button
                     type="button"
                     onClick={() => {
-
                       changeLanguage("ES");
                       setLanguageOpen(false);
-
                     }}
+                    style={{ cursor: "pointer" }}
                     className="
                       flex
                       w-full
@@ -391,11 +391,10 @@ function Header({
                   <button
                     type="button"
                     onClick={() => {
-
                       changeLanguage("EN");
                       setLanguageOpen(false);
-
                     }}
+                    style={{ cursor: "pointer" }}
                     className="
                       flex
                       w-full
@@ -828,9 +827,40 @@ function Header({
 
             {/* CONTACTO */}
 
-            <NavLink href="#contacto">
+            <Link
+              to="/contactanos"
+              className="
+                group
+                relative
+                px-4
+                py-8
+                text-[13px]
+                font-bold
+                text-[#10152f]
+                transition-all
+                duration-200
+                hover:text-[#302b80]
+              "
+            >
               {t.contact}
-            </NavLink>
+
+              <span
+                className="
+                  absolute
+                  bottom-5
+                  left-4
+                  right-4
+                  h-[2px]
+                  origin-left
+                  scale-x-0
+                  rounded-full
+                  bg-[#302b80]
+                  transition-transform
+                  duration-300
+                  group-hover:scale-x-100
+                "
+              />
+            </Link>
 
           </nav>
 

@@ -12,6 +12,7 @@ import {
   useState
 } from "react";
 
+import "leaflet/dist/leaflet.css";
 
 // ============================================================
 // COMPONENTES
@@ -39,6 +40,7 @@ import Pagos from "./pages/Pagos";
 import Soporte from "./pages/Soporte";
 import QuienesSomos from "./pages/QuienesSomos";
 import ProteccionDatos from "./pages/ProteccionDatos";
+import Contactanos from "./pages/Contactanos";
 
 
 // ============================================================
@@ -292,8 +294,6 @@ function AppContenido() {
 
   // ==========================================================
   // TIMER ACTUAL
-  //
-  // Evita que varios setTimeout se acumulen.
   // ==========================================================
 
   const timerRef = useRef(null);
@@ -379,7 +379,6 @@ function AppContenido() {
   const changeLanguage = useCallback(
 
     (newLanguage) => {
-
 
       // No hacer nada si ya estamos
       // en ese idioma
@@ -566,6 +565,23 @@ function AppContenido() {
           element={
 
             <ProteccionDatos
+              language={language}
+              changeLanguage={changeLanguage}
+            />
+
+          }
+        />
+
+
+        {/* ====================================================
+            CONTACTANOS
+        ==================================================== */}
+
+        <Route
+          path="/contactanos"
+          element={
+
+            <Contactanos
               language={language}
               changeLanguage={changeLanguage}
             />

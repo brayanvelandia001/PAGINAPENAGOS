@@ -1,147 +1,214 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const SoporteForm = () => {
-  const [form, setForm] = useState({
-    nombre: "",
-    apellidos: "",
-    email: "",
-    telefono: "",
-    pais: "",
-    ciudad: "",
-    descripcion: "",
-    terminos: false,
-  });
+const SoporteForm = ({ language = "ES" }) => {
+  const isEnglish = language === "EN";
 
-  const [estado, setEstado] = useState("formulario");
-  // formulario | enviando | exitoso | error
+  // ============================================================
+  // ESTADOS
+  // ============================================================
 
-  const [mensajeError, setMensajeError] = useState("");
+  const [enviado, setEnviado] = useState(false);
+  const [recargarFormulario, setRecargarFormulario] = useState(0);
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+  // ============================================================
+  // FORMULARIOS HUBSPOT
+  // ============================================================
 
-    setForm((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
-  };
+  const formId = isEnglish
+    ? "69d754f2-07a2-4943-9a3c-0187b6eb18e4"
+    : "3af3cb74-d050-4501-aebf-3c8e26fee359";
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  // ============================================================
+  // CARGAR HUBSPOT
+  // ============================================================
 
-    if (!form.terminos) {
-      alert("Debe aceptar los términos y condiciones para continuar.");
-      return;
-    }
+  useEffect(() => {
+    setEnviado(false);
 
-    setEstado("enviando");
-    setMensajeError("");
+    const crearFormulario = () => {
+      const contenedor = document.getElementById("hubspot-soporte");
 
-    try {
-      // =====================================================
-      // PREPARAR DATOS
-      // =====================================================
+      if (!contenedor) {
+        return;
+      }
 
-      const datos = new FormData();
+      // Limpiar cualquier formulario anterior
+      contenedor.innerHTML = "";
 
-      datos.append("nombre", form.nombre.trim());
-      datos.append("apellidos", form.apellidos.trim());
-      datos.append("email", form.email.trim());
-      datos.append("telefono", form.telefono.trim());
-      datos.append("pais", form.pais.trim());
-      datos.append("ciudad", form.ciudad.trim());
-      datos.append("descripcion", form.descripcion.trim());
-      datos.append("terminos", form.terminos ? "1" : "0");
+      if (!window.hbspt || !window.hbspt.forms) {
+        console.warn("HubSpot todavía no está disponible");
+        return;
+      }
 
-      // =====================================================
-      // ENVIAR A PHP EN PRODUCCIÓN
-      // =====================================================
+      window.hbspt.forms.create({
+        region: "na1",
+        portalId: "8988956",
+        formId: formId,
+        target: "#hubspot-soporte",
 
-      const respuesta = await fetch(
-        "https://react.penagos.com/soporte.php",
-        {
-          method: "POST",
-          body: datos,
+        // ======================================================
+        // FORMULARIO ENVIADO
+        // ======================================================
+
+        onFormSubmitted: function () {
+          console.log(
+            "Formulario de soporte enviado correctamente"
+          );
+
+          setEnviado(true);
+        },
+      });
+    };
+
+    // ============================================================
+    // HUBSPOT YA ESTÁ CARGADO
+    // ============================================================
+
+    if (window.hbspt && window.hbspt.forms) {
+      setTimeout(() => {
+        crearFormulario();
+      }, 50);
+
+      return () => {
+        const contenedor =
+          document.getElementById("hubspot-soporte");
+
+        if (contenedor) {
+          contenedor.innerHTML = "";
         }
-      );
-
-      // =====================================================
-      // LEER RESPUESTA
-      // =====================================================
-
-      let resultado;
-
-      try {
-        resultado = await respuesta.json();
-      } catch {
-        throw new Error(
-          "El servidor no devolvió una respuesta válida."
-        );
-      }
-
-      console.log("Respuesta del servidor:", resultado);
-
-      // =====================================================
-      // VALIDAR RESPUESTA DEL PHP
-      // =====================================================
-
-      if (!respuesta.ok || !resultado.success) {
-        throw new Error(
-          resultado.message ||
-            "No fue posible enviar la solicitud."
-        );
-      }
-
-      // =====================================================
-      // ÉXITO
-      // =====================================================
-
-      setEstado("exitoso");
-
-    } catch (error) {
-      console.error(
-        "Error enviando formulario:",
-        error
-      );
-
-      setMensajeError(
-        error.message ||
-          "No fue posible enviar la solicitud. Por favor inténtelo nuevamente."
-      );
-
-      setEstado("error");
+      };
     }
+
+    // ============================================================
+    // CARGAR SCRIPT DE HUBSPOT
+    // ============================================================
+
+    const script = document.createElement("script");
+
+    script.src = "https://js.hsforms.net/forms/embed/v2.js";
+    script.charset = "utf-8";
+    script.type = "text/javascript";
+    script.async = true;
+
+    script.onload = () => {
+      crearFormulario();
+    };
+
+    document.body.appendChild(script);
+
+    // ============================================================
+    // LIMPIEZA
+    // ============================================================
+
+    return () => {
+      const contenedor =
+        document.getElementById("hubspot-soporte");
+
+      if (contenedor) {
+        contenedor.innerHTML = "";
+      }
+    };
+  }, [formId, recargarFormulario]);
+
+  // ============================================================
+  // TEXTOS
+  // ============================================================
+
+  const textos = {
+    ES: {
+      etiqueta: "Atención al cliente",
+
+      titulo1: "¿Necesita",
+
+      titulo2: "ayuda?",
+
+      descripcion:
+        "Complete el siguiente formulario y nuestro equipo de servicio y post venta podrá revisar su solicitud y ponerse en contacto con usted.",
+
+      telefono: "Teléfono",
+
+      correo: "Correo electrónico",
+
+      importante: "Importante:",
+
+      campos:
+        "Los campos marcados con * son obligatorios.",
+
+      detalle:
+        "Procure proporcionar información detallada sobre su solicitud para facilitar nuestra atención.",
+
+      formularioTitulo:
+        "Consultas Post Venta",
+
+      formularioDescripcion:
+        "Diligencie sus datos y cuéntenos cómo podemos ayudarle.",
+
+      exitoTitulo:
+        "¡Solicitud enviada correctamente!",
+
+      exitoDescripcion:
+        "Hemos recibido su solicitud. Nuestro equipo de servicio y post venta revisará la información y se pondrá en contacto con usted.",
+
+      nuevoFormulario:
+        "Enviar otra solicitud",
+    },
+
+    EN: {
+      etiqueta: "Customer Service",
+
+      titulo1: "Do you",
+
+      titulo2: "need help?",
+
+      descripcion:
+        "Complete the following form and our service and after-sales team will review your request and contact you.",
+
+      telefono: "Phone",
+
+      correo: "Email",
+
+      importante: "Important:",
+
+      campos:
+        "Fields marked with * are required.",
+
+      detalle:
+        "Please provide detailed information about your request to help us assist you.",
+
+      formularioTitulo:
+        "After-Sales Support",
+
+      formularioDescripcion:
+        "Enter your information and tell us how we can help you.",
+
+      exitoTitulo:
+        "Request sent successfully!",
+
+      exitoDescripcion:
+        "We have received your request. Our service and after-sales team will review the information and contact you.",
+
+      nuevoFormulario:
+        "Send another request",
+    },
   };
 
-  const limpiarFormulario = () => {
-    setForm({
-      nombre: "",
-      apellidos: "",
-      email: "",
-      telefono: "",
-      pais: "",
-      ciudad: "",
-      descripcion: "",
-      terminos: false,
-    });
+  const t = textos[isEnglish ? "EN" : "ES"];
 
-    setMensajeError("");
-    setEstado("formulario");
-  };
+  // ============================================================
+  // NUEVA SOLICITUD
+  // ============================================================
 
-  // =====================================================
-  // LOGO PENAGOS
-  // =====================================================
+  const nuevoFormulario = () => {
+    setEnviado(false);
 
-  const LogoPenagos = () => {
-    return (
-      <img
-        src="https://penagos.com/wp-content/uploads/2026/08/favicon.png"
-        alt="Penagos"
-        className="h-16 w-16 object-contain"
-      />
+    setRecargarFormulario(
+      (actual) => actual + 1
     );
   };
+
+  // ============================================================
+  // RENDER
+  // ============================================================
 
   return (
     <section className="w-full bg-white py-14">
@@ -150,69 +217,104 @@ const SoporteForm = () => {
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-[0.8fr_1.5fr]">
 
           {/* =====================================================
-              INFORMACIÓN DE CONTACTO
+              INFORMACIÓN
           ===================================================== */}
 
           <div className="flex flex-col justify-start">
 
-            <span className="mb-3 text-sm font-semibold uppercase tracking-wider text-blue-600">
-              Atención al cliente
+            <span
+              className="mb-3 text-sm font-semibold uppercase tracking-wider"
+              style={{ color: "#00AEEF" }}
+            >
+              {t.etiqueta}
             </span>
 
             <h2 className="text-3xl font-bold leading-tight text-gray-800">
-              ¿Necesita
+
+              {t.titulo1}
+
               <br />
-              <span className="text-blue-600">
-                ayuda?
+
+              <span style={{ color: "#00AEEF" }}>
+                {t.titulo2}
               </span>
+
             </h2>
 
             <p className="mt-5 text-sm leading-7 text-gray-500">
-              Complete el siguiente formulario y nuestro equipo
-              de servicio y post venta podrá revisar su solicitud
-              y ponerse en contacto con usted.
+              {t.descripcion}
             </p>
 
-            {/* TELÉFONO */}
+            {/* =================================================
+                TELÉFONO
+            ================================================= */}
 
             <div className="mt-8 flex items-start gap-4">
 
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+              <div
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+                style={{
+                  backgroundColor: "#E6F7FD",
+                  color: "#00AEEF",
+                }}
+              >
                 ☎
               </div>
 
               <div>
+
                 <p className="text-xs font-semibold uppercase text-gray-400">
-                  Teléfono
+                  {t.telefono}
                 </p>
 
                 <a
                   href="tel:+573102987026"
-                  className="text-sm font-medium text-gray-700 transition hover:text-blue-600"
+                  className="text-sm font-medium text-gray-700 transition"
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = "#00AEEF";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = "";
+                  }}
                 >
                   +57 310 298 7026
                 </a>
+
               </div>
 
             </div>
 
-            {/* CORREO */}
+            {/* =================================================
+                CORREO
+            ================================================= */}
 
             <div className="mt-5 flex items-start gap-4">
 
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600">
+              <div
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+                style={{
+                  backgroundColor: "#E6F7FD",
+                  color: "#00AEEF",
+                }}
+              >
                 ✉
               </div>
 
               <div>
 
                 <p className="text-xs font-semibold uppercase text-gray-400">
-                  Correo electrónico
+                  {t.correo}
                 </p>
 
                 <a
                   href="mailto:servicioalcliente@penagos.com"
-                  className="text-sm font-medium text-gray-700 transition hover:text-blue-600"
+                  className="text-sm font-medium text-gray-700 transition"
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = "#00AEEF";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = "";
+                  }}
                 >
                   servicioalcliente@penagos.com
                 </a>
@@ -221,19 +323,32 @@ const SoporteForm = () => {
 
             </div>
 
-            {/* AVISO */}
+            {/* =================================================
+                AVISO
+            ================================================= */}
 
-            <div className="mt-8 rounded-xl border border-blue-100 bg-blue-50 p-5">
+            <div
+              className="mt-8 rounded-xl p-5"
+              style={{
+                border: "1px solid #B8E9F8",
+                backgroundColor: "#F0FBFE",
+              }}
+            >
 
-              <p className="text-xs leading-6 text-blue-800">
+              <p
+                className="text-xs leading-6"
+                style={{ color: "#007FA8" }}
+              >
 
-                <strong>Importante:</strong>{" "}
-                Los campos marcados con{" "}
-                <span className="font-bold">*</span>{" "}
-                son obligatorios.
+                <strong>
+                  {t.importante}
+                </strong>{" "}
 
-                Procure proporcionar información detallada
-                sobre su solicitud para facilitar nuestra atención.
+                {t.campos}
+
+                <br />
+
+                {t.detalle}
 
               </p>
 
@@ -242,367 +357,117 @@ const SoporteForm = () => {
           </div>
 
           {/* =====================================================
-              FORMULARIO
+              FORMULARIO / ÉXITO
           ===================================================== */}
 
           <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-lg md:p-8">
 
-            {estado === "formulario" && (
+            {!enviado ? (
+
               <>
+
+                {/* =================================================
+                    CABECERA DEL FORMULARIO
+                ================================================= */}
 
                 <div className="mb-7">
 
+                  {/* =================================================
+                      LOGO PENAGOS
+                  ================================================= */}
+
+                  <img
+                    src="https://penagos.com/wp-content/uploads/2020/03/Logotipo-Penagos-Hermanos-PNG.png"
+                    alt="Penagos Hermanos"
+                    className="mb-5 h-auto w-40 object-contain"
+                  />
+
                   <h2 className="text-2xl font-bold text-gray-800">
-                    Consultas Post Venta
+                    {t.formularioTitulo}
                   </h2>
 
                   <p className="mt-2 text-sm leading-relaxed text-gray-500">
-                    Diligencie sus datos y cuéntenos cómo podemos ayudarle.
+                    {t.formularioDescripcion}
                   </p>
 
                 </div>
 
-                <form
-                  onSubmit={handleSubmit}
-                  className="space-y-5"
-                >
+                {/* =================================================
+                    HUBSPOT
+                ================================================= */}
 
-                  {/* NOMBRE + APELLIDOS */}
-
-                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-
-                    <div>
-
-                      <label
-                        htmlFor="nombre"
-                        className="mb-2 block text-sm font-medium text-gray-700"
-                      >
-                        Nombre{" "}
-                        <span className="text-red-500">*</span>
-                      </label>
-
-                      <input
-                        id="nombre"
-                        name="nombre"
-                        type="text"
-                        required
-                        value={form.nombre}
-                        onChange={handleChange}
-                        placeholder="Ingrese su nombre"
-                        className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                      />
-
-                    </div>
-
-                    <div>
-
-                      <label
-                        htmlFor="apellidos"
-                        className="mb-2 block text-sm font-medium text-gray-700"
-                      >
-                        Apellidos{" "}
-                        <span className="text-red-500">*</span>
-                      </label>
-
-                      <input
-                        id="apellidos"
-                        name="apellidos"
-                        type="text"
-                        required
-                        value={form.apellidos}
-                        onChange={handleChange}
-                        placeholder="Ingrese sus apellidos"
-                        className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                      />
-
-                    </div>
-
-                  </div>
-
-                  {/* EMAIL + TELÉFONO */}
-
-                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-
-                    <div>
-
-                      <label
-                        htmlFor="email"
-                        className="mb-2 block text-sm font-medium text-gray-700"
-                      >
-                        Correo electrónico{" "}
-                        <span className="text-red-500">*</span>
-                      </label>
-
-                      <input
-                        id="email"
-                        name="email"
-                        type="email"
-                        required
-                        value={form.email}
-                        onChange={handleChange}
-                        placeholder="ejemplo@correo.com"
-                        className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                      />
-
-                    </div>
-
-                    <div>
-
-                      <label
-                        htmlFor="telefono"
-                        className="mb-2 block text-sm font-medium text-gray-700"
-                      >
-                        Teléfono{" "}
-                        <span className="text-red-500">*</span>
-                      </label>
-
-                      <input
-                        id="telefono"
-                        name="telefono"
-                        type="tel"
-                        required
-                        value={form.telefono}
-                        onChange={handleChange}
-                        placeholder="+57 300 000 0000"
-                        className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                      />
-
-                    </div>
-
-                  </div>
-
-                  {/* PAÍS + CIUDAD */}
-
-                  <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-
-                    <div>
-
-                      <label
-                        htmlFor="pais"
-                        className="mb-2 block text-sm font-medium text-gray-700"
-                      >
-                        País{" "}
-                        <span className="text-red-500">*</span>
-                      </label>
-
-                      <input
-                        id="pais"
-                        name="pais"
-                        type="text"
-                        required
-                        value={form.pais}
-                        onChange={handleChange}
-                        placeholder="Ej. Colombia"
-                        className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                      />
-
-                    </div>
-
-                    <div>
-
-                      <label
-                        htmlFor="ciudad"
-                        className="mb-2 block text-sm font-medium text-gray-700"
-                      >
-                        Ciudad{" "}
-                        <span className="text-red-500">*</span>
-                      </label>
-
-                      <input
-                        id="ciudad"
-                        name="ciudad"
-                        type="text"
-                        required
-                        value={form.ciudad}
-                        onChange={handleChange}
-                        placeholder="Ej. Bucaramanga"
-                        className="w-full rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                      />
-
-                    </div>
-
-                  </div>
-
-                  {/* DESCRIPCIÓN */}
-
-                  <div>
-
-                    <label
-                      htmlFor="descripcion"
-                      className="mb-2 block text-sm font-medium text-gray-700"
-                    >
-                      Descripción de la solicitud{" "}
-                      <span className="text-red-500">*</span>
-                    </label>
-
-                    <textarea
-                      id="descripcion"
-                      name="descripcion"
-                      required
-                      rows={6}
-                      value={form.descripcion}
-                      onChange={handleChange}
-                      placeholder="Describa detalladamente su solicitud, inconveniente o requerimiento..."
-                      className="w-full resize-none rounded-lg border border-gray-300 px-4 py-3 text-sm outline-none transition focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                    />
-
-                  </div>
-
-                  {/* TÉRMINOS */}
-
-                  <div className="rounded-lg bg-gray-50 p-4">
-
-                    <label className="flex cursor-pointer items-start gap-3">
-
-                      <input
-                        type="checkbox"
-                        name="terminos"
-                        checked={form.terminos}
-                        onChange={handleChange}
-                        required
-                        className="mt-1 h-4 w-4 cursor-pointer accent-blue-600"
-                      />
-
-                      <span className="text-xs leading-5 text-gray-500">
-
-                        He leído y acepto los{" "}
-
-                        <a
-                          href="/terminos-y-condiciones"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="font-medium text-blue-600 hover:underline"
-                        >
-                          términos y condiciones
-                        </a>{" "}
-
-                        y autorizo el tratamiento de mis datos personales
-                        de acuerdo con la política de privacidad de Penagos.
-
-                        <span className="ml-1 text-red-500">
-                          *
-                        </span>
-
-                      </span>
-
-                    </label>
-
-                  </div>
-
-                  {/* ENVIAR */}
-
-                  <button
-                    type="submit"
-                    disabled={estado === "enviando"}
-                    className="w-full rounded-lg bg-blue-600 px-6 py-3.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 hover:shadow-md active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70"
-                  >
-                    Enviar solicitud
-                  </button>
-
-                  <p className="text-center text-xs text-gray-400">
-                    Los campos marcados con * son obligatorios.
-                  </p>
-
-                </form>
+                <div
+                  id="hubspot-soporte"
+                  className="w-full"
+                />
 
               </>
-            )}
 
-            {/* =====================================================
-                ENVIANDO
-            ===================================================== */}
+            ) : (
 
-            {estado === "enviando" && (
-
-              <div className="flex min-h-[500px] flex-col items-center justify-center text-center">
-
-                <div className="mb-7 flex h-28 w-28 items-center justify-center rounded-full border border-gray-100 bg-white shadow-md">
-                  <LogoPenagos />
-                </div>
-
-                <div className="mb-5 h-8 w-8 animate-spin rounded-full border-4 border-gray-200 border-t-blue-600" />
-
-                <h2 className="text-2xl font-bold text-gray-800">
-                  Enviando solicitud...
-                </h2>
-
-                <p className="mt-3 max-w-md text-sm leading-relaxed text-gray-500">
-                  Estamos procesando su solicitud.
-                  Por favor espere un momento.
-                </p>
-
-              </div>
-
-            )}
-
-            {/* =====================================================
-                ÉXITO
-            ===================================================== */}
-
-            {estado === "exitoso" && (
+              /* ==================================================
+                 PANTALLA DE ÉXITO
+              ================================================== */
 
               <div className="flex min-h-[500px] flex-col items-center justify-center text-center">
 
-                <div className="mb-7 flex h-28 w-28 items-center justify-center rounded-full border border-gray-100 bg-white shadow-md">
-                  <LogoPenagos />
+                {/* =================================================
+                    LOGO
+                ================================================= */}
+
+                <img
+                  src="https://penagos.com/wp-content/uploads/2020/03/Logotipo-Penagos-Hermanos-PNG.png"
+                  alt="Penagos Hermanos"
+                  className="mb-8 h-auto w-48 object-contain"
+                />
+
+                {/* =================================================
+                    CHECK
+                ================================================= */}
+
+                <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-green-100">
+
+                  <span className="text-5xl font-bold text-green-600">
+                    ✓
+                  </span>
+
                 </div>
 
-                <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-3xl font-bold text-green-600">
-                  ✓
-                </div>
+                {/* =================================================
+                    TÍTULO
+                ================================================= */}
 
                 <h2 className="text-2xl font-bold text-gray-800">
-                  ¡Solicitud enviada!
+                  {t.exitoTitulo}
                 </h2>
 
-                <p className="mt-3 max-w-md text-sm leading-relaxed text-gray-500">
-                  Hemos recibido correctamente su solicitud.
-                  Nuestro equipo de servicio y post venta revisará
-                  la información y se pondrá en contacto con usted.
+                {/* =================================================
+                    DESCRIPCIÓN
+                ================================================= */}
+
+                <p className="mt-4 max-w-md text-sm leading-7 text-gray-500">
+                  {t.exitoDescripcion}
                 </p>
+
+                {/* =================================================
+                    BOTÓN
+                ================================================= */}
 
                 <button
                   type="button"
-                  onClick={limpiarFormulario}
-                  className="mt-7 rounded-lg border border-blue-600 px-6 py-3 text-sm font-semibold text-blue-600 transition hover:bg-blue-50"
+                  onClick={nuevoFormulario}
+                  className="mt-8 rounded-lg px-6 py-3 text-sm font-semibold text-white transition"
+                  style={{
+                    backgroundColor: "#00AEEF",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = "#008FC4";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = "#00AEEF";
+                  }}
                 >
-                  Registrar otra solicitud
-                </button>
-
-              </div>
-
-            )}
-
-            {/* =====================================================
-                ERROR
-            ===================================================== */}
-
-            {estado === "error" && (
-
-              <div className="flex min-h-[500px] flex-col items-center justify-center text-center">
-
-                <div className="mb-7 flex h-28 w-28 items-center justify-center rounded-full border border-gray-100 bg-white shadow-md">
-                  <LogoPenagos />
-                </div>
-
-                <div className="mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 text-3xl font-bold text-red-600">
-                  !
-                </div>
-
-                <h2 className="text-2xl font-bold text-gray-800">
-                  No pudimos enviar la solicitud
-                </h2>
-
-                <p className="mt-3 max-w-md text-sm leading-relaxed text-gray-500">
-                  {mensajeError}
-                </p>
-
-                <button
-                  type="button"
-                  onClick={() => setEstado("formulario")}
-                  className="mt-7 rounded-lg bg-blue-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-blue-700"
-                >
-                  Intentar nuevamente
+                  {t.nuevoFormulario}
                 </button>
 
               </div>
