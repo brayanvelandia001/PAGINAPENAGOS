@@ -1,90 +1,132 @@
-import React, {
-  useState
-} from "react";
-
+import React, { useState } from "react";
 
 /* ============================================================
    HISTORIA PENAGOS
 ============================================================ */
 
-function HistoriaPenagos({
-  language
-}) {
+function HistoriaPenagos({ language }) {
 
   const isEnglish = language === "EN";
 
-
   /* ==========================================================
      DATOS DE HISTORIA
+     
+     Cada período tiene:
+     - imageES = imagen en español
+     - imageEN = imagen en inglés
   ========================================================== */
 
   const historia = [
 
     {
       year: "1870 - 1900",
-      image:
-        "https://penagos.com/wp-content/uploads/2020/02/Nuestra-historia-Penagos-1870-1900.jpg"
+
+      imageES:
+        "https://penagos.com/wp-content/uploads/2020/02/Nuestra-historia-Penagos-1870-1900.jpg",
+
+      imageEN:
+        "https://penagos.com/wp-content/uploads/2021/03/QUIENES-SOMOS-1.jpg",
     },
 
     {
       year: "1910",
-      image:
-        "https://penagos.com/wp-content/uploads/2021/05/1900-1910-scaled.jpg"
+
+      imageES:
+        "https://penagos.com/wp-content/uploads/2021/05/1900-1910-scaled.jpg",
+
+      imageEN:
+        "https://penagos.com/wp-content/uploads/2021/03/QUIENES-SOMOS-2.jpg",
     },
 
     {
       year: "1920",
-      image:
-        "https://penagos.com/wp-content/uploads/2020/02/Nuestra-historia-Penagos-1910-1920.jpg"
+
+      imageES:
+        "https://penagos.com/wp-content/uploads/2020/02/Nuestra-historia-Penagos-1910-1920.jpg",
+
+      imageEN:
+        "https://penagos.com/wp-content/uploads/2021/03/QUIENES-SOMOS-3.jpg",
     },
 
     {
       year: "1930",
-      image:
-        "https://penagos.com/wp-content/uploads/2020/02/Nuestra-historia-Penagos-1920-1930.jpg"
+
+      imageES:
+        "https://penagos.com/wp-content/uploads/2020/02/Nuestra-historia-Penagos-1920-1930.jpg",
+
+      imageEN:
+        "https://penagos.com/wp-content/uploads/2021/03/QUIENES-SOMOS-4.jpg",
     },
 
     {
       year: "1940",
-      image:
-        "https://penagos.com/wp-content/uploads/2020/02/Nuestra-historia-Penagos-1930-1940.jpg"
+
+      imageES:
+        "https://penagos.com/wp-content/uploads/2020/02/Nuestra-historia-Penagos-1930-1940.jpg",
+
+      imageEN:
+        "https://penagos.com/wp-content/uploads/2021/03/QUIENES-SOMOS-5.jpg",
     },
 
     {
       year: "1950 - 1960",
-      image:
-        "https://penagos.com/wp-content/uploads/2021/05/1950-1960-scaled.jpg"
+
+      imageES:
+        "https://penagos.com/wp-content/uploads/2021/05/1950-1960-scaled.jpg",
+
+      imageEN:
+        "https://penagos.com/wp-content/uploads/2021/03/QUIENES-SOMOS-6.jpg",
     },
 
     {
       year: "1970 - 1980",
-      image:
-        "https://penagos.com/wp-content/uploads/2020/02/Nuestra-historia-Penagos-1970-1980.jpg"
+
+      imageES:
+        "https://penagos.com/wp-content/uploads/2020/02/Nuestra-historia-Penagos-1970-1980.jpg",
+
+      imageEN:
+        "https://penagos.com/wp-content/uploads/2021/03/QUIENES-SOMOS-7.jpg",
     },
 
     {
       year: "1990 - 2000",
-      image:
-        "https://penagos.com/wp-content/uploads/2020/02/Nuestra-historia-Penagos-1990-2000.jpg"
+
+      imageES:
+        "https://penagos.com/wp-content/uploads/2020/02/Nuestra-historia-Penagos-1990-2000.jpg",
+
+      imageEN:
+        "https://penagos.com/wp-content/uploads/2021/03/QUIENES-SOMOS-8.jpg",
     },
 
     {
       year: "2010",
-      image:
-        "https://penagos.com/wp-content/uploads/2020/02/Nuestra-historia-Penagos-2000-2010.jpg"
+
+      imageES:
+        "https://penagos.com/wp-content/uploads/2020/02/Nuestra-historia-Penagos-2000-2010.jpg",
+
+      imageEN:
+        "https://penagos.com/wp-content/uploads/2021/03/QUIENES-SOMOS-9.jpg",
     },
 
     {
       year: "2017",
-      image:
-        "https://penagos.com/wp-content/uploads/2021/05/2017-2020-scaled.jpg"
+
+      imageES:
+        "https://penagos.com/wp-content/uploads/2021/05/2017-2020-scaled.jpg",
+
+      imageEN:
+        "https://penagos.com/wp-content/uploads/2021/06/2017-2020-2-scaled.jpg",
     },
 
     {
       year: "Hoy",
-      image:
-        "https://penagos.com/wp-content/uploads/2021/06/2021-HOY-1-scaled.jpg"
-    }
+
+      imageES:
+        "https://penagos.com/wp-content/uploads/2021/06/2021-HOY-1-scaled.jpg",
+
+      imageEN:
+        "https://penagos.com/wp-content/uploads/2021/03/QUIENES-SOMOS-10.jpg",
+    },
 
   ];
 
@@ -99,8 +141,21 @@ function HistoriaPenagos({
   ] = useState(0);
 
 
+  /* ==========================================================
+     HISTORIA ACTUAL
+  ========================================================== */
+
   const historiaActual =
     historia[seleccionado];
+
+
+  /* ==========================================================
+     IMAGEN ACTUAL SEGÚN IDIOMA
+  ========================================================== */
+
+  const imagenActual = isEnglish
+    ? historiaActual.imageEN
+    : historiaActual.imageES;
 
 
   /* ==========================================================
@@ -617,8 +672,8 @@ function HistoriaPenagos({
         >
 
           <img
-            key={historiaActual.image}
-            src={historiaActual.image}
+            key={imagenActual}
+            src={imagenActual}
             alt={
               isEnglish
                 ? `Penagos history ${historiaActual.year}`
@@ -674,3 +729,4 @@ function HistoriaPenagos({
 
 
 export default HistoriaPenagos;
+

@@ -2,14 +2,15 @@ import {
   BrowserRouter,
   Routes,
   Route,
-  useLocation
+  useLocation,
+  useNavigate,
 } from "react-router-dom";
 
 import {
   useCallback,
   useEffect,
   useRef,
-  useState
+  useState,
 } from "react";
 
 import "leaflet/dist/leaflet.css";
@@ -29,7 +30,6 @@ import Clientes from "./components/Clientes";
 import BotonCredito from "./components/BotonCredito";
 import ChatPenagos from "./components/ChatPenagos";
 
-
 // ============================================================
 // PÁGINAS
 // ============================================================
@@ -42,15 +42,15 @@ import QuienesSomos from "./pages/QuienesSomos";
 import ProteccionDatos from "./pages/ProteccionDatos";
 import Contactanos from "./pages/Contactanos";
 
+// NUEVA PÁGINA
+import AgricultoresPenagos from "./pages/AgricultoresPenagos";
 
 // ============================================================
 // PANTALLA DE CARGA
 // ============================================================
 
 function PantallaCarga() {
-
   return (
-
     <div
       className="
         fixed
@@ -64,7 +64,6 @@ function PantallaCarga() {
         px-6
       "
     >
-
       <div
         className="
           flex
@@ -75,9 +74,7 @@ function PantallaCarga() {
         "
       >
 
-        {/* ==================================================
-            LOGO
-        ================================================== */}
+        {/* LOGO */}
 
         <img
           src="https://penagos.com/wp-content/uploads/2020/03/Logotipo-Penagos-Hermanos-PNG.png"
@@ -89,10 +86,7 @@ function PantallaCarga() {
           "
         />
 
-
-        {/* ==================================================
-            BARRA DE CARGA
-        ================================================== */}
+        {/* BARRA */}
 
         <div
           className="
@@ -104,7 +98,6 @@ function PantallaCarga() {
             bg-slate-200
           "
         >
-
           <div
             className="
               h-full
@@ -114,15 +107,9 @@ function PantallaCarga() {
               animate-[loadingIdioma_1.4s_ease-in-out_infinite]
             "
           />
-
         </div>
 
       </div>
-
-
-      {/* ====================================================
-          ANIMACIONES
-      ==================================================== */}
 
       <style>
         {`
@@ -146,7 +133,6 @@ function PantallaCarga() {
 
           }
 
-
           @keyframes loadingIdioma {
 
             0% {
@@ -163,11 +149,8 @@ function PantallaCarga() {
       </style>
 
     </div>
-
   );
-
 }
-
 
 // ============================================================
 // PÁGINA PRINCIPAL
@@ -176,65 +159,30 @@ function PantallaCarga() {
 function Inicio({
   language,
   changeLanguage,
-  onMaquinasListas
+  onMaquinasListas,
 }) {
-
   return (
-
-    <div
-      className="
-        min-h-screen
-        bg-white
-      "
-    >
-
-      {/* ==================================================
-          HEADER
-      ================================================== */}
+    <div className="min-h-screen bg-white">
 
       <Header
         language={language}
         changeLanguage={changeLanguage}
       />
 
-
-      {/* ==================================================
-          CONTENIDO
-      ================================================== */}
-
       <main>
-
-        {/* ==================================================
-            VIDEO
-        ================================================== */}
 
         <VideoSection
           language={language}
         />
-
-
-        {/* ==================================================
-            MÁQUINAS
-        ================================================== */}
 
         <MaquinasCarousel
           language={language}
           onMaquinasListas={onMaquinasListas}
         />
 
-
-        {/* ==================================================
-            MAPA
-        ================================================== */}
-
         <Mapa
           language={language}
         />
-
-
-        {/* ==================================================
-            CLIENTES
-        ================================================== */}
 
         <Clientes
           language={language}
@@ -242,28 +190,19 @@ function Inicio({
 
       </main>
 
-
-      {/* ==================================================
-          FOOTER
-      ================================================== */}
-
       <Footer
         language={language}
       />
 
     </div>
-
   );
-
 }
 
-
 // ============================================================
-// CONTENEDOR DE RUTAS
+// APP CONTENIDO
 // ============================================================
 
 function AppContenido() {
-
 
   // ==========================================================
   // IDIOMA
@@ -271,9 +210,8 @@ function AppContenido() {
 
   const [
     language,
-    setLanguage
+    setLanguage,
   ] = useState("ES");
-
 
   // ==========================================================
   // CARGA
@@ -281,34 +219,34 @@ function AppContenido() {
 
   const [
     cargandoPagina,
-    setCargandoPagina
+    setCargandoPagina,
   ] = useState(true);
 
-
   // ==========================================================
-  // RUTA ACTUAL
+  // RUTA
   // ==========================================================
 
   const location = useLocation();
 
+  // ==========================================================
+  // NAVEGACIÓN
+  // ==========================================================
+
+  const navigate = useNavigate();
 
   // ==========================================================
-  // TIMER ACTUAL
+  // TIMER
   // ==========================================================
 
   const timerRef = useRef(null);
 
-
   // ==========================================================
-  // MOSTRAR PANTALLA DE CARGA
+  // MOSTRAR CARGA
   // ==========================================================
 
   const mostrarCarga = useCallback(() => {
 
     setCargandoPagina(true);
-
-
-    // Cancelar timer anterior
 
     if (timerRef.current) {
 
@@ -317,9 +255,6 @@ function AppContenido() {
       );
 
     }
-
-
-    // Mostrar durante 2.5 segundos
 
     timerRef.current = setTimeout(() => {
 
@@ -331,35 +266,36 @@ function AppContenido() {
 
   }, []);
 
-
   // ==========================================================
   // CARGA INICIAL
   // ==========================================================
 
   useEffect(() => {
 
-    mostrarCarga();
+    const pathname =
+      location.pathname.toLowerCase();
 
+    /*
+      SOLO usamos la URL para determinar
+      el idioma inicial.
 
-    return () => {
+      Esto NO cambia el idioma cada vez
+      que navegamos entre páginas.
+    */
 
-      if (timerRef.current) {
+    if (
+      pathname === "/en" ||
+      pathname.startsWith("/en/")
+    ) {
 
-        clearTimeout(
-          timerRef.current
-        );
+      setLanguage("EN");
 
-      }
+    }
 
-    };
-
-  }, [
-    mostrarCarga
-  ]);
-
+  }, []);
 
   // ==========================================================
-  // CAMBIO DE RUTA
+  // CAMBIO DE PÁGINA
   // ==========================================================
 
   useEffect(() => {
@@ -368,20 +304,15 @@ function AppContenido() {
 
   }, [
     location.pathname,
-    mostrarCarga
+    mostrarCarga,
   ]);
-
 
   // ==========================================================
   // CAMBIAR IDIOMA
   // ==========================================================
 
   const changeLanguage = useCallback(
-
     (newLanguage) => {
-
-      // No hacer nada si ya estamos
-      // en ese idioma
 
       if (
         newLanguage === language
@@ -391,20 +322,219 @@ function AppContenido() {
 
       }
 
+      const pathname =
+        location.pathname;
 
-      // Mostrar pantalla de carga
+      let nuevaRuta = null;
 
-      setCargandoPagina(true);
+      // ======================================================
+      // INICIO
+      // ======================================================
 
+      if (
+        pathname === "/" ||
+        pathname === "/en"
+      ) {
 
-      // Cambiar idioma
+        nuevaRuta =
+          newLanguage === "EN"
+            ? "/en"
+            : "/";
+
+      }
+
+      // ======================================================
+      // BLOG / NEWS
+      // ======================================================
+
+      else if (
+        pathname === "/blog" ||
+        pathname === "/en/news"
+      ) {
+
+        nuevaRuta =
+          newLanguage === "EN"
+            ? "/en/news"
+            : "/blog";
+
+      }
+
+      // ======================================================
+      // QUIÉNES SOMOS / ABOUT US
+      // ======================================================
+
+      else if (
+        pathname === "/quienes-somos" ||
+        pathname === "/en/about-us"
+      ) {
+
+        nuevaRuta =
+          newLanguage === "EN"
+            ? "/en/about-us"
+            : "/quienes-somos";
+
+      }
+
+      // ======================================================
+      // AGRICULTORES PENAGOS / PENAGOS FARMERS
+      // ======================================================
+
+      else if (
+        pathname === "/agricultores-penagos" ||
+        pathname === "/en/penagos-farmers"
+      ) {
+
+        nuevaRuta =
+          newLanguage === "EN"
+            ? "/en/penagos-farmers"
+            : "/agricultores-penagos";
+
+      }
+
+      // ======================================================
+      // PAGOS / PAYMENTS
+      // ======================================================
+
+      else if (
+        pathname === "/pagos" ||
+        pathname === "/en/payments"
+      ) {
+
+        nuevaRuta =
+          newLanguage === "EN"
+            ? "/en/payments"
+            : "/pagos";
+
+      }
+
+      // ======================================================
+      // SOPORTE / TECHNICAL SUPPORT
+      // ======================================================
+
+      else if (
+        pathname === "/soporte-tecnico" ||
+        pathname === "/en/technical-support"
+      ) {
+
+        nuevaRuta =
+          newLanguage === "EN"
+            ? "/en/technical-support"
+            : "/soporte-tecnico";
+
+      }
+
+      // ======================================================
+      // PROTECCIÓN DE DATOS
+      // ======================================================
+
+      else if (
+        pathname === "/proteccion-de-datos-personales" ||
+        pathname === "/en/personal-data-protection"
+      ) {
+
+        nuevaRuta =
+          newLanguage === "EN"
+            ? "/en/personal-data-protection"
+            : "/proteccion-de-datos-personales";
+
+      }
+
+      // ======================================================
+      // CONTACTANOS / CONTACT US
+      // ======================================================
+
+      else if (
+        pathname === "/contactanos" ||
+        pathname === "/en/contact-us"
+      ) {
+
+        nuevaRuta =
+          newLanguage === "EN"
+            ? "/en/contact-us"
+            : "/contactanos";
+
+      }
+
+      // ======================================================
+      // NOTICIA / NEWS DETAIL
+      // ======================================================
+
+      else if (
+        pathname.startsWith("/noticia/")
+      ) {
+
+        const id =
+          pathname.replace(
+            "/noticia/",
+            ""
+          );
+
+        nuevaRuta =
+          newLanguage === "EN"
+            ? `/en/news/${id}`
+            : `/noticia/${id}`;
+
+      }
+
+      // ======================================================
+      // NEWS DETAIL ENGLISH
+      // ======================================================
+
+      else if (
+        pathname.startsWith("/en/news/")
+      ) {
+
+        const id =
+          pathname.replace(
+            "/en/news/",
+            ""
+          );
+
+        nuevaRuta =
+          newLanguage === "EN"
+            ? `/en/news/${id}`
+            : `/noticia/${id}`;
+
+      }
+
+      // ======================================================
+      // FALLBACK
+      // ======================================================
+
+      if (!nuevaRuta) {
+
+        nuevaRuta =
+          newLanguage === "EN"
+            ? "/en"
+            : "/";
+
+      }
+
+      // ======================================================
+      // CAMBIAR IDIOMA
+      // ======================================================
 
       setLanguage(
         newLanguage
       );
 
+      // ======================================================
+      // MOSTRAR CARGA
+      // ======================================================
 
-      // Cancelar timer anterior
+      setCargandoPagina(true);
+
+      // ======================================================
+      // NAVEGAR
+      // ======================================================
+
+      navigate(
+        nuevaRuta
+      );
+
+      // ======================================================
+      // CANCELAR TIMER
+      // ======================================================
 
       if (timerRef.current) {
 
@@ -414,8 +544,9 @@ function AppContenido() {
 
       }
 
-
-      // Ocultar después de 2.5 segundos
+      // ======================================================
+      // OCULTAR CARGA
+      // ======================================================
 
       timerRef.current = setTimeout(() => {
 
@@ -426,56 +557,44 @@ function AppContenido() {
       }, 2500);
 
     },
-
     [
-      language
+      language,
+      location.pathname,
+      navigate,
     ]
-
   );
 
-
   // ==========================================================
-  // MÁQUINAS TERMINADAS
+  // MÁQUINAS
   // ==========================================================
 
-  const manejarMaquinasListas = useCallback(
-
-    () => {
+  const manejarMaquinasListas =
+    useCallback(() => {
 
       console.log(
         "MÁQUINAS TERMINARON DE CARGAR"
       );
 
-    },
-
-    []
-
-  );
-
+    }, []);
 
   // ==========================================================
   // RENDER
   // ==========================================================
 
   return (
-
     <>
-
-      {/* ======================================================
-          RUTAS
-      ====================================================== */}
 
       <Routes>
 
+        {/* ==================================================
+            ESPAÑOL
+        ================================================== */}
 
-        {/* ====================================================
-            INICIO
-        ==================================================== */}
+        {/* INICIO */}
 
         <Route
           path="/"
           element={
-
             <Inicio
               language={language}
               changeLanguage={changeLanguage}
@@ -483,175 +602,247 @@ function AppContenido() {
                 manejarMaquinasListas
               }
             />
-
           }
         />
 
-
-        {/* ====================================================
-            BLOG
-        ==================================================== */}
+        {/* BLOG */}
 
         <Route
           path="/blog"
           element={
-
             <Blog
               language={language}
               changeLanguage={changeLanguage}
             />
-
           }
         />
 
-
-        {/* ====================================================
-            QUIÉNES SOMOS
-        ==================================================== */}
+        {/* QUIÉNES SOMOS */}
 
         <Route
           path="/quienes-somos"
           element={
-
             <QuienesSomos
               language={language}
               changeLanguage={changeLanguage}
             />
-
           }
         />
 
+        {/* AGRICULTORES PENAGOS */}
 
-        {/* ====================================================
-            PAGOS
-        ==================================================== */}
+        <Route
+          path="/agricultores-penagos"
+          element={
+            <AgricultoresPenagos
+              language={language}
+              changeLanguage={changeLanguage}
+            />
+          }
+        />
+
+        {/* PAGOS */}
 
         <Route
           path="/pagos"
           element={
-
             <Pagos
               language={language}
               changeLanguage={changeLanguage}
             />
-
           }
         />
 
-
-        {/* ====================================================
-            SOPORTE TÉCNICO
-        ==================================================== */}
+        {/* SOPORTE */}
 
         <Route
           path="/soporte-tecnico"
           element={
-
             <Soporte
               language={language}
               changeLanguage={changeLanguage}
             />
-
           }
         />
 
-
-        {/* ====================================================
-            PROTECCIÓN DE DATOS
-        ==================================================== */}
+        {/* PROTECCIÓN DE DATOS */}
 
         <Route
           path="/proteccion-de-datos-personales"
           element={
-
             <ProteccionDatos
               language={language}
               changeLanguage={changeLanguage}
             />
-
           }
         />
 
-
-        {/* ====================================================
-            CONTACTANOS
-        ==================================================== */}
+        {/* CONTACTANOS */}
 
         <Route
           path="/contactanos"
           element={
-
             <Contactanos
               language={language}
               changeLanguage={changeLanguage}
             />
-
           }
         />
 
-
-        {/* ====================================================
-            DETALLE DE NOTICIA
-        ==================================================== */}
+        {/* NOTICIA */}
 
         <Route
           path="/noticia/:id"
           element={
-
             <NoticiaDetalle
               language={language}
               changeLanguage={changeLanguage}
             />
-
           }
         />
 
+        {/* ==================================================
+            INGLÉS
+        ================================================== */}
+
+        {/* INICIO */}
+
+        <Route
+          path="/en"
+          element={
+            <Inicio
+              language="EN"
+              changeLanguage={changeLanguage}
+              onMaquinasListas={
+                manejarMaquinasListas
+              }
+            />
+          }
+        />
+
+        {/* NEWS */}
+
+        <Route
+          path="/en/news"
+          element={
+            <Blog
+              language="EN"
+              changeLanguage={changeLanguage}
+            />
+          }
+        />
+
+        {/* ABOUT US */}
+
+        <Route
+          path="/en/about-us"
+          element={
+            <QuienesSomos
+              language="EN"
+              changeLanguage={changeLanguage}
+            />
+          }
+        />
+
+        {/* PENAGOS FARMERS */}
+
+        <Route
+          path="/en/penagos-farmers"
+          element={
+            <AgricultoresPenagos
+              language="EN"
+              changeLanguage={changeLanguage}
+            />
+          }
+        />
+
+        {/* PAYMENTS */}
+
+        <Route
+          path="/en/payments"
+          element={
+            <Pagos
+              language="EN"
+              changeLanguage={changeLanguage}
+            />
+          }
+        />
+
+        {/* TECHNICAL SUPPORT */}
+
+        <Route
+          path="/en/technical-support"
+          element={
+            <Soporte
+              language="EN"
+              changeLanguage={changeLanguage}
+            />
+          }
+        />
+
+        {/* PERSONAL DATA PROTECTION */}
+
+        <Route
+          path="/en/personal-data-protection"
+          element={
+            <ProteccionDatos
+              language="EN"
+              changeLanguage={changeLanguage}
+            />
+          }
+        />
+
+        {/* CONTACT US */}
+
+        <Route
+          path="/en/contact-us"
+          element={
+            <Contactanos
+              language="EN"
+              changeLanguage={changeLanguage}
+            />
+          }
+        />
+
+        {/* NEWS DETAIL */}
+
+        <Route
+          path="/en/news/:id"
+          element={
+            <NoticiaDetalle
+              language="EN"
+              changeLanguage={changeLanguage}
+            />
+          }
+        />
 
       </Routes>
 
-
       {/* ======================================================
-          BOTÓN FLOTANTE BANCO AGRARIO
-
-          Está fuera de Routes para que aparezca
-          independientemente de la página actual.
-
-          El propio componente verifica si el visitante
-          está en Colombia.
+          BOTÓN BANCO AGRARIO
       ====================================================== */}
 
-      <BotonCredito />
-
+      <BotonCredito
+        language={language}
+      />
 
       {/* ======================================================
-          CHAT HUBSPOT PENAGOS
-
-          Está fuera de Routes para que HubSpot esté
-          disponible en todas las páginas.
+          CHAT HUBSPOT
       ====================================================== */}
 
       <ChatPenagos />
 
-
       {/* ======================================================
-          PANTALLA DE CARGA GLOBAL
-
-          Está fuera de Routes para que cubra
-          cualquier página.
+          PANTALLA DE CARGA
       ====================================================== */}
 
       {cargandoPagina && (
-
         <PantallaCarga />
-
       )}
 
     </>
-
   );
-
 }
-
 
 // ============================================================
 // APP
@@ -660,16 +851,13 @@ function AppContenido() {
 function App() {
 
   return (
-
     <BrowserRouter>
 
       <AppContenido />
 
     </BrowserRouter>
-
   );
-
 }
 
-
 export default App;
+

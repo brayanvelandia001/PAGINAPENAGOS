@@ -13,7 +13,9 @@ import {
 // BOTÓN CRÉDITO BANCO AGRARIO
 // ============================================================
 
-function BotonCredito() {
+function BotonCredito({
+  language = "ES"
+}) {
 
   // ==========================================================
   // VISIBILIDAD
@@ -33,6 +35,20 @@ function BotonCredito() {
     abierto,
     setAbierto
   ] = useState(false);
+
+
+  // ==========================================================
+  // IDIOMA
+  // ==========================================================
+
+  const idiomaActual =
+    language === "EN"
+      ? "EN"
+      : "ES";
+
+
+  const esIngles =
+    idiomaActual === "EN";
 
 
   // ==========================================================
@@ -58,7 +74,6 @@ function BotonCredito() {
   useEffect(() => {
 
     let activo = true;
-
 
     const detectarPais = async () => {
 
@@ -152,10 +167,6 @@ function BotonCredito() {
 
   // ==========================================================
   // CERRAR TARJETA
-  //
-  // IMPORTANTE:
-  // NO ocultamos el componente.
-  // Solo cerramos la tarjeta y vuelve el botón.
   // ==========================================================
 
   const cerrar = () => {
@@ -222,7 +233,11 @@ function BotonCredito() {
             <button
               type="button"
               onClick={cerrar}
-              aria-label="Cerrar información de crédito"
+              aria-label={
+                esIngles
+                  ? "Close credit information"
+                  : "Cerrar información de crédito"
+              }
               className="
                 absolute
                 right-3
@@ -321,7 +336,10 @@ function BotonCredito() {
                     "
                   >
 
-                    Financiamiento
+                    {esIngles
+                      ? "Financing"
+                      : "Financiamiento"
+                    }
 
                   </p>
 
@@ -370,9 +388,19 @@ function BotonCredito() {
                 "
               >
 
-                ¿Necesitas financiar
-                <br />
-                tu proyecto?
+                {esIngles ? (
+                  <>
+                    Do you need to finance
+                    <br />
+                    your project?
+                  </>
+                ) : (
+                  <>
+                    ¿Necesitas financiar
+                    <br />
+                    tu proyecto?
+                  </>
+                )}
 
               </h4>
 
@@ -390,9 +418,10 @@ function BotonCredito() {
                 "
               >
 
-                Conoce las opciones de crédito
-                disponibles para adquirir tus
-                equipos Penagos.
+                {esIngles
+                  ? "Discover the credit options available to purchase your Penagos equipment."
+                  : "Conoce las opciones de crédito disponibles para adquirir tus equipos Penagos."
+                }
 
               </p>
 
@@ -428,7 +457,10 @@ function BotonCredito() {
                 "
               >
 
-                Solicita tu crédito
+                {esIngles
+                  ? "Apply for credit"
+                  : "Solicita tu crédito"
+                }
 
                 <ArrowRight
                   size={18}
@@ -451,8 +483,14 @@ function BotonCredito() {
 
           <button
             type="button"
-            onClick={() => setAbierto(true)}
-            aria-label="Solicita tu crédito con Banco Agrario"
+            onClick={() =>
+              setAbierto(true)
+            }
+            aria-label={
+              esIngles
+                ? "Apply for credit with Banco Agrario"
+                : "Solicita tu crédito con Banco Agrario"
+            }
             className="
               group
               relative
@@ -552,7 +590,10 @@ function BotonCredito() {
               "
             >
 
-              Solicita tu crédito
+              {esIngles
+                ? "Apply for credit"
+                : "Solicita tu crédito"
+              }
 
             </span>
 

@@ -1,6 +1,7 @@
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import FormularioContacto from "../components/FormularioContacto";
+import MapaDistribuidores from "../components/MapaDistribuidores";
 import InfoContacto from "../components/InfoContacto";
 
 /* ============================================================
@@ -9,7 +10,7 @@ import InfoContacto from "../components/InfoContacto";
 
 function Contactanos({
   language,
-  changeLanguage
+  changeLanguage,
 }) {
 
   const isEnglish = language === "EN";
@@ -200,7 +201,21 @@ function Contactanos({
           language={language}
         />
 
-         <InfoContacto
+
+        {/* ====================================================
+            MAPA DE DISTRIBUIDORES
+        ==================================================== */}
+
+        <MapaDistribuidores
+          language={language}
+        />
+
+
+        {/* ====================================================
+            INFORMACIÓN COMERCIAL - COLOMBIA
+        ==================================================== */}
+
+        <InfoContacto
           language={language}
         />
 
@@ -222,3 +237,4 @@ function Contactanos({
 }
 
 export default Contactanos;
+
