@@ -64,6 +64,14 @@ function Header({
     dataProtection: isEnglish
       ? "/en/personal-data-protection"
       : "/proteccion-de-datos-personales",
+
+    // ========================================================
+    // CENTRALES DE PROCESAMIENTO DE CAFÉ
+    // ========================================================
+
+    plants: isEnglish
+      ? "/en/coffee-processing-plants"
+      : "/centrales-procesamiento-de-cafe",
   };
 
   // ============================================================
@@ -681,9 +689,7 @@ function Header({
 
               </Link>
 
-              {/* ==================================================
-                  AGRICULTORES PENAGOS
-              ================================================== */}
+              {/* AGRICULTORES PENAGOS */}
 
               <Link
                 to={rutas.farmers}
@@ -723,9 +729,7 @@ function Header({
 
               </Link>
 
-              {/* ==================================================
-                  PRODUCTOS
-              ================================================== */}
+              {/* PRODUCTOS */}
 
               <div className="group relative">
 
@@ -949,14 +953,27 @@ function Header({
                 {t.sustainability}
               </NavLink>
 
-              {/* CENTRALES */}
+              {/* ==================================================
+                  CENTRALES DE PROCESAMIENTO
+              ================================================== */}
 
-              <NavLink
-                href={
-                  isEnglish
-                    ? "/en#centrales"
-                    : "/#centrales"
-                }
+              <Link
+                to={rutas.plants}
+                onClick={cerrarMenus}
+                className="
+                  group
+                  relative
+                  px-4
+                  py-8
+                  text-center
+                  text-[13px]
+                  font-bold
+                  leading-4
+                  text-[#10152f]
+                  transition-all
+                  duration-200
+                  hover:text-[#302b80]
+                "
               >
 
                 {isEnglish ? (
@@ -973,7 +990,24 @@ function Header({
                   </>
                 )}
 
-              </NavLink>
+                <span
+                  className="
+                    absolute
+                    bottom-5
+                    left-4
+                    right-4
+                    h-[2px]
+                    origin-left
+                    scale-x-0
+                    rounded-full
+                    bg-[#302b80]
+                    transition-transform
+                    duration-300
+                    group-hover:scale-x-100
+                  "
+                />
+
+              </Link>
 
               {/* NOTICIAS */}
 
@@ -1209,9 +1243,7 @@ function Header({
                   {t.about}
                 </Link>
 
-                {/* ==================================================
-                    AGRICULTORES PENAGOS
-                ================================================== */}
+                {/* AGRICULTORES PENAGOS */}
 
                 <Link
                   to={rutas.farmers}
@@ -1277,18 +1309,27 @@ function Header({
                   {t.support}
                 </Link>
 
-                {/* CENTRALES */}
+                {/* ==================================================
+                    CENTRALES
+                ================================================== */}
 
-                <MobileLink
-                  href={
-                    isEnglish
-                      ? "/en#centrales"
-                      : "/#centrales"
-                  }
+                <Link
+                  to={rutas.plants}
                   onClick={cerrarMobile}
+                  className="
+                    border-b
+                    border-slate-100
+                    py-4
+                    text-sm
+                    font-bold
+                    text-[#07133d]
+                    transition-all
+                    hover:pl-2
+                    hover:text-[#302b80]
+                  "
                 >
                   {t.plants}
-                </MobileLink>
+                </Link>
 
                 {/* NOTICIAS */}
 

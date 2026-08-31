@@ -41,8 +41,13 @@ import Soporte from "./pages/Soporte";
 import QuienesSomos from "./pages/QuienesSomos";
 import ProteccionDatos from "./pages/ProteccionDatos";
 import Contactanos from "./pages/Contactanos";
+import CentralesProcesamientoCafe from "./pages/CentralesProcesamientoCafe";
 
-// NUEVA PÁGINA
+// ============================================================
+// AGRICULTORES PENAGOS
+// ============================================================
+
+import AgricultoresMundo from "./pages/AgricultoresMundo";
 import AgricultoresPenagos from "./pages/AgricultoresPenagos";
 
 // ============================================================
@@ -73,8 +78,9 @@ function PantallaCarga() {
           justify-center
         "
       >
-
-        {/* LOGO */}
+        {/* ==================================================
+            LOGO
+        ================================================== */}
 
         <img
           src="https://penagos.com/wp-content/uploads/2020/03/Logotipo-Penagos-Hermanos-PNG.png"
@@ -86,7 +92,9 @@ function PantallaCarga() {
           "
         />
 
-        {/* BARRA */}
+        {/* ==================================================
+            BARRA DE CARGA
+        ================================================== */}
 
         <div
           className="
@@ -108,8 +116,11 @@ function PantallaCarga() {
             "
           />
         </div>
-
       </div>
+
+      {/* ====================================================
+          ANIMACIONES
+      ==================================================== */}
 
       <style>
         {`
@@ -147,7 +158,6 @@ function PantallaCarga() {
 
         `}
       </style>
-
     </div>
   );
 }
@@ -223,7 +233,7 @@ function AppContenido() {
   ] = useState(true);
 
   // ==========================================================
-  // RUTA
+  // RUTA ACTUAL
   // ==========================================================
 
   const location = useLocation();
@@ -239,6 +249,70 @@ function AppContenido() {
   // ==========================================================
 
   const timerRef = useRef(null);
+
+  // ==========================================================
+  // PRIMERA CARGA
+  // ==========================================================
+
+  useEffect(() => {
+
+    const pathname =
+      location.pathname.toLowerCase();
+
+    // --------------------------------------------------------
+    // DETECTAR INGLÉS
+    // --------------------------------------------------------
+
+    if (
+      pathname === "/en" ||
+      pathname.startsWith("/en/")
+    ) {
+
+      setLanguage("EN");
+
+    } else {
+
+      setLanguage("ES");
+
+    }
+
+    // --------------------------------------------------------
+    // PANTALLA INICIAL DE CARGA
+    // --------------------------------------------------------
+
+    const timer = setTimeout(() => {
+
+      setCargandoPagina(false);
+
+    }, 2500);
+
+    return () => {
+
+      clearTimeout(timer);
+
+    };
+
+  }, []);
+
+  // ==========================================================
+  // LIMPIAR TIMER
+  // ==========================================================
+
+  useEffect(() => {
+
+    return () => {
+
+      if (timerRef.current) {
+
+        clearTimeout(
+          timerRef.current
+        );
+
+      }
+
+    };
+
+  }, []);
 
   // ==========================================================
   // MOSTRAR CARGA
@@ -267,45 +341,106 @@ function AppContenido() {
   }, []);
 
   // ==========================================================
-  // CARGA INICIAL
+  // DETECTAR AGRICULTORES PENAGOS
   // ==========================================================
 
-  useEffect(() => {
+  const esRutaAgricultores = useCallback(
+    (pathname) => {
 
-    const pathname =
-      location.pathname.toLowerCase();
+      const ruta =
+        pathname.toLowerCase();
 
-    /*
-      SOLO usamos la URL para determinar
-      el idioma inicial.
+      return (
+        ruta === "/agricultores-penagos" ||
+        ruta.startsWith(
+          "/agricultores-penagos/"
+        ) ||
+        ruta === "/en/penagos-farmers" ||
+        ruta.startsWith(
+          "/en/penagos-farmers/"
+        )
+      );
 
-      Esto NO cambia el idioma cada vez
-      que navegamos entre páginas.
-    */
-
-    if (
-      pathname === "/en" ||
-      pathname.startsWith("/en/")
-    ) {
-
-      setLanguage("EN");
-
-    }
-
-  }, []);
+    },
+    []
+  );
 
   // ==========================================================
-  // CAMBIO DE PÁGINA
+  // OBTENER REGIÓN AGRICULTORES
   // ==========================================================
 
-  useEffect(() => {
+  const obtenerRegionAgricultores = useCallback(
+    (pathname) => {
 
-    mostrarCarga();
+      const ruta =
+        pathname.toLowerCase();
 
-  }, [
-    location.pathname,
-    mostrarCarga,
-  ]);
+      // ------------------------------------------------------
+      // ESPAÑOL
+      // ------------------------------------------------------
+
+      if (
+        ruta.startsWith(
+          "/agricultores-penagos/"
+        )
+      ) {
+
+        return ruta.replace(
+          "/agricultores-penagos/",
+          ""
+        );
+
+      }
+
+      // ------------------------------------------------------
+      // INGLÉS
+      // ------------------------------------------------------
+
+      if (
+        ruta.startsWith(
+          "/en/penagos-farmers/"
+        )
+      ) {
+
+        return ruta.replace(
+          "/en/penagos-farmers/",
+          ""
+        );
+
+      }
+
+      return null;
+
+    },
+    []
+  );
+
+  // ==========================================================
+  // CREAR RUTA AGRICULTORES
+  // ==========================================================
+
+  const crearRutaAgricultores = useCallback(
+    (
+      newLanguage,
+      region
+    ) => {
+
+      const base =
+        newLanguage === "EN"
+          ? "/en/penagos-farmers"
+          : "/agricultores-penagos";
+
+      if (!region) {
+
+        return base;
+
+      }
+
+      return `${base}/${region}`;
+
+    },
+    []
+  );
 
   // ==========================================================
   // CAMBIAR IDIOMA
@@ -313,6 +448,10 @@ function AppContenido() {
 
   const changeLanguage = useCallback(
     (newLanguage) => {
+
+      // ------------------------------------------------------
+      // EVITAR CAMBIO INNECESARIO
+      // ------------------------------------------------------
 
       if (
         newLanguage === language
@@ -323,15 +462,36 @@ function AppContenido() {
       }
 
       const pathname =
-        location.pathname;
+        location.pathname.toLowerCase();
 
       let nuevaRuta = null;
+
+      // ======================================================
+      // AGRICULTORES
+      // ======================================================
+
+      if (
+        esRutaAgricultores(pathname)
+      ) {
+
+        const region =
+          obtenerRegionAgricultores(
+            pathname
+          );
+
+        nuevaRuta =
+          crearRutaAgricultores(
+            newLanguage,
+            region
+          );
+
+      }
 
       // ======================================================
       // INICIO
       // ======================================================
 
-      if (
+      else if (
         pathname === "/" ||
         pathname === "/en"
       ) {
@@ -344,7 +504,7 @@ function AppContenido() {
       }
 
       // ======================================================
-      // BLOG / NEWS
+      // BLOG
       // ======================================================
 
       else if (
@@ -360,7 +520,7 @@ function AppContenido() {
       }
 
       // ======================================================
-      // QUIÉNES SOMOS / ABOUT US
+      // QUIENES SOMOS
       // ======================================================
 
       else if (
@@ -376,23 +536,7 @@ function AppContenido() {
       }
 
       // ======================================================
-      // AGRICULTORES PENAGOS / PENAGOS FARMERS
-      // ======================================================
-
-      else if (
-        pathname === "/agricultores-penagos" ||
-        pathname === "/en/penagos-farmers"
-      ) {
-
-        nuevaRuta =
-          newLanguage === "EN"
-            ? "/en/penagos-farmers"
-            : "/agricultores-penagos";
-
-      }
-
-      // ======================================================
-      // PAGOS / PAYMENTS
+      // PAGOS
       // ======================================================
 
       else if (
@@ -408,7 +552,7 @@ function AppContenido() {
       }
 
       // ======================================================
-      // SOPORTE / TECHNICAL SUPPORT
+      // SOPORTE
       // ======================================================
 
       else if (
@@ -428,8 +572,10 @@ function AppContenido() {
       // ======================================================
 
       else if (
-        pathname === "/proteccion-de-datos-personales" ||
-        pathname === "/en/personal-data-protection"
+        pathname ===
+          "/proteccion-de-datos-personales" ||
+        pathname ===
+          "/en/personal-data-protection"
       ) {
 
         nuevaRuta =
@@ -440,7 +586,7 @@ function AppContenido() {
       }
 
       // ======================================================
-      // CONTACTANOS / CONTACT US
+      // CONTACTANOS
       // ======================================================
 
       else if (
@@ -456,11 +602,48 @@ function AppContenido() {
       }
 
       // ======================================================
-      // NOTICIA / NEWS DETAIL
+      // CENTRALES DE PROCESAMIENTO
+      // ======================================================
+      //
+      // RUTA PRINCIPAL:
+      //
+      // ES:
+      // /centrales-procesamiento-de-cafe
+      //
+      // EN:
+      // /en/coffee-processing-plants
+      //
+      // También aceptamos la antigua ruta:
+      //
+      // /centrales-de-procesamiento-de-cafe
+      //
+      // para evitar que una URL anterior quede rota.
       // ======================================================
 
       else if (
-        pathname.startsWith("/noticia/")
+        pathname ===
+          "/centrales-procesamiento-de-cafe" ||
+        pathname ===
+          "/centrales-de-procesamiento-de-cafe" ||
+        pathname ===
+          "/en/coffee-processing-plants"
+      ) {
+
+        nuevaRuta =
+          newLanguage === "EN"
+            ? "/en/coffee-processing-plants"
+            : "/centrales-procesamiento-de-cafe";
+
+      }
+
+      // ======================================================
+      // NOTICIA ESPAÑOL
+      // ======================================================
+
+      else if (
+        pathname.startsWith(
+          "/noticia/"
+        )
       ) {
 
         const id =
@@ -477,11 +660,13 @@ function AppContenido() {
       }
 
       // ======================================================
-      // NEWS DETAIL ENGLISH
+      // NOTICIA INGLÉS
       // ======================================================
 
       else if (
-        pathname.startsWith("/en/news/")
+        pathname.startsWith(
+          "/en/news/"
+        )
       ) {
 
         const id =
@@ -522,7 +707,7 @@ function AppContenido() {
       // MOSTRAR CARGA
       // ======================================================
 
-      setCargandoPagina(true);
+      mostrarCarga();
 
       // ======================================================
       // NAVEGAR
@@ -532,37 +717,92 @@ function AppContenido() {
         nuevaRuta
       );
 
-      // ======================================================
-      // CANCELAR TIMER
-      // ======================================================
-
-      if (timerRef.current) {
-
-        clearTimeout(
-          timerRef.current
-        );
-
-      }
-
-      // ======================================================
-      // OCULTAR CARGA
-      // ======================================================
-
-      timerRef.current = setTimeout(() => {
-
-        setCargandoPagina(false);
-
-        timerRef.current = null;
-
-      }, 2500);
-
     },
     [
       language,
       location.pathname,
       navigate,
+      mostrarCarga,
+      esRutaAgricultores,
+      obtenerRegionAgricultores,
+      crearRutaAgricultores,
     ]
   );
+
+  // ==========================================================
+  // DETECTAR CAMBIO DE RUTA
+  // ==========================================================
+
+  const rutaAnteriorRef =
+    useRef(null);
+
+  useEffect(() => {
+
+    const pathname =
+      location.pathname.toLowerCase();
+
+    // --------------------------------------------------------
+    // PRIMERA RUTA
+    // --------------------------------------------------------
+
+    if (
+      rutaAnteriorRef.current === null
+    ) {
+
+      rutaAnteriorRef.current =
+        pathname;
+
+      return;
+
+    }
+
+    const rutaAnterior =
+      rutaAnteriorRef.current;
+
+    // --------------------------------------------------------
+    // AGRICULTORES
+    // --------------------------------------------------------
+
+    const anteriorEsAgricultores =
+      esRutaAgricultores(
+        rutaAnterior
+      );
+
+    const actualEsAgricultores =
+      esRutaAgricultores(
+        pathname
+      );
+
+    // ========================================================
+    // AGRICULTORES -> AGRICULTORES
+    // ========================================================
+
+    if (
+      anteriorEsAgricultores &&
+      actualEsAgricultores
+    ) {
+
+      rutaAnteriorRef.current =
+        pathname;
+
+      return;
+
+    }
+
+    // ========================================================
+    // CUALQUIER OTRA NAVEGACIÓN
+    // ========================================================
+
+    mostrarCarga();
+
+    rutaAnteriorRef.current =
+      pathname;
+
+  }, [
+    location.pathname,
+    mostrarCarga,
+    esRutaAgricultores,
+  ]);
 
   // ==========================================================
   // MÁQUINAS
@@ -590,14 +830,18 @@ function AppContenido() {
             ESPAÑOL
         ================================================== */}
 
-        {/* INICIO */}
+        {/* ==================================================
+            INICIO
+        ================================================== */}
 
         <Route
           path="/"
           element={
             <Inicio
               language={language}
-              changeLanguage={changeLanguage}
+              changeLanguage={
+                changeLanguage
+              }
               onMaquinasListas={
                 manejarMaquinasListas
               }
@@ -605,98 +849,180 @@ function AppContenido() {
           }
         />
 
-        {/* BLOG */}
+        {/* ==================================================
+            BLOG
+        ================================================== */}
 
         <Route
           path="/blog"
           element={
             <Blog
               language={language}
-              changeLanguage={changeLanguage}
+              changeLanguage={
+                changeLanguage
+              }
             />
           }
         />
 
-        {/* QUIÉNES SOMOS */}
+        {/* ==================================================
+            QUIENES SOMOS
+        ================================================== */}
 
         <Route
           path="/quienes-somos"
           element={
             <QuienesSomos
               language={language}
-              changeLanguage={changeLanguage}
+              changeLanguage={
+                changeLanguage
+              }
             />
           }
         />
 
-        {/* AGRICULTORES PENAGOS */}
+        {/* ==================================================
+            AGRICULTORES PENAGOS
+        ================================================== */}
 
         <Route
           path="/agricultores-penagos"
           element={
             <AgricultoresPenagos
               language={language}
-              changeLanguage={changeLanguage}
+              changeLanguage={
+                changeLanguage
+              }
             />
           }
         />
 
-        {/* PAGOS */}
+        <Route
+          path="/agricultores-penagos/:region"
+          element={
+            <AgricultoresMundo
+              language={language}
+              changeLanguage={
+                changeLanguage
+              }
+            />
+          }
+        />
+
+        {/* ==================================================
+            CENTRALES DE PROCESAMIENTO DE CAFÉ
+        ==================================================
+        
+            ESTA ES LA RUTA CORRECTA:
+
+            /centrales-procesamiento-de-cafe
+
+        ================================================== */}
+
+        <Route
+          path="/centrales-procesamiento-de-cafe"
+          element={
+            <CentralesProcesamientoCafe
+              language="ES"
+              changeLanguage={
+                changeLanguage
+              }
+            />
+          }
+        />
+
+        {/* ==================================================
+            COMPATIBILIDAD CON RUTA ANTIGUA
+        ================================================== */}
+
+        <Route
+          path="/centrales-de-procesamiento-de-cafe"
+          element={
+            <CentralesProcesamientoCafe
+              language="ES"
+              changeLanguage={
+                changeLanguage
+              }
+            />
+          }
+        />
+
+        {/* ==================================================
+            PAGOS
+        ================================================== */}
 
         <Route
           path="/pagos"
           element={
             <Pagos
               language={language}
-              changeLanguage={changeLanguage}
+              changeLanguage={
+                changeLanguage
+              }
             />
           }
         />
 
-        {/* SOPORTE */}
+        {/* ==================================================
+            SOPORTE
+        ================================================== */}
 
         <Route
           path="/soporte-tecnico"
           element={
             <Soporte
               language={language}
-              changeLanguage={changeLanguage}
+              changeLanguage={
+                changeLanguage
+              }
             />
           }
         />
 
-        {/* PROTECCIÓN DE DATOS */}
+        {/* ==================================================
+            PROTECCIÓN DE DATOS
+        ================================================== */}
 
         <Route
           path="/proteccion-de-datos-personales"
           element={
             <ProteccionDatos
               language={language}
-              changeLanguage={changeLanguage}
+              changeLanguage={
+                changeLanguage
+              }
             />
           }
         />
 
-        {/* CONTACTANOS */}
+        {/* ==================================================
+            CONTACTANOS
+        ================================================== */}
 
         <Route
           path="/contactanos"
           element={
             <Contactanos
               language={language}
-              changeLanguage={changeLanguage}
+              changeLanguage={
+                changeLanguage
+              }
             />
           }
         />
 
-        {/* NOTICIA */}
+        {/* ==================================================
+            NOTICIA
+        ================================================== */}
 
         <Route
           path="/noticia/:id"
           element={
             <NoticiaDetalle
               language={language}
-              changeLanguage={changeLanguage}
+              changeLanguage={
+                changeLanguage
+              }
             />
           }
         />
@@ -705,14 +1031,18 @@ function AppContenido() {
             INGLÉS
         ================================================== */}
 
-        {/* INICIO */}
+        {/* ==================================================
+            INICIO
+        ================================================== */}
 
         <Route
           path="/en"
           element={
             <Inicio
               language="EN"
-              changeLanguage={changeLanguage}
+              changeLanguage={
+                changeLanguage
+              }
               onMaquinasListas={
                 manejarMaquinasListas
               }
@@ -720,98 +1050,158 @@ function AppContenido() {
           }
         />
 
-        {/* NEWS */}
+        {/* ==================================================
+            NEWS
+        ================================================== */}
 
         <Route
           path="/en/news"
           element={
             <Blog
               language="EN"
-              changeLanguage={changeLanguage}
+              changeLanguage={
+                changeLanguage
+              }
             />
           }
         />
 
-        {/* ABOUT US */}
+        {/* ==================================================
+            ABOUT US
+        ================================================== */}
 
         <Route
           path="/en/about-us"
           element={
             <QuienesSomos
               language="EN"
-              changeLanguage={changeLanguage}
+              changeLanguage={
+                changeLanguage
+              }
             />
           }
         />
 
-        {/* PENAGOS FARMERS */}
+        {/* ==================================================
+            PENAGOS FARMERS
+        ================================================== */}
 
         <Route
           path="/en/penagos-farmers"
           element={
-            <AgricultoresPenagos
+            <AgricultoresMundo
               language="EN"
-              changeLanguage={changeLanguage}
+              changeLanguage={
+                changeLanguage
+              }
             />
           }
         />
 
-        {/* PAYMENTS */}
+        <Route
+          path="/en/penagos-farmers/:region"
+          element={
+            <AgricultoresMundo
+              language="EN"
+              changeLanguage={
+                changeLanguage
+              }
+            />
+          }
+        />
+
+        {/* ==================================================
+            COFFEE PROCESSING PLANTS
+        ================================================== */}
+
+        <Route
+          path="/en/coffee-processing-plants"
+          element={
+            <CentralesProcesamientoCafe
+              language="EN"
+              changeLanguage={
+                changeLanguage
+              }
+            />
+          }
+        />
+
+        {/* ==================================================
+            PAYMENTS
+        ================================================== */}
 
         <Route
           path="/en/payments"
           element={
             <Pagos
               language="EN"
-              changeLanguage={changeLanguage}
+              changeLanguage={
+                changeLanguage
+              }
             />
           }
         />
 
-        {/* TECHNICAL SUPPORT */}
+        {/* ==================================================
+            TECHNICAL SUPPORT
+        ================================================== */}
 
         <Route
           path="/en/technical-support"
           element={
             <Soporte
               language="EN"
-              changeLanguage={changeLanguage}
+              changeLanguage={
+                changeLanguage
+              }
             />
           }
         />
 
-        {/* PERSONAL DATA PROTECTION */}
+        {/* ==================================================
+            PERSONAL DATA PROTECTION
+        ================================================== */}
 
         <Route
           path="/en/personal-data-protection"
           element={
             <ProteccionDatos
               language="EN"
-              changeLanguage={changeLanguage}
+              changeLanguage={
+                changeLanguage
+              }
             />
           }
         />
 
-        {/* CONTACT US */}
+        {/* ==================================================
+            CONTACT US
+        ================================================== */}
 
         <Route
           path="/en/contact-us"
           element={
             <Contactanos
               language="EN"
-              changeLanguage={changeLanguage}
+              changeLanguage={
+                changeLanguage
+              }
             />
           }
         />
 
-        {/* NEWS DETAIL */}
+        {/* ==================================================
+            NEWS DETAIL
+        ================================================== */}
 
         <Route
           path="/en/news/:id"
           element={
             <NoticiaDetalle
               language="EN"
-              changeLanguage={changeLanguage}
+              changeLanguage={
+                changeLanguage
+              }
             />
           }
         />
@@ -860,4 +1250,3 @@ function App() {
 }
 
 export default App;
-

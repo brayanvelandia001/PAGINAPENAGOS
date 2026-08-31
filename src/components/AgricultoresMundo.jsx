@@ -25,8 +25,10 @@ function AgricultoresMundo({ language = "ES" }) {
       x: "25%",
       y: "55%",
 
-      // AQUÍ DESPUÉS PONES EL ENLACE
-      link: "#",
+      // RUTA COLOMBIA
+      link: isEnglish
+        ? "/en/penagos-farmers/colombia"
+        : "/agricultores-penagos/colombia",
     },
 
     {
@@ -41,8 +43,10 @@ function AgricultoresMundo({ language = "ES" }) {
       x: "30%",
       y: "45%",
 
-      // AQUÍ DESPUÉS PONES EL ENLACE
-      link: "#",
+      // RUTA AMÉRICA
+      link: isEnglish
+        ? "/en/penagos-farmers/america"
+        : "/agricultores-penagos/america",
     },
 
     {
@@ -57,8 +61,10 @@ function AgricultoresMundo({ language = "ES" }) {
       x: "52%",
       y: "57%",
 
-      // AQUÍ DESPUÉS PONES EL ENLACE
-      link: "#",
+      // RUTA ÁFRICA
+      link: isEnglish
+        ? "/en/penagos-farmers/africa"
+        : "/agricultores-penagos/africa",
     },
 
     {
@@ -73,8 +79,10 @@ function AgricultoresMundo({ language = "ES" }) {
       x: "80%",
       y: "58%",
 
-      // AQUÍ DESPUÉS PONES EL ENLACE
-      link: "#",
+      // RUTA ASIA Y OCEANÍA
+      link: isEnglish
+        ? "/en/penagos-farmers/asia-oceania"
+        : "/agricultores-penagos/asia-oceania",
     },
   ];
 
@@ -180,6 +188,7 @@ function AgricultoresMundo({ language = "ES" }) {
             </span>
 
           </div>
+
 
           <h2
             className="
@@ -413,6 +422,7 @@ function AgricultoresMundo({ language = "ES" }) {
                   "
                 />
 
+
                 {/* TONO AZUL */}
 
                 <div
@@ -424,6 +434,7 @@ function AgricultoresMundo({ language = "ES" }) {
                   "
                 />
 
+
                 {/* ILUMINACIÓN */}
 
                 <div
@@ -434,6 +445,7 @@ function AgricultoresMundo({ language = "ES" }) {
                     bg-[radial-gradient(circle_at_28%_22%,rgba(255,255,255,.16),transparent_24%),radial-gradient(circle_at_70%_75%,rgba(0,0,0,.60),transparent_68%)]
                   "
                 />
+
 
                 {/* VIÑETA */}
 

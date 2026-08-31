@@ -23,7 +23,6 @@ import {
 import "swiper/css";
 import "swiper/css/navigation";
 
-
 // ============================================================
 // CARRUSEL DE PRODUCTOS
 // ============================================================
@@ -42,7 +41,6 @@ function MaquinasCarousel({
     setProductos,
   ] = useState([]);
 
-
   // ==========================================================
   // PRODUCTO SELECCIONADO
   // ==========================================================
@@ -52,7 +50,6 @@ function MaquinasCarousel({
     setProductoSeleccionado,
   ] = useState(null);
 
-
   // ==========================================================
   // CARGANDO
   // ==========================================================
@@ -61,7 +58,6 @@ function MaquinasCarousel({
     cargando,
     setCargando,
   ] = useState(true);
-
 
   // ==========================================================
   // REFERENCIAS FLECHAS
@@ -73,7 +69,6 @@ function MaquinasCarousel({
   const botonSiguienteRef =
     useRef(null);
 
-
   // ==========================================================
   // IDIOMA
   // ==========================================================
@@ -82,7 +77,6 @@ function MaquinasCarousel({
     language === "EN"
       ? "EN"
       : "ES";
-
 
   // ==========================================================
   // LIMPIAR TEXTO
@@ -99,7 +93,6 @@ function MaquinasCarousel({
 
     let resultado =
       String(texto);
-
 
     // ========================================================
     // CONVERTIR HTML
@@ -131,7 +124,6 @@ function MaquinasCarousel({
           );
     }
 
-
     // ========================================================
     // QUITAR RESTO DE HTML
     // ========================================================
@@ -141,7 +133,6 @@ function MaquinasCarousel({
         /<[^>]*>/g,
         ""
       );
-
 
     // ========================================================
     // DECODIFICAR ENTIDADES HTML
@@ -202,7 +193,6 @@ function MaquinasCarousel({
           ">"
         );
 
-
     // ========================================================
     // NORMALIZAR GUIONES
     // ========================================================
@@ -212,7 +202,6 @@ function MaquinasCarousel({
         /[–—−]/g,
         "-"
       );
-
 
     // ========================================================
     // NORMALIZAR ESPACIOS
@@ -234,10 +223,8 @@ function MaquinasCarousel({
         )
         .trim();
 
-
     return resultado;
   };
-
 
   // ==========================================================
   // NOMBRE LIMPIO DEL PRODUCTO
@@ -257,7 +244,6 @@ function MaquinasCarousel({
     );
   };
 
-
   // ==========================================================
   // DESCRIPCIÓN LIMPIA
   // ==========================================================
@@ -271,7 +257,6 @@ function MaquinasCarousel({
       true
     );
   };
-
 
   // ==========================================================
   // DETECTAR IDIOMA DEL PRODUCTO
@@ -293,7 +278,6 @@ function MaquinasCarousel({
       producto.language_code ||
       producto.lang_code;
 
-
     if (
       typeof idiomaDirecto === "string"
     ) {
@@ -303,17 +287,14 @@ function MaquinasCarousel({
           .toLowerCase()
           .trim();
 
-
       if (
         idioma === "es" ||
         idioma === "es-es" ||
         idioma === "spa" ||
         idioma === "spanish"
       ) {
-
         return "ES";
       }
-
 
       if (
         idioma === "en" ||
@@ -322,11 +303,9 @@ function MaquinasCarousel({
         idioma === "eng" ||
         idioma === "english"
       ) {
-
         return "EN";
       }
     }
-
 
     // ========================================================
     // 2. OBJETO LANGUAGE
@@ -343,7 +322,6 @@ function MaquinasCarousel({
         producto.language.locale ||
         producto.language.name;
 
-
       if (
         typeof idiomaObjeto === "string"
       ) {
@@ -353,17 +331,14 @@ function MaquinasCarousel({
             .toLowerCase()
             .trim();
 
-
         if (
           idioma === "es" ||
           idioma === "es-es" ||
           idioma === "spa" ||
           idioma === "spanish"
         ) {
-
           return "ES";
         }
-
 
         if (
           idioma === "en" ||
@@ -372,12 +347,10 @@ function MaquinasCarousel({
           idioma === "eng" ||
           idioma === "english"
         ) {
-
           return "EN";
         }
       }
     }
-
 
     // ========================================================
     // 3. CATEGORÍAS
@@ -398,7 +371,6 @@ function MaquinasCarousel({
           `${categoria.name || ""} ${categoria.slug || ""}`
             .toLowerCase();
 
-
         if (
           textoCategoria.includes(
             "español"
@@ -411,10 +383,8 @@ function MaquinasCarousel({
           ) ||
           textoCategoria === "es"
         ) {
-
           return "ES";
         }
-
 
         if (
           textoCategoria.includes(
@@ -428,12 +398,10 @@ function MaquinasCarousel({
           ) ||
           textoCategoria === "en"
         ) {
-
           return "EN";
         }
       }
     }
-
 
     // ========================================================
     // 4. SLUG
@@ -445,7 +413,6 @@ function MaquinasCarousel({
         ""
       )
         .toLowerCase();
-
 
     const palabrasIngles = [
       "-english",
@@ -460,17 +427,14 @@ function MaquinasCarousel({
       "inglés-",
     ];
 
-
     if (
       palabrasIngles.some(
         (palabra) =>
           slug.includes(palabra)
       )
     ) {
-
       return "EN";
     }
-
 
     const palabrasEspanol = [
       "-spanish",
@@ -486,17 +450,14 @@ function MaquinasCarousel({
       "español-",
     ];
 
-
     if (
       palabrasEspanol.some(
         (palabra) =>
           slug.includes(palabra)
       )
     ) {
-
       return "ES";
     }
-
 
     // ========================================================
     // 5. WPML
@@ -512,7 +473,6 @@ function MaquinasCarousel({
         )
         .toLowerCase();
 
-
       if (
         linksTexto.includes(
           "language"
@@ -524,26 +484,21 @@ function MaquinasCarousel({
             "en"
           )
         ) {
-
           return "EN";
         }
-
 
         if (
           linksTexto.includes(
             "es"
           )
         ) {
-
           return "ES";
         }
       }
     }
 
-
     return null;
   };
-
 
   // ==========================================================
   // CARGAR PRODUCTOS
@@ -555,7 +510,6 @@ function MaquinasCarousel({
 
     const controlador =
       new AbortController();
-
 
     const cargarProductos =
       async () => {
@@ -569,7 +523,6 @@ function MaquinasCarousel({
           setProductoSeleccionado(
             null
           );
-
 
           console.log(
             "===================================="
@@ -588,16 +541,13 @@ function MaquinasCarousel({
             "===================================="
           );
 
-
           const url =
             "https://penagos.com/wp-json/wc/store/v1/products?per_page=100";
-
 
           console.log(
             "CONSULTANDO:",
             url
           );
-
 
           const response =
             await fetch(
@@ -608,12 +558,10 @@ function MaquinasCarousel({
               }
             );
 
-
           console.log(
             "RESPUESTA HTTP:",
             response.status
           );
-
 
           if (
             !response.ok
@@ -624,24 +572,19 @@ function MaquinasCarousel({
             );
           }
 
-
           const data =
             await response.json();
-
 
           if (
             cancelado
           ) {
-
             return;
           }
-
 
           console.log(
             "TOTAL PRODUCTOS:",
             data.length
           );
-
 
           // ==================================================
           // FILTRAR PRODUCTOS
@@ -660,20 +603,16 @@ function MaquinasCarousel({
                   producto.images.length >
                     0;
 
-
                 if (
                   !tieneImagen
                 ) {
-
                   return false;
                 }
-
 
                 const idiomaProducto =
                   obtenerIdiomaProducto(
                     producto
                   );
-
 
                 console.log(
                   "PRODUCTO:",
@@ -683,7 +622,6 @@ function MaquinasCarousel({
                   "| IDIOMA:",
                   idiomaProducto
                 );
-
 
                 if (
                   idiomaProducto
@@ -695,17 +633,14 @@ function MaquinasCarousel({
                   );
                 }
 
-
                 return false;
               }
             );
-
 
           console.log(
             `PRODUCTOS ${idiomaActual}:`,
             productosFiltrados.length
           );
-
 
           if (
             !cancelado
@@ -724,22 +659,21 @@ function MaquinasCarousel({
             error.name ===
             "AbortError"
           ) {
-
             return;
           }
-
 
           console.error(
             "ERROR CARGANDO PRODUCTOS:",
             error
           );
 
-
           if (
             !cancelado
           ) {
 
-            setProductos([]);
+            setProductos(
+              []
+            );
           }
 
         } finally {
@@ -752,7 +686,6 @@ function MaquinasCarousel({
               false
             );
 
-
             if (
               onMaquinasListas
             ) {
@@ -763,9 +696,7 @@ function MaquinasCarousel({
         }
       };
 
-
     cargarProductos();
-
 
     return () => {
 
@@ -777,7 +708,6 @@ function MaquinasCarousel({
   }, [
     language,
   ]);
-
 
   // ==========================================================
   // ESCAPE PARA CERRAR MODAL
@@ -799,7 +729,6 @@ function MaquinasCarousel({
         }
       };
 
-
     if (
       productoSeleccionado
     ) {
@@ -812,7 +741,6 @@ function MaquinasCarousel({
       document.body.style.overflow =
         "hidden";
     }
-
 
     return () => {
 
@@ -829,7 +757,6 @@ function MaquinasCarousel({
     productoSeleccionado,
   ]);
 
-
   // ==========================================================
   // OBTENER IMAGEN
   // ==========================================================
@@ -844,14 +771,11 @@ function MaquinasCarousel({
       producto.images.length ===
         0
     ) {
-
       return null;
     }
 
-
     return producto.images[0];
   };
-
 
   // ==========================================================
   // RENDER
@@ -880,7 +804,8 @@ function MaquinasCarousel({
       >
 
         {/* ====================================================
-            CARGANDO
+            CARGANDO PRODUCTOS
+            LOGO + BARRA PENAGOS
         ==================================================== */}
 
         {cargando ? (
@@ -888,19 +813,73 @@ function MaquinasCarousel({
           <div
             className="
               flex
-              min-h-[240px]
+              min-h-[350px]
+              flex-col
               items-center
               justify-center
-              text-sm
-              font-semibold
-              text-slate-400
+              px-6
             "
           >
 
-            {idiomaActual === "EN"
-              ? "Loading products..."
-              : "Cargando productos..."
-            }
+            {/* ==================================================
+                LOGO PENAGOS
+            ================================================== */}
+
+            <img
+              src="https://penagos.com/wp-content/uploads/2020/03/Logotipo-Penagos-Hermanos-PNG.png"
+              alt="Penagos Hermanos"
+              className="
+                w-[210px]
+                object-contain
+                animate-[logoPulseProductos_2s_ease-in-out_infinite]
+              "
+            />
+
+            {/* ==================================================
+                BARRA DE CARGA
+            ================================================== */}
+
+            <div
+              className="
+                mt-8
+                h-[4px]
+                w-[180px]
+                overflow-hidden
+                rounded-full
+                bg-slate-200
+              "
+            >
+
+              <div
+                className="
+                  h-full
+                  w-1/2
+                  rounded-full
+                  bg-[#302b80]
+                  animate-[loadingProductos_1.4s_ease-in-out_infinite]
+                "
+              />
+
+            </div>
+
+            {/* ==================================================
+                TEXTO
+            ================================================== */}
+
+            <p
+              className="
+                mt-5
+                text-xs
+                font-semibold
+                tracking-wide
+                text-slate-400
+              "
+            >
+              {idiomaActual === "EN"
+                ? "Loading products..."
+                : "Cargando productos..."
+              }
+            </p>
 
           </div>
 
@@ -921,14 +900,11 @@ function MaquinasCarousel({
           >
 
             <p>
-
               {idiomaActual === "EN"
                 ? "No products available."
                 : "No hay productos disponibles."
               }
-
             </p>
-
 
             <p
               className="
@@ -938,7 +914,6 @@ function MaquinasCarousel({
                 text-slate-400
               "
             >
-
               {idiomaActual === "EN"
                 ? "Language:"
                 : "Idioma:"
@@ -1024,7 +999,6 @@ function MaquinasCarousel({
 
             </button>
 
-
             {/* ==================================================
                 FLECHA DERECHA
             ================================================== */}
@@ -1078,7 +1052,6 @@ function MaquinasCarousel({
               />
 
             </button>
-
 
             {/* ==================================================
                 SWIPER
@@ -1145,12 +1118,10 @@ function MaquinasCarousel({
                       producto
                     );
 
-
                   const nombre =
                     obtenerNombreProducto(
                       producto
                     );
-
 
                   return (
 
@@ -1234,7 +1205,6 @@ function MaquinasCarousel({
 
                         </div>
 
-
                         {/* ==================================
                             NOMBRE
                         ================================== */}
@@ -1270,9 +1240,7 @@ function MaquinasCarousel({
                               group-hover:text-[#302b80]
                             "
                           >
-
                             {nombre}
-
                           </h3>
 
                         </div>
@@ -1282,7 +1250,6 @@ function MaquinasCarousel({
                     </SwiperSlide>
 
                   );
-
                 }
               )}
 
@@ -1293,7 +1260,6 @@ function MaquinasCarousel({
         )}
 
       </div>
-
 
       {/* ========================================================
           MODAL
@@ -1322,7 +1288,7 @@ function MaquinasCarousel({
         >
 
           {/* ====================================================
-              MODAL MÁS GRANDE
+              MODAL
           ==================================================== */}
 
           <div
@@ -1386,7 +1352,6 @@ function MaquinasCarousel({
 
             </button>
 
-
             {/* ================================================
                 IMAGEN
             ================================================= */}
@@ -1433,7 +1398,6 @@ function MaquinasCarousel({
 
             </div>
 
-
             {/* ================================================
                 INFORMACIÓN
             ================================================= */}
@@ -1470,7 +1434,6 @@ function MaquinasCarousel({
                 }
 
               </h2>
-
 
               {/* ============================================
                   DESCRIPCIÓN
@@ -1512,10 +1475,49 @@ function MaquinasCarousel({
 
       )}
 
+      {/* ========================================================
+          ANIMACIONES DEL LOADER
+      ======================================================== */}
+
+      <style>
+        {`
+
+          @keyframes logoPulseProductos {
+
+            0% {
+              transform: scale(1);
+              opacity: 0.70;
+            }
+
+            50% {
+              transform: scale(1.06);
+              opacity: 1;
+            }
+
+            100% {
+              transform: scale(1);
+              opacity: 0.70;
+            }
+
+          }
+
+          @keyframes loadingProductos {
+
+            0% {
+              transform: translateX(-120%);
+            }
+
+            100% {
+              transform: translateX(220%);
+            }
+
+          }
+
+        `}
+      </style>
+
     </section>
   );
 }
 
-
 export default MaquinasCarousel;
-
