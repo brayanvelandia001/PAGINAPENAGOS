@@ -1,403 +1,665 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 /* ============================================================
-   CHAT PENAGOS - HUBSPOT
-   ============================================================
-
-   FUNCIONAMIENTO:
-
-   1. HubSpot se carga una sola vez.
-   2. El chat NO se abre automáticamente.
-   3. "Hablemos" llama a abrirChatPenagos().
-   4. Si HubSpot todavía está cargando, esperamos.
-   5. El botón puede abrir el chat nuevamente después de cerrarlo.
-============================================================ */
-
-
-/* ============================================================
-   ESTADO GLOBAL DE CARGA
+   CHAT PENAGOS - HUBSPOT + PENAGÜINO PREMIUM
 ============================================================ */
 
 let hubspotCargando = false;
 let hubspotListo = false;
 
+/* ============================================================
+   IMAGEN PENAGÜINO
+============================================================ */
+
+const PENAGUINO_URL =
+  "https://penagos.com/wp-content/uploads/2026/09/PenaguinoNew.png";
 
 /* ============================================================
-   FUNCIÓN PARA ABRIR HUBSPOT
+   COLORES PENAGOS
+============================================================ */
+
+const AZUL_PENAGOS = "#0893f0";
+const AZUL_PENAGOS_CLARO = "#0e99f7";
+
+/* ============================================================
+   ABRIR HUBSPOT
 ============================================================ */
 
 export function abrirChatPenagos() {
-
-  console.log("======================================");
-  console.log("🟣 HABLEMOS - SOLICITANDO CHAT");
-  console.log("======================================");
-
-
-  /* ==========================================================
-     FUNCIÓN QUE REALMENTE ABRE EL CHAT
-  ========================================================== */
+  console.log("🔵 Abriendo chat Penagos");
 
   const abrirAhora = () => {
+    const hubspot = window.HubSpotConversations;
 
-    const hubspot =
-      window.HubSpotConversations;
-
-
-    if (
-      hubspot &&
-      hubspot.widget
-    ) {
-
-      console.log(
-        "✅ HubSpot Conversations disponible"
-      );
-
-
+    if (hubspot && hubspot.widget) {
       try {
-
         hubspot.widget.open();
 
-        console.log(
-          "✅ CHAT HUBSPOT ABIERTO"
-        );
+        console.log("✅ HubSpot abierto");
 
         return true;
-
       } catch (error) {
-
-        console.error(
-          "❌ Error abriendo HubSpot:",
-          error
-        );
-
-        return false;
-
+        console.error("Error abriendo HubSpot:", error);
       }
-
     }
 
-
     return false;
-
   };
 
-
-  /* ==========================================================
-     SI YA ESTÁ LISTO
-  ========================================================== */
-
   if (abrirAhora()) {
-
     return;
-
   }
-
-
-  /* ==========================================================
-     ESPERAR A HUBSPOT
-  ========================================================== */
-
-  console.log(
-    "⏳ HubSpot todavía no está listo..."
-  );
-
 
   let intentos = 0;
 
-  const MAX_INTENTOS = 40;
+  const intervalo = setInterval(() => {
+    intentos++;
 
+    if (abrirAhora()) {
+      clearInterval(intervalo);
+    }
 
-  const intervalo =
-    setInterval(() => {
+    if (intentos >= 40) {
+      clearInterval(intervalo);
 
-      intentos++;
-
-
-      console.log(
-        `⏳ Esperando HubSpot ${intentos}/${MAX_INTENTOS}`
-      );
-
-
-      /* ------------------------------------------------------
-         Intentar abrir
-      ------------------------------------------------------ */
-
-      if (abrirAhora()) {
-
-        clearInterval(intervalo);
-
-        console.log(
-          "🟢 Chat abierto después de esperar."
-        );
-
-        return;
-
-      }
-
-
-      /* ------------------------------------------------------
-         Límite
-      ------------------------------------------------------ */
-
-      if (
-        intentos >= MAX_INTENTOS
-      ) {
-
-        clearInterval(intervalo);
-
-        console.error(
-          "❌ HubSpot no estuvo disponible."
-        );
-
-      }
-
-    }, 500);
-
+      console.error("HubSpot no disponible");
+    }
+  }, 500);
 }
 
-
 /* ============================================================
-   COMPONENTE CHAT PENAGOS
+   COMPONENTE
 ============================================================ */
 
 function ChatPenagos() {
+  const [chatAbierto, setChatAbierto] = useState(false);
+
+  /* ============================================================
+     CARGAR HUBSPOT
+  ============================================================ */
 
   useEffect(() => {
-
-    const SCRIPT_ID =
-      "hs-script-loader";
-
+    const SCRIPT_ID = "hs-script-loader";
 
     const SCRIPT_URL =
       "https://js.hs-scripts.com/8988956.js";
 
+    console.log("🔵 Cargando HubSpot");
 
-    /* ========================================================
-       COMPROBAR SI HUBSPOT YA EXISTE
-    ======================================================== */
+    /* ----------------------------------------------------------
+       SI HUBSPOT YA EXISTE
+    ---------------------------------------------------------- */
 
-    if (
-      window.HubSpotConversations
-    ) {
-
-      console.log(
-        "🟢 HubSpot ya estaba cargado."
-      );
-
+    if (window.HubSpotConversations) {
       hubspotListo = true;
 
-      return;
-
-    }
-
-
-    /* ========================================================
-       COMPROBAR SCRIPT EXISTENTE
-    ======================================================== */
-
-    const scriptExistente =
-      document.getElementById(
-        SCRIPT_ID
-      );
-
-
-    if (
-      scriptExistente
-    ) {
-
-      console.log(
-        "🟡 El script de HubSpot ya existe."
-      );
+      configurarEventos();
 
       return;
-
     }
 
+    /* ----------------------------------------------------------
+       SI EL SCRIPT YA EXISTE
+    ---------------------------------------------------------- */
 
-    /* ========================================================
-       EVITAR CARGAS DUPLICADAS
-    ======================================================== */
-
-    if (
-      hubspotCargando
-    ) {
-
-      console.log(
-        "🟡 HubSpot ya se está cargando."
-      );
+    if (document.getElementById(SCRIPT_ID)) {
+      esperarHubSpot();
 
       return;
-
     }
 
+    /* ----------------------------------------------------------
+       SI YA SE ESTÁ CARGANDO
+    ---------------------------------------------------------- */
+
+    if (hubspotCargando) {
+      esperarHubSpot();
+
+      return;
+    }
 
     hubspotCargando = true;
 
+    /* ----------------------------------------------------------
+       CREAR SCRIPT HUBSPOT
+    ---------------------------------------------------------- */
 
-    /* ========================================================
-       CREAR SCRIPT
-    ======================================================== */
+    const script = document.createElement("script");
 
-    console.log(
-      "🔵 Cargando HubSpot..."
-    );
+    script.id = SCRIPT_ID;
 
+    script.async = true;
 
-    const script =
-      document.createElement(
-        "script"
-      );
+    script.defer = true;
 
+    script.src = SCRIPT_URL;
 
-    script.id =
-      SCRIPT_ID;
-
-
-    script.type =
-      "text/javascript";
-
-
-    script.async =
-      true;
-
-
-    script.defer =
-      true;
-
-
-    script.src =
-      SCRIPT_URL;
-
-
-    /* ========================================================
-       CUANDO EL SCRIPT TERMINA DE CARGAR
-    ======================================================== */
+    /* ----------------------------------------------------------
+       SCRIPT CARGADO
+    ---------------------------------------------------------- */
 
     script.onload = () => {
+      console.log("🟢 Script HubSpot cargado");
 
-      console.log(
-        "======================================"
-      );
+      hubspotCargando = false;
 
-      console.log(
-        "🟢 SCRIPT HUBSPOT CARGADO"
-      );
-
-      console.log(
-        "🟢 EL CHAT NO SE ABRIRÁ AUTOMÁTICAMENTE"
-      );
-
-      console.log(
-        "======================================"
-      );
-
-
-      hubspotCargando =
-        false;
-
-
-      /*
-       * Esperar un poco porque HubSpot puede
-       * cargar el objeto Conversations después
-       * de cargar el script.
-       */
-
-      let intentos =
-        0;
-
-
-      const esperarInicializacion =
-        setInterval(() => {
-
-          intentos++;
-
-
-          if (
-            window.HubSpotConversations &&
-            window.HubSpotConversations.widget
-          ) {
-
-            clearInterval(
-              esperarInicializacion
-            );
-
-
-            hubspotListo =
-              true;
-
-
-            console.log(
-              "🟢 HUBSPOT CONVERSATIONS LISTO"
-            );
-
-
-            return;
-
-          }
-
-
-          if (
-            intentos >= 30
-          ) {
-
-            clearInterval(
-              esperarInicializacion
-            );
-
-
-            console.warn(
-              "⚠️ HubSpot tardó demasiado en inicializar."
-            );
-
-          }
-
-        }, 500);
-
+      esperarHubSpot();
     };
 
-
-    /* ========================================================
+    /* ----------------------------------------------------------
        ERROR
-    ======================================================== */
+    ---------------------------------------------------------- */
 
     script.onerror = () => {
+      console.error("❌ Error cargando HubSpot");
 
-      hubspotCargando =
-        false;
-
-
-      console.error(
-        "❌ ERROR CARGANDO HUBSPOT"
-      );
-
+      hubspotCargando = false;
     };
 
+    document.body.appendChild(script);
 
-    /* ========================================================
-       INSERTAR SCRIPT
-    ======================================================== */
+    /* ============================================================
+       ESPERAR HUBSPOT
+    ============================================================ */
 
-    document.body.appendChild(
-      script
-    );
+    function esperarHubSpot() {
+      let intentos = 0;
 
+      const intervalo = setInterval(() => {
+        intentos++;
 
+        if (
+          window.HubSpotConversations &&
+          window.HubSpotConversations.widget
+        ) {
+          clearInterval(intervalo);
+
+          hubspotListo = true;
+
+          configurarEventos();
+
+          console.log("🟢 HubSpot listo");
+        }
+
+        if (intentos >= 40) {
+          clearInterval(intervalo);
+
+          console.error(
+            "❌ Tiempo de espera de HubSpot agotado"
+          );
+        }
+      }, 500);
+    }
+
+    /* ============================================================
+       EVENTOS HUBSPOT
+    ============================================================ */
+
+    function configurarEventos() {
+      const hubspot =
+        window.HubSpotConversations;
+
+      if (!hubspot) {
+        return;
+      }
+
+      if (typeof hubspot.on === "function") {
+        hubspot.on(
+          "widgetOpened",
+          () => {
+            setChatAbierto(true);
+          }
+        );
+
+        hubspot.on(
+          "widgetClosed",
+          () => {
+            setChatAbierto(false);
+          }
+        );
+      }
+    }
+
+    return () => {};
   }, []);
 
+  /* ============================================================
+     CLICK EN PENAGÜINO
+  ============================================================ */
 
-  /* ==========================================================
-     IMPORTANTE
+  const handleAbrirChat = () => {
+    console.log("🔵 Click en Penagüino");
 
-     NO llamamos widget.open() aquí.
-     
-     El chat solamente se abre mediante:
-     
-     abrirChatPenagos()
-  ========================================================== */
+    setChatAbierto(true);
 
-  return null;
+    abrirChatPenagos();
+  };
 
+  /* ============================================================
+     RENDER
+  ============================================================ */
+
+  return (
+    <>
+      {/* ======================================================
+          PENAGÜINO + MENSAJE
+      ====================================================== */}
+
+      {!chatAbierto && (
+        <div
+          className="
+            fixed
+            bottom-5
+            right-5
+            z-[99990]
+            flex
+            items-center
+            justify-center
+            group
+          "
+        >
+
+          {/* ==================================================
+              MENSAJE PENAGÜINO
+          ================================================== */}
+
+          <div
+            className="
+              penaguinoMensaje
+
+              absolute
+
+              right-[94px]
+              bottom-[72px]
+
+              flex
+              flex-col
+              items-start
+
+              whitespace-nowrap
+
+              rounded-2xl
+
+              bg-[#0893f0]
+
+              px-5
+              py-3.5
+
+              text-white
+
+              shadow-[0_12px_35px_rgba(0,91,150,0.38)]
+
+              border
+              border-[#0077B6]
+
+              opacity-0
+
+              translate-x-3
+              scale-95
+
+              pointer-events-none
+
+              transition-all
+              duration-300
+              ease-out
+            "
+          >
+
+            {/* ==================================================
+                SALUDO
+            ================================================== */}
+
+            <span
+              className="
+                text-[14px]
+                font-bold
+                tracking-[-0.01em]
+                text-white
+              "
+            >
+              ¡Hola! Soy Penagüino 👋
+            </span>
+
+            {/* ==================================================
+                MENSAJE
+            ================================================== */}
+
+            <span
+              className="
+                mt-0.5
+                text-[12px]
+                font-medium
+                text-white/90
+              "
+            >
+              ¿En qué puedo ayudarte?
+            </span>
+
+            {/* ==================================================
+                COLITA DEL GLOBO
+            ================================================== */}
+
+            <span
+              className="
+                absolute
+
+                right-[-7px]
+                bottom-[18px]
+
+                h-4
+                w-4
+
+                rotate-45
+
+                bg-[#005B96]
+
+                border-r
+                border-t
+
+                border-[#0077B6]
+              "
+            />
+
+          </div>
+
+
+          {/* ==================================================
+              BOTÓN PENAGÜINO
+          ================================================== */}
+
+          <button
+            type="button"
+            onClick={handleAbrirChat}
+            aria-label="Abrir chat Penagos"
+            className="
+              relative
+
+              flex
+
+              h-[105px]
+              w-[105px]
+
+              items-center
+              justify-center
+
+              cursor-pointer
+
+              border-0
+
+              bg-transparent
+
+              p-0
+
+              transition-all
+
+              duration-300
+
+              hover:scale-110
+
+              focus:outline-none
+
+              focus-visible:ring-2
+
+              focus-visible:ring-[#D89B2B]
+
+              focus-visible:ring-offset-2
+            "
+          >
+
+            <img
+              src={PENAGUINO_URL}
+              alt="Penagüino - Chat Penagos"
+              className="
+                h-full
+                w-full
+
+                object-contain
+
+                drop-shadow-[0_12px_25px_rgba(0,0,0,0.30)]
+
+                animate-[penaguinoFlotar_3s_ease-in-out_infinite]
+              "
+            />
+
+          </button>
+
+        </div>
+      )}
+
+
+      {/* ======================================================
+          ESTILOS
+      ====================================================== */}
+
+      <style>
+        {`
+
+          /* ==================================================
+             ANIMACIÓN PENAGÜINO
+          ================================================== */
+
+          @keyframes penaguinoFlotar {
+
+            0% {
+              transform: translateY(0);
+            }
+
+            50% {
+              transform: translateY(-7px);
+            }
+
+            100% {
+              transform: translateY(0);
+            }
+
+          }
+
+
+          /* ==================================================
+             MOSTRAR MENSAJE AL PASAR EL MOUSE
+          ================================================== */
+
+          div:has(
+            > button[aria-label="Abrir chat Penagos"]
+          ):hover
+          .penaguinoMensaje {
+
+            opacity: 1;
+
+            transform:
+              translateX(0)
+              scale(1);
+
+          }
+
+
+          /* ==================================================
+             SOMBRA PENAGÜINO
+          ================================================== */
+
+          button[aria-label="Abrir chat Penagos"] {
+
+            filter:
+              drop-shadow(
+                0 8px 20px rgba(0,0,0,0.18)
+              );
+
+          }
+
+
+          /* ==================================================
+             HOVER PENAGÜINO
+          ================================================== */
+
+          button[aria-label="Abrir chat Penagos"]:hover {
+
+            filter:
+              drop-shadow(
+                0 14px 30px rgba(0,0,0,0.28)
+              );
+
+          }
+
+
+          /* ==================================================
+             HUBSPOT
+             POSICIÓN ORIGINAL
+          ================================================== */
+
+          #hubspot-messages-iframe-container {
+
+            position: fixed !important;
+
+            right: 20px !important;
+
+            bottom: 30px !important;
+
+            transform:
+              translateX(-40px) !important;
+
+            transform-origin:
+              bottom right !important;
+
+            z-index: 99989 !important;
+
+            visibility: visible !important;
+
+          }
+
+
+          /* ==================================================
+             REDUCIR SOLAMENTE LA VENTANA VISUAL
+             
+             IMPORTANTE:
+             NO TOCAMOS WIDTH NI HEIGHT DEL IFRAME.
+             HUBSPOT CONSERVA SU ESTRUCTURA INTERNA.
+          ================================================== */
+
+          #hubspot-messages-iframe-container iframe {
+
+            transform:
+              scale(0.82) !important;
+
+            transform-origin:
+              bottom right !important;
+
+            border-radius: 18px !important;
+
+          }
+
+
+          /* ==================================================
+             ICONO HUBSPOT
+             SIN CAMBIOS
+          ================================================== */
+
+          #hubspot-messages-iframe-container
+          .widget-align-right {
+
+            right: auto !important;
+
+            left: 0 !important;
+
+            bottom: 0 !important;
+
+          }
+
+
+          /* ==================================================
+             MÓVIL
+          ================================================== */
+
+          @media (max-width: 640px) {
+
+            div:has(
+              > button[aria-label="Abrir chat Penagos"]
+            ) {
+
+              bottom: 14px;
+
+              right: 14px;
+
+            }
+
+
+            button[aria-label="Abrir chat Penagos"] {
+
+              height: 88px;
+
+              width: 88px;
+
+            }
+
+
+            #hubspot-messages-iframe-container {
+
+              right: 70px !important;
+
+              bottom: 14px !important;
+
+              transform: none !important;
+
+            }
+
+
+            #hubspot-messages-iframe-container iframe {
+
+              transform:
+                scale(0.88) !important;
+
+              transform-origin:
+                bottom right !important;
+
+            }
+
+          }
+
+
+          /* ==================================================
+             OCULTAR MENSAJE EN MÓVIL
+          ================================================== */
+
+          @media (max-width: 640px) {
+
+            .penaguinoMensaje {
+
+              display: none;
+
+            }
+
+          }
+
+
+          /* ==================================================
+             REDUCIR MOVIMIENTO
+          ================================================== */
+
+          @media (prefers-reduced-motion: reduce) {
+
+            button[aria-label="Abrir chat Penagos"] img {
+
+              animation: none !important;
+
+            }
+
+
+            .penaguinoMensaje {
+
+              transition: none !important;
+
+            }
+
+          }
+
+        `}
+      </style>
+    </>
+  );
 }
 
+
+/* ============================================================
+   EXPORT
+============================================================ */
 
 export default ChatPenagos;

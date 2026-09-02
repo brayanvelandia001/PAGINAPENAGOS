@@ -1,21 +1,11 @@
 import React from "react";
 
 /* ============================================================
-   HERO — CENTRALES DE PROCESAMIENTO DE CAFÉ
+   HERO SOSTENIBILIDAD
    PENAGOS
-
-   DISEÑO BASADO EN HERO SOSTENIBILIDAD
-   ------------------------------------------------------------
-   - Imagen a pantalla completa
-   - Degradado lateral
-   - Degradado inferior
-   - Composición editorial
-   - Título grande
-   - Acento azul Penagos
-   - Misma estructura visual de Sostenibilidad
 ============================================================ */
 
-function CentralesHero({
+function HeroSostenibilidad({
   language = "ES",
 }) {
   const isEnglish = language === "EN";
@@ -39,14 +29,12 @@ function CentralesHero({
       ====================================================== */}
 
       <img
-        src="https://penagos.com/wp-content/uploads/2021/02/Imagen-banner-de-centrales.png"
+        src="https://penagos.com/wp-content/uploads/2021/08/Imagen-fondo-contacto.webp"
         alt={
           isEnglish
-            ? "Penagos coffee processing plant"
-            : "Central de procesamiento de café Penagos"
+            ? "Sustainability and coffee agriculture"
+            : "Sostenibilidad y agricultura cafetera"
         }
-        loading="eager"
-        decoding="async"
         className="
           absolute
           inset-0
@@ -61,7 +49,6 @@ function CentralesHero({
         "
       />
 
-
       {/* ======================================================
           OVERLAY GENERAL
       ====================================================== */}
@@ -73,7 +60,6 @@ function CentralesHero({
           bg-black/25
         "
       />
-
 
       {/* ======================================================
           DEGRADADO IZQUIERDO
@@ -89,7 +75,6 @@ function CentralesHero({
           to-transparent
         "
       />
-
 
       {/* ======================================================
           DEGRADADO INFERIOR
@@ -108,9 +93,8 @@ function CentralesHero({
         "
       />
 
-
       {/* ======================================================
-          TONO AZUL PENAGOS
+          LIGERO TONO AZUL PENAGOS
       ====================================================== */}
 
       <div
@@ -121,7 +105,6 @@ function CentralesHero({
           mix-blend-multiply
         "
       />
-
 
       {/* ======================================================
           CONTENIDO
@@ -162,6 +145,8 @@ function CentralesHero({
             "
           >
 
+            {/* LÍNEA AZUL */}
+
             <span
               className="
                 h-[3px]
@@ -187,15 +172,14 @@ function CentralesHero({
               "
             >
               {isEnglish
-                ? "Penagos Engineering"
-                : "Ingeniería Penagos"}
+                ? "Penagos Sustainability"
+                : "Sostenibilidad Penagos"}
             </span>
 
           </div>
 
-
           {/* ==================================================
-              TÍTULO
+              TITULO
           ================================================== */}
 
           <h1
@@ -215,8 +199,7 @@ function CentralesHero({
 
             {isEnglish ? (
               <>
-                Coffee processing
-
+                Engineering
                 <br />
 
                 <span
@@ -227,13 +210,12 @@ function CentralesHero({
                     group-hover:text-white/90
                   "
                 >
-                  plants.
+                  a better future.
                 </span>
               </>
             ) : (
               <>
-                Centrales de procesamiento
-
+                Ingeniería para
                 <br />
 
                 <span
@@ -244,16 +226,15 @@ function CentralesHero({
                     group-hover:text-white/90
                   "
                 >
-                  de café.
+                  un mejor futuro.
                 </span>
               </>
             )}
 
           </h1>
 
-
           {/* ==================================================
-              LÍNEA AZUL PENAGOS
+              LINEA AZUL PENAGOS
           ================================================== */}
 
           <div
@@ -271,9 +252,8 @@ function CentralesHero({
             "
           />
 
-
           {/* ==================================================
-              FRASE PRINCIPAL
+              DESCRIPCIÓN
           ================================================== */}
 
           <p
@@ -292,31 +272,9 @@ function CentralesHero({
             "
           >
             {isEnglish
-              ? "Our technology at its maximum expression."
-              : "Nuestra tecnología en su máxima expresión."}
+              ? "We develop technology that promotes efficiency, innovation and responsible agriculture, contributing to a more sustainable future."
+              : "Desarrollamos tecnología que impulsa la eficiencia, la innovación y una agricultura responsable, contribuyendo a un futuro más sostenible."}
           </p>
-
-
-          {/* ==================================================
-              DESCRIPCIÓN
-          ================================================== */}
-
-          <p
-            className="
-              mt-3
-              max-w-[650px]
-              text-[13px]
-              leading-6
-              text-white/65
-              sm:text-[14px]
-              sm:leading-7
-            "
-          >
-            {isEnglish
-              ? "We develop integrated solutions that transform coffee processing through precision, efficiency and innovation."
-              : "Desarrollamos soluciones integrales que transforman el procesamiento del café mediante precisión, eficiencia e innovación."}
-          </p>
-
 
           {/* ==================================================
               INDICADOR VISUAL
@@ -359,8 +317,8 @@ function CentralesHero({
               "
             >
               {isEnglish
-                ? "Engineering · Integration · Innovation"
-                : "Ingeniería · Integración · Innovación"}
+                ? "Innovation · Sustainability"
+                : "Innovación · Sostenibilidad"}
             </span>
 
           </div>
@@ -368,7 +326,6 @@ function CentralesHero({
         </div>
 
       </div>
-
 
       {/* ======================================================
           INDICADOR SCROLL
@@ -438,40 +395,6 @@ function CentralesHero({
 
       </div>
 
-
-      {/* ======================================================
-          TEXTO INFERIOR DERECHO
-      ====================================================== */}
-
-      <div
-        className="
-          absolute
-          bottom-5
-          right-8
-          z-20
-          hidden
-          lg:block
-          xl:right-10
-        "
-      >
-
-        <p
-          className="
-            text-[9px]
-            font-bold
-            uppercase
-            tracking-[0.25em]
-            text-white/50
-          "
-        >
-          {isEnglish
-            ? "Coffee Processing · Penagos"
-            : "Procesamiento de Café · Penagos"}
-        </p>
-
-      </div>
-
-
       {/* ======================================================
           LÍNEA INFERIOR AZUL PENAGOS
       ====================================================== */}
@@ -487,7 +410,6 @@ function CentralesHero({
           bg-[#302b80]
         "
       />
-
 
       {/* ======================================================
           BRILLO SUPERIOR SUTIL
@@ -512,4 +434,4 @@ function CentralesHero({
   );
 }
 
-export default CentralesHero;
+export default HeroSostenibilidad;

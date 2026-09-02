@@ -21,12 +21,10 @@ import "leaflet/dist/leaflet.css";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
-
 import VideoSection from "./components/VideoSection";
 import MaquinasCarousel from "./components/MaquinasCarousel";
 import Mapa from "./components/Mapa";
 import Clientes from "./components/Clientes";
-
 import BotonCredito from "./components/BotonCredito";
 import ChatPenagos from "./components/ChatPenagos";
 
@@ -42,6 +40,22 @@ import QuienesSomos from "./pages/QuienesSomos";
 import ProteccionDatos from "./pages/ProteccionDatos";
 import Contactanos from "./pages/Contactanos";
 import CentralesProcesamientoCafe from "./pages/CentralesProcesamientoCafe";
+
+import Productos from "./pages/productos/Productos";
+
+// ============================================================
+// PRODUCTOS - CATEGORÍAS
+// ============================================================
+
+import ProductosAgricultura from "./pages/productos/ProductosAgricultura";
+import ProductosCafe from "./pages/productos/ProductosCafe";
+import ProductosDaewoo from "./pages/productos/ProductosDaewoo";
+
+// ============================================================
+// SOSTENIBILIDAD
+// ============================================================
+
+import Sostenibilidad from "./pages/Sostenibilidad/Sostenibilidad";
 
 // ============================================================
 // AGRICULTORES PENAGOS
@@ -78,10 +92,6 @@ function PantallaCarga() {
           justify-center
         "
       >
-        {/* ==================================================
-            LOGO
-        ================================================== */}
-
         <img
           src="https://penagos.com/wp-content/uploads/2020/03/Logotipo-Penagos-Hermanos-PNG.png"
           alt="Penagos Hermanos"
@@ -91,10 +101,6 @@ function PantallaCarga() {
             animate-[logoPulseIdioma_2s_ease-in-out_infinite]
           "
         />
-
-        {/* ==================================================
-            BARRA DE CARGA
-        ================================================== */}
 
         <div
           className="
@@ -118,15 +124,9 @@ function PantallaCarga() {
         </div>
       </div>
 
-      {/* ====================================================
-          ANIMACIONES
-      ==================================================== */}
-
       <style>
         {`
-
           @keyframes logoPulseIdioma {
-
             0% {
               transform: scale(1);
               opacity: 0.70;
@@ -141,11 +141,9 @@ function PantallaCarga() {
               transform: scale(1);
               opacity: 0.70;
             }
-
           }
 
           @keyframes loadingIdioma {
-
             0% {
               transform: translateX(-120%);
             }
@@ -153,9 +151,7 @@ function PantallaCarga() {
             100% {
               transform: translateX(220%);
             }
-
           }
-
         `}
       </style>
     </div>
@@ -187,7 +183,9 @@ function Inicio({
 
         <MaquinasCarousel
           language={language}
-          onMaquinasListas={onMaquinasListas}
+          onMaquinasListas={
+            onMaquinasListas
+          }
         />
 
         <Mapa
@@ -218,10 +216,8 @@ function AppContenido() {
   // IDIOMA
   // ==========================================================
 
-  const [
-    language,
-    setLanguage,
-  ] = useState("ES");
+  const [language, setLanguage] =
+    useState("ES");
 
   // ==========================================================
   // CARGA
@@ -233,22 +229,25 @@ function AppContenido() {
   ] = useState(true);
 
   // ==========================================================
-  // RUTA ACTUAL
+  // RUTA
   // ==========================================================
 
-  const location = useLocation();
+  const location =
+    useLocation();
 
   // ==========================================================
   // NAVEGACIÓN
   // ==========================================================
 
-  const navigate = useNavigate();
+  const navigate =
+    useNavigate();
 
   // ==========================================================
   // TIMER
   // ==========================================================
 
-  const timerRef = useRef(null);
+  const timerRef =
+    useRef(null);
 
   // ==========================================================
   // PRIMERA CARGA
@@ -259,37 +258,22 @@ function AppContenido() {
     const pathname =
       location.pathname.toLowerCase();
 
-    // --------------------------------------------------------
-    // DETECTAR INGLÉS
-    // --------------------------------------------------------
-
     if (
       pathname === "/en" ||
       pathname.startsWith("/en/")
     ) {
-
       setLanguage("EN");
-
     } else {
-
       setLanguage("ES");
-
     }
 
-    // --------------------------------------------------------
-    // PANTALLA INICIAL DE CARGA
-    // --------------------------------------------------------
-
-    const timer = setTimeout(() => {
-
-      setCargandoPagina(false);
-
-    }, 2500);
+    const timer =
+      setTimeout(() => {
+        setCargandoPagina(false);
+      }, 1200);
 
     return () => {
-
       clearTimeout(timer);
-
     };
 
   }, []);
@@ -318,416 +302,514 @@ function AppContenido() {
   // MOSTRAR CARGA
   // ==========================================================
 
-  const mostrarCarga = useCallback(() => {
+  const mostrarCarga =
+    useCallback(() => {
 
-    setCargandoPagina(true);
+      setCargandoPagina(true);
 
-    if (timerRef.current) {
+      if (timerRef.current) {
 
-      clearTimeout(
-        timerRef.current
-      );
-
-    }
-
-    timerRef.current = setTimeout(() => {
-
-      setCargandoPagina(false);
-
-      timerRef.current = null;
-
-    }, 2500);
-
-  }, []);
-
-  // ==========================================================
-  // DETECTAR AGRICULTORES PENAGOS
-  // ==========================================================
-
-  const esRutaAgricultores = useCallback(
-    (pathname) => {
-
-      const ruta =
-        pathname.toLowerCase();
-
-      return (
-        ruta === "/agricultores-penagos" ||
-        ruta.startsWith(
-          "/agricultores-penagos/"
-        ) ||
-        ruta === "/en/penagos-farmers" ||
-        ruta.startsWith(
-          "/en/penagos-farmers/"
-        )
-      );
-
-    },
-    []
-  );
-
-  // ==========================================================
-  // OBTENER REGIÓN AGRICULTORES
-  // ==========================================================
-
-  const obtenerRegionAgricultores = useCallback(
-    (pathname) => {
-
-      const ruta =
-        pathname.toLowerCase();
-
-      // ------------------------------------------------------
-      // ESPAÑOL
-      // ------------------------------------------------------
-
-      if (
-        ruta.startsWith(
-          "/agricultores-penagos/"
-        )
-      ) {
-
-        return ruta.replace(
-          "/agricultores-penagos/",
-          ""
+        clearTimeout(
+          timerRef.current
         );
 
       }
 
-      // ------------------------------------------------------
-      // INGLÉS
-      // ------------------------------------------------------
+      timerRef.current =
+        setTimeout(() => {
 
-      if (
-        ruta.startsWith(
-          "/en/penagos-farmers/"
-        )
-      ) {
+          setCargandoPagina(false);
 
-        return ruta.replace(
-          "/en/penagos-farmers/",
-          ""
+          timerRef.current =
+            null;
+
+        }, 1200);
+
+    }, []);
+
+  // ==========================================================
+  // DETECTAR RUTA AGRICULTORES
+  // ==========================================================
+
+  const esRutaAgricultores =
+    useCallback(
+      (pathname) => {
+
+        const ruta =
+          pathname.toLowerCase();
+
+        return (
+          ruta ===
+            "/agricultores-penagos" ||
+
+          ruta.startsWith(
+            "/agricultores-penagos/"
+          ) ||
+
+          ruta ===
+            "/en/penagos-farmers" ||
+
+          ruta.startsWith(
+            "/en/penagos-farmers/"
+          )
         );
 
-      }
+      },
+      []
+    );
 
-      return null;
+  // ==========================================================
+  // OBTENER REGIÓN
+  // ==========================================================
 
-    },
-    []
-  );
+  const obtenerRegionAgricultores =
+    useCallback(
+      (pathname) => {
+
+        const ruta =
+          pathname
+            .toLowerCase()
+            .replace(/\/+$/, "");
+
+        // ------------------------------------------------------
+        // ESPAÑOL
+        // ------------------------------------------------------
+
+        if (
+          ruta.startsWith(
+            "/agricultores-penagos/"
+          )
+        ) {
+
+          const region =
+            ruta.replace(
+              "/agricultores-penagos/",
+              ""
+            );
+
+          return region || null;
+        }
+
+        // ------------------------------------------------------
+        // INGLÉS
+        // ------------------------------------------------------
+
+        if (
+          ruta.startsWith(
+            "/en/penagos-farmers/"
+          )
+        ) {
+
+          const region =
+            ruta.replace(
+              "/en/penagos-farmers/",
+              ""
+            );
+
+          return region || null;
+        }
+
+        return null;
+
+      },
+      []
+    );
 
   // ==========================================================
   // CREAR RUTA AGRICULTORES
   // ==========================================================
 
-  const crearRutaAgricultores = useCallback(
-    (
-      newLanguage,
-      region
-    ) => {
+  const crearRutaAgricultores =
+    useCallback(
+      (newLanguage, region) => {
 
-      const base =
-        newLanguage === "EN"
-          ? "/en/penagos-farmers"
-          : "/agricultores-penagos";
+        const base =
+          newLanguage === "EN"
+            ? "/en/penagos-farmers"
+            : "/agricultores-penagos";
 
-      if (!region) {
+        if (!region) {
+          return base;
+        }
 
-        return base;
+        return `${base}/${region}`;
 
-      }
-
-      return `${base}/${region}`;
-
-    },
-    []
-  );
+      },
+      []
+    );
 
   // ==========================================================
   // CAMBIAR IDIOMA
   // ==========================================================
 
-  const changeLanguage = useCallback(
-    (newLanguage) => {
+  const changeLanguage =
+    useCallback(
+      (newLanguage) => {
 
-      // ------------------------------------------------------
-      // EVITAR CAMBIO INNECESARIO
-      // ------------------------------------------------------
+        if (
+          newLanguage === language
+        ) {
+          return;
+        }
 
-      if (
-        newLanguage === language
-      ) {
+        const pathname =
+          location.pathname
+            .toLowerCase()
+            .replace(/\/+$/, "") || "/";
 
-        return;
+        let nuevaRuta = null;
 
-      }
+        // ====================================================
+        // AGRICULTORES PENAGOS
+        // ====================================================
 
-      const pathname =
-        location.pathname.toLowerCase();
-
-      let nuevaRuta = null;
-
-      // ======================================================
-      // AGRICULTORES
-      // ======================================================
-
-      if (
-        esRutaAgricultores(pathname)
-      ) {
-
-        const region =
-          obtenerRegionAgricultores(
+        if (
+          esRutaAgricultores(
             pathname
-          );
+          )
+        ) {
 
-        nuevaRuta =
-          crearRutaAgricultores(
-            newLanguage,
-            region
-          );
+          const region =
+            obtenerRegionAgricultores(
+              pathname
+            );
 
-      }
+          nuevaRuta =
+            crearRutaAgricultores(
+              newLanguage,
+              region
+            );
+        }
 
-      // ======================================================
-      // INICIO
-      // ======================================================
+        // ====================================================
+        // INICIO
+        // ====================================================
 
-      else if (
-        pathname === "/" ||
-        pathname === "/en"
-      ) {
+        else if (
+          pathname === "/" ||
+          pathname === "/en"
+        ) {
 
-        nuevaRuta =
-          newLanguage === "EN"
-            ? "/en"
-            : "/";
+          nuevaRuta =
+            newLanguage === "EN"
+              ? "/en"
+              : "/";
+        }
 
-      }
+        // ====================================================
+        // BLOG
+        // ====================================================
 
-      // ======================================================
-      // BLOG
-      // ======================================================
+        else if (
+          pathname === "/blog" ||
+          pathname === "/en/news"
+        ) {
 
-      else if (
-        pathname === "/blog" ||
-        pathname === "/en/news"
-      ) {
+          nuevaRuta =
+            newLanguage === "EN"
+              ? "/en/news"
+              : "/blog";
+        }
 
-        nuevaRuta =
-          newLanguage === "EN"
-            ? "/en/news"
-            : "/blog";
+        // ====================================================
+        // QUIÉNES SOMOS
+        // ====================================================
 
-      }
+        else if (
+          pathname ===
+            "/quienes-somos" ||
+          pathname ===
+            "/en/about-us"
+        ) {
 
-      // ======================================================
-      // QUIENES SOMOS
-      // ======================================================
+          nuevaRuta =
+            newLanguage === "EN"
+              ? "/en/about-us"
+              : "/quienes-somos";
+        }
 
-      else if (
-        pathname === "/quienes-somos" ||
-        pathname === "/en/about-us"
-      ) {
+        // ====================================================
+        // PRODUCTOS PRINCIPAL
+        // ====================================================
 
-        nuevaRuta =
-          newLanguage === "EN"
-            ? "/en/about-us"
-            : "/quienes-somos";
+        else if (
+          pathname === "/productos" ||
+          pathname === "/en/products"
+        ) {
 
-      }
+          nuevaRuta =
+            newLanguage === "EN"
+              ? "/en/products"
+              : "/productos";
+        }
 
-      // ======================================================
-      // PAGOS
-      // ======================================================
+        // ====================================================
+        // PRODUCTOS - AGRICULTURA
+        // ====================================================
 
-      else if (
-        pathname === "/pagos" ||
-        pathname === "/en/payments"
-      ) {
+        else if (
+          pathname ===
+            "/productos/agricultura" ||
+          pathname ===
+            "/en/products/agriculture"
+        ) {
 
-        nuevaRuta =
-          newLanguage === "EN"
-            ? "/en/payments"
-            : "/pagos";
+          nuevaRuta =
+            newLanguage === "EN"
+              ? "/en/products/agriculture"
+              : "/productos/agricultura";
+        }
 
-      }
+        // ====================================================
+        // PRODUCTOS - CAFÉ
+        // ====================================================
 
-      // ======================================================
-      // SOPORTE
-      // ======================================================
+        else if (
+          pathname ===
+            "/productos/cafe" ||
+          pathname ===
+            "/en/products/coffee"
+        ) {
 
-      else if (
-        pathname === "/soporte-tecnico" ||
-        pathname === "/en/technical-support"
-      ) {
+          nuevaRuta =
+            newLanguage === "EN"
+              ? "/en/products/coffee"
+              : "/productos/cafe";
+        }
 
-        nuevaRuta =
-          newLanguage === "EN"
-            ? "/en/technical-support"
-            : "/soporte-tecnico";
+        // ====================================================
+        // PRODUCTOS - DAEWOO
+        // ====================================================
 
-      }
+        else if (
+          pathname ===
+            "/productos/daewoo" ||
+          pathname ===
+            "/en/products/daewoo"
+        ) {
 
-      // ======================================================
-      // PROTECCIÓN DE DATOS
-      // ======================================================
+          nuevaRuta =
+            newLanguage === "EN"
+              ? "/en/products/daewoo"
+              : "/productos/daewoo";
+        }
 
-      else if (
-        pathname ===
-          "/proteccion-de-datos-personales" ||
-        pathname ===
-          "/en/personal-data-protection"
-      ) {
+        // ====================================================
+        // PRODUCTOS - GAS
+        // ====================================================
 
-        nuevaRuta =
-          newLanguage === "EN"
-            ? "/en/personal-data-protection"
-            : "/proteccion-de-datos-personales";
+        else if (
+          pathname ===
+            "/productos/gas" ||
+          pathname ===
+            "/en/products/gas"
+        ) {
 
-      }
+          nuevaRuta =
+            newLanguage === "EN"
+              ? "/en/products/gas"
+              : "/productos/gas";
+        }
 
-      // ======================================================
-      // CONTACTANOS
-      // ======================================================
+        // ====================================================
+        // SOSTENIBILIDAD
+        // ====================================================
 
-      else if (
-        pathname === "/contactanos" ||
-        pathname === "/en/contact-us"
-      ) {
+        else if (
+          pathname ===
+            "/sostenibilidad" ||
+          pathname ===
+            "/en/sustainability"
+        ) {
 
-        nuevaRuta =
-          newLanguage === "EN"
-            ? "/en/contact-us"
-            : "/contactanos";
+          nuevaRuta =
+            newLanguage === "EN"
+              ? "/en/sustainability"
+              : "/sostenibilidad";
+        }
 
-      }
+        // ====================================================
+        // PAGOS
+        // ====================================================
 
-      // ======================================================
-      // CENTRALES DE PROCESAMIENTO
-      // ======================================================
-      //
-      // RUTA PRINCIPAL:
-      //
-      // ES:
-      // /centrales-procesamiento-de-cafe
-      //
-      // EN:
-      // /en/coffee-processing-plants
-      //
-      // También aceptamos la antigua ruta:
-      //
-      // /centrales-de-procesamiento-de-cafe
-      //
-      // para evitar que una URL anterior quede rota.
-      // ======================================================
+        else if (
+          pathname === "/pagos" ||
+          pathname === "/en/payments"
+        ) {
 
-      else if (
-        pathname ===
-          "/centrales-procesamiento-de-cafe" ||
-        pathname ===
-          "/centrales-de-procesamiento-de-cafe" ||
-        pathname ===
-          "/en/coffee-processing-plants"
-      ) {
+          nuevaRuta =
+            newLanguage === "EN"
+              ? "/en/payments"
+              : "/pagos";
+        }
 
-        nuevaRuta =
-          newLanguage === "EN"
-            ? "/en/coffee-processing-plants"
-            : "/centrales-procesamiento-de-cafe";
+        // ====================================================
+        // SOPORTE
+        // ====================================================
 
-      }
+        else if (
+          pathname ===
+            "/soporte-tecnico" ||
+          pathname ===
+            "/en/technical-support"
+        ) {
 
-      // ======================================================
-      // NOTICIA ESPAÑOL
-      // ======================================================
+          nuevaRuta =
+            newLanguage === "EN"
+              ? "/en/technical-support"
+              : "/soporte-tecnico";
+        }
 
-      else if (
-        pathname.startsWith(
-          "/noticia/"
-        )
-      ) {
+        // ====================================================
+        // PROTECCIÓN DE DATOS
+        // ====================================================
 
-        const id =
-          pathname.replace(
-            "/noticia/",
-            ""
-          );
+        else if (
+          pathname ===
+            "/proteccion-de-datos-personales" ||
+          pathname ===
+            "/en/personal-data-protection"
+        ) {
 
-        nuevaRuta =
-          newLanguage === "EN"
-            ? `/en/news/${id}`
-            : `/noticia/${id}`;
+          nuevaRuta =
+            newLanguage === "EN"
+              ? "/en/personal-data-protection"
+              : "/proteccion-de-datos-personales";
+        }
 
-      }
+        // ====================================================
+        // CONTACTANOS
+        // ====================================================
 
-      // ======================================================
-      // NOTICIA INGLÉS
-      // ======================================================
+        else if (
+          pathname === "/contactanos" ||
+          pathname === "/en/contact-us"
+        ) {
 
-      else if (
-        pathname.startsWith(
-          "/en/news/"
-        )
-      ) {
+          nuevaRuta =
+            newLanguage === "EN"
+              ? "/en/contact-us"
+              : "/contactanos";
+        }
 
-        const id =
-          pathname.replace(
-            "/en/news/",
-            ""
-          );
+        // ====================================================
+        // CENTRALES DE CAFÉ
+        // ====================================================
 
-        nuevaRuta =
-          newLanguage === "EN"
-            ? `/en/news/${id}`
-            : `/noticia/${id}`;
+        else if (
+          pathname ===
+            "/centrales-procesamiento-de-cafe" ||
+          pathname ===
+            "/centrales-de-procesamiento-de-cafe" ||
+          pathname ===
+            "/en/coffee-processing-plants"
+        ) {
 
-      }
+          nuevaRuta =
+            newLanguage === "EN"
+              ? "/en/coffee-processing-plants"
+              : "/centrales-procesamiento-de-cafe";
+        }
 
-      // ======================================================
-      // FALLBACK
-      // ======================================================
+        // ====================================================
+        // NOTICIA ESPAÑOL
+        // ====================================================
 
-      if (!nuevaRuta) {
+        else if (
+          pathname.startsWith(
+            "/noticia/"
+          )
+        ) {
 
-        nuevaRuta =
-          newLanguage === "EN"
-            ? "/en"
-            : "/";
+          const id =
+            pathname
+              .replace(
+                "/noticia/",
+                ""
+              )
+              .replace(
+                /\/+$/,
+                ""
+              );
 
-      }
+          nuevaRuta =
+            newLanguage === "EN"
+              ? `/en/news/${id}`
+              : `/noticia/${id}`;
+        }
 
-      // ======================================================
-      // CAMBIAR IDIOMA
-      // ======================================================
+        // ====================================================
+        // NOTICIA INGLÉS
+        // ====================================================
 
-      setLanguage(
-        newLanguage
-      );
+        else if (
+          pathname.startsWith(
+            "/en/news/"
+          )
+        ) {
 
-      // ======================================================
-      // MOSTRAR CARGA
-      // ======================================================
+          const id =
+            pathname
+              .replace(
+                "/en/news/",
+                ""
+              )
+              .replace(
+                /\/+$/,
+                ""
+              );
 
-      mostrarCarga();
+          nuevaRuta =
+            newLanguage === "EN"
+              ? `/en/news/${id}`
+              : `/noticia/${id}`;
+        }
 
-      // ======================================================
-      // NAVEGAR
-      // ======================================================
+        // ====================================================
+        // FALLBACK
+        // ====================================================
 
-      navigate(
-        nuevaRuta
-      );
+        if (!nuevaRuta) {
 
-    },
-    [
-      language,
-      location.pathname,
-      navigate,
-      mostrarCarga,
-      esRutaAgricultores,
-      obtenerRegionAgricultores,
-      crearRutaAgricultores,
-    ]
-  );
+          nuevaRuta =
+            newLanguage === "EN"
+              ? "/en"
+              : "/";
+        }
+
+        // ====================================================
+        // ACTUALIZAR ESTADO
+        // ====================================================
+
+        setLanguage(
+          newLanguage
+        );
+
+        // ====================================================
+        // MOSTRAR CARGA
+        // ====================================================
+
+        mostrarCarga();
+
+        // ====================================================
+        // NAVEGAR
+        // ====================================================
+
+        navigate(
+          nuevaRuta
+        );
+
+      },
+      [
+        language,
+        location.pathname,
+        navigate,
+        mostrarCarga,
+        esRutaAgricultores,
+        obtenerRegionAgricultores,
+        crearRutaAgricultores,
+      ]
+    );
 
   // ==========================================================
   // DETECTAR CAMBIO DE RUTA
@@ -739,7 +821,9 @@ function AppContenido() {
   useEffect(() => {
 
     const pathname =
-      location.pathname.toLowerCase();
+      location.pathname
+        .toLowerCase()
+        .replace(/\/+$/, "") || "/";
 
     // --------------------------------------------------------
     // PRIMERA RUTA
@@ -753,7 +837,6 @@ function AppContenido() {
         pathname;
 
       return;
-
     }
 
     const rutaAnterior =
@@ -773,9 +856,10 @@ function AppContenido() {
         pathname
       );
 
-    // ========================================================
-    // AGRICULTORES -> AGRICULTORES
-    // ========================================================
+    // --------------------------------------------------------
+    // SI AMBAS SON AGRICULTORES
+    // NO HACEMOS UNA CARGA EXTRA
+    // --------------------------------------------------------
 
     if (
       anteriorEsAgricultores &&
@@ -786,12 +870,11 @@ function AppContenido() {
         pathname;
 
       return;
-
     }
 
-    // ========================================================
+    // --------------------------------------------------------
     // CUALQUIER OTRA NAVEGACIÓN
-    // ========================================================
+    // --------------------------------------------------------
 
     mostrarCarga();
 
@@ -838,7 +921,7 @@ function AppContenido() {
           path="/"
           element={
             <Inicio
-              language={language}
+              language="ES"
               changeLanguage={
                 changeLanguage
               }
@@ -857,7 +940,7 @@ function AppContenido() {
           path="/blog"
           element={
             <Blog
-              language={language}
+              language="ES"
               changeLanguage={
                 changeLanguage
               }
@@ -866,14 +949,14 @@ function AppContenido() {
         />
 
         {/* ==================================================
-            QUIENES SOMOS
+            QUIÉNES SOMOS
         ================================================== */}
 
         <Route
           path="/quienes-somos"
           element={
             <QuienesSomos
-              language={language}
+              language="ES"
               changeLanguage={
                 changeLanguage
               }
@@ -882,26 +965,94 @@ function AppContenido() {
         />
 
         {/* ==================================================
-            AGRICULTORES PENAGOS
+            PRODUCTOS
+        ================================================== */}
+
+        <Route
+          path="/productos"
+          element={
+            <Productos
+              language="ES"
+              changeLanguage={
+                changeLanguage
+              }
+            />
+          }
+        />
+
+        {/* ==================================================
+            PRODUCTOS - AGRICULTURA
+        ================================================== */}
+
+        <Route
+          path="/productos/agricultura"
+          element={
+            <ProductosAgricultura
+              language="ES"
+              changeLanguage={
+                changeLanguage
+              }
+            />
+          }
+        />
+
+        {/* ==================================================
+            PRODUCTOS - CAFÉ
+        ================================================== */}
+
+        <Route
+          path="/productos/cafe"
+          element={
+            <ProductosCafe
+              language="ES"
+              changeLanguage={
+                changeLanguage
+              }
+            />
+          }
+        />
+
+        {/* ==================================================
+            PRODUCTOS - DAEWOO
+        ================================================== */}
+
+        <Route
+          path="/productos/daewoo"
+          element={
+            <ProductosDaewoo
+              language="ES"
+              changeLanguage={
+                changeLanguage
+              }
+            />
+          }
+        />
+
+        {/* ==================================================
+            SOSTENIBILIDAD
+        ================================================== */}
+
+        <Route
+          path="/sostenibilidad"
+          element={
+            <Sostenibilidad
+              language="ES"
+              changeLanguage={
+                changeLanguage
+              }
+            />
+          }
+        />
+
+        {/* ==================================================
+            AGRICULTORES - PRINCIPAL
         ================================================== */}
 
         <Route
           path="/agricultores-penagos"
           element={
             <AgricultoresPenagos
-              language={language}
-              changeLanguage={
-                changeLanguage
-              }
-            />
-          }
-        />
-
-        <Route
-          path="/agricultores-penagos/:region"
-          element={
-            <AgricultoresMundo
-              language={language}
+              language="ES"
               changeLanguage={
                 changeLanguage
               }
@@ -910,13 +1061,23 @@ function AppContenido() {
         />
 
         {/* ==================================================
-            CENTRALES DE PROCESAMIENTO DE CAFÉ
-        ==================================================
-        
-            ESTA ES LA RUTA CORRECTA:
+            AGRICULTORES - REGIÓN
+        ================================================== */}
 
-            /centrales-procesamiento-de-cafe
+        <Route
+          path="/agricultores-penagos/:region"
+          element={
+            <AgricultoresMundo
+              language="ES"
+              changeLanguage={
+                changeLanguage
+              }
+            />
+          }
+        />
 
+        {/* ==================================================
+            CENTRALES CAFÉ
         ================================================== */}
 
         <Route
@@ -930,10 +1091,6 @@ function AppContenido() {
             />
           }
         />
-
-        {/* ==================================================
-            COMPATIBILIDAD CON RUTA ANTIGUA
-        ================================================== */}
 
         <Route
           path="/centrales-de-procesamiento-de-cafe"
@@ -955,7 +1112,7 @@ function AppContenido() {
           path="/pagos"
           element={
             <Pagos
-              language={language}
+              language="ES"
               changeLanguage={
                 changeLanguage
               }
@@ -971,7 +1128,7 @@ function AppContenido() {
           path="/soporte-tecnico"
           element={
             <Soporte
-              language={language}
+              language="ES"
               changeLanguage={
                 changeLanguage
               }
@@ -980,14 +1137,14 @@ function AppContenido() {
         />
 
         {/* ==================================================
-            PROTECCIÓN DE DATOS
+            PROTECCIÓN
         ================================================== */}
 
         <Route
           path="/proteccion-de-datos-personales"
           element={
             <ProteccionDatos
-              language={language}
+              language="ES"
               changeLanguage={
                 changeLanguage
               }
@@ -996,14 +1153,14 @@ function AppContenido() {
         />
 
         {/* ==================================================
-            CONTACTANOS
+            CONTACTO
         ================================================== */}
 
         <Route
           path="/contactanos"
           element={
             <Contactanos
-              language={language}
+              language="ES"
               changeLanguage={
                 changeLanguage
               }
@@ -1012,14 +1169,14 @@ function AppContenido() {
         />
 
         {/* ==================================================
-            NOTICIA
+            NOTICIAS
         ================================================== */}
 
         <Route
           path="/noticia/:id"
           element={
             <NoticiaDetalle
-              language={language}
+              language="ES"
               changeLanguage={
                 changeLanguage
               }
@@ -1083,13 +1240,13 @@ function AppContenido() {
         />
 
         {/* ==================================================
-            PENAGOS FARMERS
+            PRODUCTS
         ================================================== */}
 
         <Route
-          path="/en/penagos-farmers"
+          path="/en/products"
           element={
-            <AgricultoresMundo
+            <Productos
               language="EN"
               changeLanguage={
                 changeLanguage
@@ -1097,6 +1254,90 @@ function AppContenido() {
             />
           }
         />
+
+        {/* ==================================================
+            PRODUCTS - AGRICULTURE
+        ================================================== */}
+
+        <Route
+          path="/en/products/agriculture"
+          element={
+            <ProductosAgricultura
+              language="EN"
+              changeLanguage={
+                changeLanguage
+              }
+            />
+          }
+        />
+
+        {/* ==================================================
+            PRODUCTS - COFFEE
+        ================================================== */}
+
+        <Route
+          path="/en/products/coffee"
+          element={
+            <ProductosCafe
+              language="EN"
+              changeLanguage={
+                changeLanguage
+              }
+            />
+          }
+        />
+
+        {/* ==================================================
+            PRODUCTS - DAEWOO
+        ================================================== */}
+
+        <Route
+          path="/en/products/daewoo"
+          element={
+            <ProductosDaewoo
+              language="EN"
+              changeLanguage={
+                changeLanguage
+              }
+            />
+          }
+        />
+
+        {/* ==================================================
+            SUSTAINABILITY
+        ================================================== */}
+
+        <Route
+          path="/en/sustainability"
+          element={
+            <Sostenibilidad
+              language="EN"
+              changeLanguage={
+                changeLanguage
+              }
+            />
+          }
+        />
+
+        {/* ==================================================
+            PENAGOS FARMERS - PRINCIPAL
+        ================================================== */}
+
+        <Route
+          path="/en/penagos-farmers"
+          element={
+            <AgricultoresPenagos
+              language="EN"
+              changeLanguage={
+                changeLanguage
+              }
+            />
+          }
+        />
+
+        {/* ==================================================
+            PENAGOS FARMERS - REGIÓN
+        ================================================== */}
 
         <Route
           path="/en/penagos-farmers/:region"
@@ -1143,7 +1384,7 @@ function AppContenido() {
         />
 
         {/* ==================================================
-            TECHNICAL SUPPORT
+            SUPPORT
         ================================================== */}
 
         <Route
@@ -1159,7 +1400,7 @@ function AppContenido() {
         />
 
         {/* ==================================================
-            PERSONAL DATA PROTECTION
+            DATA PROTECTION
         ================================================== */}
 
         <Route
@@ -1175,7 +1416,7 @@ function AppContenido() {
         />
 
         {/* ==================================================
-            CONTACT US
+            CONTACT
         ================================================== */}
 
         <Route
@@ -1209,7 +1450,7 @@ function AppContenido() {
       </Routes>
 
       {/* ======================================================
-          BOTÓN BANCO AGRARIO
+          BOTÓN CRÉDITO
       ====================================================== */}
 
       <BotonCredito
@@ -1217,13 +1458,13 @@ function AppContenido() {
       />
 
       {/* ======================================================
-          CHAT HUBSPOT
+          HUBSPOT
       ====================================================== */}
 
       <ChatPenagos />
 
       {/* ======================================================
-          PANTALLA DE CARGA
+          LOADING
       ====================================================== */}
 
       {cargandoPagina && (
@@ -1239,12 +1480,9 @@ function AppContenido() {
 // ============================================================
 
 function App() {
-
   return (
     <BrowserRouter>
-
       <AppContenido />
-
     </BrowserRouter>
   );
 }

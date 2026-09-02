@@ -1,24 +1,177 @@
 import React from "react";
+import { ArrowRight } from "lucide-react";
 
 /* ============================================================
-   HERO — CENTRALES DE PROCESAMIENTO DE CAFÉ
+   HERO PRODUCTOS
    PENAGOS
 
-   DISEÑO BASADO EN HERO SOSTENIBILIDAD
-   ------------------------------------------------------------
-   - Imagen a pantalla completa
-   - Degradado lateral
-   - Degradado inferior
-   - Composición editorial
-   - Título grande
-   - Acento azul Penagos
-   - Misma estructura visual de Sostenibilidad
+   TIPOS:
+   - general
+   - agricultura
+   - cafe
+   - daewoo
 ============================================================ */
 
-function CentralesHero({
+function HeroProductos({
   language = "ES",
+  tipo = "general",
 }) {
   const isEnglish = language === "EN";
+
+  /* ============================================================
+     IMÁGENES DEL HERO
+  ============================================================ */
+
+  const imagenes = {
+    general:
+      "https://penagos.com/wp-content/uploads/2020/04/Picapasto-Penagos-PP-300R-Picadora-de-forrajes-y-alimentos-5.jpg",
+
+    agricultura:
+      "https://penagos.com/wp-content/uploads/2020/05/Banner-Agricola.jpg",
+
+    cafe:
+      "https://penagos.com/wp-content/uploads/2020/05/Banner-Café.jpg",
+
+    daewoo:
+      "https://penagos.com/wp-content/uploads/2021/04/Banner-Daewoo-Power-Products.jpg",
+  };
+
+  /* ============================================================
+     IMAGEN ACTUAL
+  ============================================================ */
+
+  const imagenHero =
+    imagenes[tipo] || imagenes.general;
+
+  /* ============================================================
+     TEXTOS DINÁMICOS
+  ============================================================ */
+
+  const textos = {
+    general: {
+      eyebrow: {
+        ES: "Productos Penagos",
+        EN: "Penagos Products",
+      },
+      title: {
+        ES: (
+          <>
+            Tecnología para
+            <br />
+            <span>cada proceso.</span>
+          </>
+        ),
+        EN: (
+          <>
+            Technology for
+            <br />
+            <span>every process.</span>
+          </>
+        ),
+      },
+      description: {
+        ES: "Descubre la maquinaria y las soluciones Penagos diseñadas para mejorar la productividad, eficiencia y rendimiento en diferentes procesos.",
+        EN: "Explore Penagos machinery and solutions designed to improve productivity, efficiency and performance across different processes.",
+      },
+    },
+
+    agricultura: {
+      eyebrow: {
+        ES: "Maquinaria agrícola",
+        EN: "Agricultural Machinery",
+      },
+      title: {
+        ES: (
+          <>
+            Tecnología para
+            <br />
+            <span>el campo.</span>
+          </>
+        ),
+        EN: (
+          <>
+            Technology for
+            <br />
+            <span>the field.</span>
+          </>
+        ),
+      },
+      description: {
+        ES: "Soluciones Penagos diseñadas para transformar, optimizar y mejorar los procesos agrícolas.",
+        EN: "Penagos solutions designed to transform, optimize and improve agricultural processes.",
+      },
+    },
+
+    cafe: {
+      eyebrow: {
+        ES: "Procesamiento de café",
+        EN: "Coffee Processing",
+      },
+      title: {
+        ES: (
+          <>
+            Tecnología para
+            <br />
+            <span>cada grano.</span>
+          </>
+        ),
+        EN: (
+          <>
+            Technology for
+            <br />
+            <span>every bean.</span>
+          </>
+        ),
+      },
+      description: {
+        ES: "Tecnología especializada para mejorar la eficiencia y calidad en cada etapa del procesamiento del café.",
+        EN: "Specialized technology to improve efficiency and quality at every stage of coffee processing.",
+      },
+    },
+
+    daewoo: {
+      eyebrow: {
+        ES: "Equipos Daewoo",
+        EN: "Daewoo Equipment",
+      },
+      title: {
+        ES: (
+          <>
+            Potencia para
+            <br />
+            <span>cada desafío.</span>
+          </>
+        ),
+        EN: (
+          <>
+            Power for
+            <br />
+            <span>every challenge.</span>
+          </>
+        ),
+      },
+      description: {
+        ES: "Equipos Daewoo diseñados para ofrecer potencia, rendimiento y confiabilidad en diferentes aplicaciones.",
+        EN: "Daewoo equipment designed to deliver power, performance and reliability across different applications.",
+      },
+    },
+  };
+
+  const contenido =
+    textos[tipo] || textos.general;
+
+  /* ============================================================
+     SCROLL A CATEGORÍAS
+  ============================================================ */
+
+  const irACategorias = () => {
+    document
+      .getElementById("categorias-productos")
+      ?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+  };
 
   return (
     <section
@@ -35,18 +188,16 @@ function CentralesHero({
     >
 
       {/* ======================================================
-          IMAGEN DE FONDO
+          IMAGEN PRINCIPAL
       ====================================================== */}
 
       <img
-        src="https://penagos.com/wp-content/uploads/2021/02/Imagen-banner-de-centrales.png"
+        src={imagenHero}
         alt={
           isEnglish
-            ? "Penagos coffee processing plant"
-            : "Central de procesamiento de café Penagos"
+            ? "Penagos products"
+            : "Productos Penagos"
         }
-        loading="eager"
-        decoding="async"
         className="
           absolute
           inset-0
@@ -57,10 +208,9 @@ function CentralesHero({
           transition-transform
           duration-[2000ms]
           ease-out
-          group-hover:scale-[1.02]
+          group-hover:scale-[1.025]
         "
       />
-
 
       {/* ======================================================
           OVERLAY GENERAL
@@ -70,10 +220,9 @@ function CentralesHero({
         className="
           absolute
           inset-0
-          bg-black/25
+          bg-black/30
         "
       />
-
 
       {/* ======================================================
           DEGRADADO IZQUIERDO
@@ -84,12 +233,27 @@ function CentralesHero({
           absolute
           inset-0
           bg-gradient-to-r
-          from-[#07133d]/90
-          via-[#07133d]/45
+          from-[#07133d]/95
+          via-[#07133d]/65
           to-transparent
         "
       />
 
+      {/* ======================================================
+          DEGRADADO DERECHO
+      ====================================================== */}
+
+      <div
+        className="
+          absolute
+          inset-y-0
+          right-0
+          w-[55%]
+          bg-gradient-to-l
+          from-[#07133d]/30
+          to-transparent
+        "
+      />
 
       {/* ======================================================
           DEGRADADO INFERIOR
@@ -100,28 +264,13 @@ function CentralesHero({
           absolute
           inset-x-0
           bottom-0
-          h-[50%]
+          h-[45%]
           bg-gradient-to-t
-          from-[#07133d]/80
-          via-[#07133d]/25
+          from-[#07133d]/90
+          via-[#07133d]/35
           to-transparent
         "
       />
-
-
-      {/* ======================================================
-          TONO AZUL PENAGOS
-      ====================================================== */}
-
-      <div
-        className="
-          absolute
-          inset-0
-          bg-[#302b80]/5
-          mix-blend-multiply
-        "
-      />
-
 
       {/* ======================================================
           CONTENIDO
@@ -135,14 +284,13 @@ function CentralesHero({
           w-full
           max-w-[1500px]
           px-6
-          pb-20
+          pb-24
           pt-32
           sm:px-10
           lg:px-16
           xl:px-20
         "
       >
-
         <div
           className="
             max-w-[780px]
@@ -161,14 +309,13 @@ function CentralesHero({
               gap-4
             "
           >
-
             <span
               className="
                 h-[3px]
                 w-14
                 rounded-full
                 bg-[#302b80]
-                shadow-[0_0_15px_rgba(48,43,128,0.5)]
+                shadow-[0_0_15px_rgba(48,43,128,0.55)]
                 transition-all
                 duration-500
                 group-hover:w-20
@@ -186,74 +333,33 @@ function CentralesHero({
                 sm:text-xs
               "
             >
-              {isEnglish
-                ? "Penagos Engineering"
-                : "Ingeniería Penagos"}
+              {contenido.eyebrow[language]}
             </span>
-
           </div>
 
-
           {/* ==================================================
-              TÍTULO
+              TITULO
           ================================================== */}
 
           <h1
             className="
-              text-[48px]
+              text-[50px]
               font-semibold
-              leading-[0.96]
-              tracking-[-0.045em]
+              leading-[0.94]
+              tracking-[-0.05em]
               text-white
-              drop-shadow-[0_5px_25px_rgba(0,0,0,0.25)]
+              drop-shadow-[0_5px_25px_rgba(0,0,0,0.3)]
               sm:text-6xl
               md:text-7xl
               lg:text-[82px]
-              xl:text-[92px]
+              xl:text-[94px]
             "
           >
-
-            {isEnglish ? (
-              <>
-                Coffee processing
-
-                <br />
-
-                <span
-                  className="
-                    text-white/75
-                    transition-colors
-                    duration-500
-                    group-hover:text-white/90
-                  "
-                >
-                  plants.
-                </span>
-              </>
-            ) : (
-              <>
-                Centrales de procesamiento
-
-                <br />
-
-                <span
-                  className="
-                    text-white/75
-                    transition-colors
-                    duration-500
-                    group-hover:text-white/90
-                  "
-                >
-                  de café.
-                </span>
-              </>
-            )}
-
+            {contenido.title[language]}
           </h1>
 
-
           {/* ==================================================
-              LÍNEA AZUL PENAGOS
+              LINEA PENAGOS
           ================================================== */}
 
           <div
@@ -271,9 +377,8 @@ function CentralesHero({
             "
           />
 
-
           {/* ==================================================
-              FRASE PRINCIPAL
+              DESCRIPCIÓN
           ================================================== */}
 
           <p
@@ -291,35 +396,70 @@ function CentralesHero({
               lg:leading-8
             "
           >
-            {isEnglish
-              ? "Our technology at its maximum expression."
-              : "Nuestra tecnología en su máxima expresión."}
+            {contenido.description[language]}
           </p>
 
-
           {/* ==================================================
-              DESCRIPCIÓN
+              BOTÓN
           ================================================== */}
 
-          <p
+          <div
             className="
-              mt-3
-              max-w-[650px]
-              text-[13px]
-              leading-6
-              text-white/65
-              sm:text-[14px]
-              sm:leading-7
+              mt-9
             "
           >
-            {isEnglish
-              ? "We develop integrated solutions that transform coffee processing through precision, efficiency and innovation."
-              : "Desarrollamos soluciones integrales que transforman el procesamiento del café mediante precisión, eficiencia e innovación."}
-          </p>
+            <button
+              type="button"
+              onClick={irACategorias}
+              className="
+                group/button
+                inline-flex
+                cursor-pointer
+                items-center
+                gap-3
+                rounded-full
+                bg-white
+                px-6
+                py-3.5
+                text-[12px]
+                font-bold
+                uppercase
+                tracking-[0.08em]
+                text-[#07133d]
+                shadow-[0_12px_35px_rgba(0,0,0,0.18)]
+                transition-all
+                duration-300
+                hover:-translate-y-1
+                hover:bg-[#302b80]
+                hover:text-white
+              "
+            >
+              {isEnglish
+                ? "Explore products"
+                : "Explorar productos"}
 
+              <span
+                className="
+                  flex
+                  h-7
+                  w-7
+                  items-center
+                  justify-center
+                  rounded-full
+                  bg-[#07133d]/10
+                  transition-all
+                  duration-300
+                  group-hover/button:bg-white/15
+                  group-hover/button:translate-x-1
+                "
+              >
+                <ArrowRight size={14} />
+              </span>
+            </button>
+          </div>
 
           {/* ==================================================
-              INDICADOR VISUAL
+              INDICADOR
           ================================================== */}
 
           <div
@@ -330,7 +470,6 @@ function CentralesHero({
               gap-3
             "
           >
-
             <span
               className="
                 h-2
@@ -359,19 +498,16 @@ function CentralesHero({
               "
             >
               {isEnglish
-                ? "Engineering · Integration · Innovation"
-                : "Ingeniería · Integración · Innovación"}
+                ? "Engineering · Innovation · Performance"
+                : "Ingeniería · Innovación · Rendimiento"}
             </span>
-
           </div>
 
         </div>
-
       </div>
 
-
       {/* ======================================================
-          INDICADOR SCROLL
+          INDICADOR LATERAL
       ====================================================== */}
 
       <div
@@ -386,7 +522,6 @@ function CentralesHero({
           lg:flex
         "
       >
-
         <span
           className="
             text-[9px]
@@ -397,8 +532,8 @@ function CentralesHero({
           "
         >
           {isEnglish
-            ? "Discover more"
-            : "Descubre más"}
+            ? "View catalog"
+            : "Ver catálogo"}
         </span>
 
         <span
@@ -419,7 +554,6 @@ function CentralesHero({
             group-hover:bg-[#302b80]
           "
         >
-
           <span
             className="
               h-1.5
@@ -433,47 +567,11 @@ function CentralesHero({
               group-hover:translate-y-1
             "
           />
-
         </span>
-
       </div>
 
-
       {/* ======================================================
-          TEXTO INFERIOR DERECHO
-      ====================================================== */}
-
-      <div
-        className="
-          absolute
-          bottom-5
-          right-8
-          z-20
-          hidden
-          lg:block
-          xl:right-10
-        "
-      >
-
-        <p
-          className="
-            text-[9px]
-            font-bold
-            uppercase
-            tracking-[0.25em]
-            text-white/50
-          "
-        >
-          {isEnglish
-            ? "Coffee Processing · Penagos"
-            : "Procesamiento de Café · Penagos"}
-        </p>
-
-      </div>
-
-
-      {/* ======================================================
-          LÍNEA INFERIOR AZUL PENAGOS
+          LÍNEA INFERIOR
       ====================================================== */}
 
       <div
@@ -488,9 +586,8 @@ function CentralesHero({
         "
       />
 
-
       {/* ======================================================
-          BRILLO SUPERIOR SUTIL
+          BRILLO SUPERIOR
       ====================================================== */}
 
       <div
@@ -512,4 +609,5 @@ function CentralesHero({
   );
 }
 
-export default CentralesHero;
+export default HeroProductos;
+

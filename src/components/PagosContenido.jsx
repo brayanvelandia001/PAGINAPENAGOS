@@ -9,12 +9,10 @@ function PagosContenido({
      ENLACES DE PAGO
   ============================================================ */
 
-  // PAGO CON TARJETA → AVALPAYCENTER
   const enlaceTarjeta =
     "https://www.avalpaycenter.com/wps/portal/portal-de-pagos/web/banco-avvillas/resultado-busqueda/realizar-pago?idConv=00014575&origen=buscar";
 
 
-  // TRANSFERENCIA → MIPAGOAMIGO
   const enlaceTransferencia =
     "https://www.mipagoamigo.com/MPA_WebSite/ServicePayments/StartPayment?id=6326&searchedCategoryId=&searchedAgreementName=PENAGOS%20HERMANOS%20Y%20COMPANIA%20SAS";
 
@@ -31,6 +29,7 @@ function PagosContenido({
     "https://penagos.com/wp-content/uploads/2021/12/transferencia-800x800-1.png";
 
 
+
   return (
 
     <section
@@ -44,9 +43,8 @@ function PagosContenido({
       "
     >
 
-      {/* ======================================================
-          DECORACIÓN DE FONDO
-      ====================================================== */}
+
+      {/* DECORACIÓN */}
 
       <div
         className="
@@ -61,6 +59,7 @@ function PagosContenido({
           blur-3xl
         "
       />
+
 
       <div
         className="
@@ -77,6 +76,7 @@ function PagosContenido({
       />
 
 
+
       <div
         className="
           relative
@@ -88,9 +88,12 @@ function PagosContenido({
         "
       >
 
+
+
         {/* ====================================================
             ENCABEZADO
         ==================================================== */}
+
 
         <div
           className="
@@ -100,7 +103,6 @@ function PagosContenido({
           "
         >
 
-          {/* TÍTULO */}
 
           <h1
             className="
@@ -109,7 +111,7 @@ function PagosContenido({
               tracking-tight
               text-[#07133d]
               sm:text-4xl
-              lg:text-[52px]
+              lg:text-[44px]
               lg:leading-[1.08]
             "
           >
@@ -122,7 +124,6 @@ function PagosContenido({
           </h1>
 
 
-          {/* SUBTÍTULO */}
 
           <p
             className="
@@ -145,7 +146,6 @@ function PagosContenido({
           </p>
 
 
-          {/* COLOMBIA */}
 
           <div
             className="
@@ -167,9 +167,12 @@ function PagosContenido({
 
 
 
+
+
         {/* ====================================================
             TARJETAS DE PAGO
         ==================================================== */}
+
 
         <div
           className="
@@ -184,15 +187,23 @@ function PagosContenido({
         >
 
 
+
+
+
           {/* ==================================================
-              PAGO CON TARJETA
-              AVALPAYCENTER
+              TARJETA
           ================================================== */}
+
 
           <a
             href={enlaceTarjeta}
             target="_blank"
             rel="noopener noreferrer"
+            aria-label={
+              isEnglish
+                ? "Pay with card using AvalPayCenter"
+                : "Pagar con tarjeta mediante AvalPayCenter"
+            }
 
             className="
               group
@@ -211,13 +222,13 @@ function PagosContenido({
             "
           >
 
-            {/* IMAGEN */}
+
 
             <div
               className="
                 relative
                 flex
-                h-[300px]
+                h-[260px]
                 items-center
                 justify-center
                 overflow-hidden
@@ -227,7 +238,7 @@ function PagosContenido({
               "
             >
 
-              {/* DECORACIÓN */}
+
 
               <div
                 className="
@@ -247,7 +258,6 @@ function PagosContenido({
               />
 
 
-              {/* IMAGEN REAL */}
 
               <img
                 src={imagenTarjeta}
@@ -256,6 +266,7 @@ function PagosContenido({
                     ? "Credit and debit card payment"
                     : "Pago con tarjeta débito y crédito"
                 }
+
                 className="
                   relative
                   z-10
@@ -270,7 +281,6 @@ function PagosContenido({
               />
 
 
-              {/* ETIQUETA */}
 
               <div
                 className="
@@ -298,10 +308,11 @@ function PagosContenido({
 
               </div>
 
+
             </div>
 
 
-            {/* CONTENIDO */}
+
 
             <div
               className="
@@ -309,6 +320,7 @@ function PagosContenido({
                 sm:p-9
               "
             >
+
 
               <div
                 className="
@@ -319,7 +331,9 @@ function PagosContenido({
                 "
               >
 
+
                 <div>
+
 
                   <p
                     className="
@@ -339,6 +353,7 @@ function PagosContenido({
                   </p>
 
 
+
                   <h2
                     className="
                       mt-2
@@ -356,10 +371,9 @@ function PagosContenido({
 
                   </h2>
 
+
                 </div>
 
-
-                {/* FLECHA */}
 
                 <span
                   className="
@@ -372,40 +386,17 @@ function PagosContenido({
                     rounded-full
                     bg-[#302b80]
                     text-white
-                    shadow-[0_8px_20px_rgba(48,43,128,0.18)]
-                    transition-all
-                    duration-300
-                    group-hover:translate-x-1
                   "
                 >
 
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-
-                    <path
-                      d="M5 12h14"
-                    />
-
-                    <path
-                      d="m13 6 6 6-6 6"
-                    />
-
-                  </svg>
+                  →
 
                 </span>
 
+
               </div>
 
-
-              {/* DESCRIPCIÓN */}
+                            {/* DESCRIPCIÓN */}
 
               <p
                 className="
@@ -424,6 +415,7 @@ function PagosContenido({
               </p>
 
 
+
               {/* ACCIÓN */}
 
               <div
@@ -438,6 +430,7 @@ function PagosContenido({
                 "
               >
 
+
                 <span
                   className="
                     text-sm
@@ -447,11 +440,12 @@ function PagosContenido({
                 >
 
                   {isEnglish
-                    ? "Pay now"
-                    : "Pagar ahora"
+                    ? "Continue payment"
+                    : "Continuar pago"
                   }
 
                 </span>
+
 
 
                 <span
@@ -477,13 +471,19 @@ function PagosContenido({
                     →
                   </span>
 
+
                 </span>
+
 
               </div>
 
+
             </div>
 
+
           </a>
+
+
 
 
 
@@ -492,10 +492,19 @@ function PagosContenido({
               MIPAGOAMIGO
           ================================================== */}
 
+
+
           <a
             href={enlaceTransferencia}
             target="_blank"
             rel="noopener noreferrer"
+
+            aria-label={
+              isEnglish
+                ? "Pay through bank transfer using MiPagoAmigo"
+                : "Pagar mediante transferencia bancaria usando MiPagoAmigo"
+            }
+
 
             className="
               group
@@ -514,13 +523,15 @@ function PagosContenido({
             "
           >
 
+
+
             {/* IMAGEN */}
 
             <div
               className="
                 relative
                 flex
-                h-[300px]
+                h-[260px]
                 items-center
                 justify-center
                 overflow-hidden
@@ -530,7 +541,7 @@ function PagosContenido({
               "
             >
 
-              {/* DECORACIÓN */}
+
 
               <div
                 className="
@@ -550,15 +561,17 @@ function PagosContenido({
               />
 
 
-              {/* IMAGEN REAL */}
 
               <img
                 src={imagenTransferencia}
+
                 alt={
                   isEnglish
                     ? "Bank transfer payment"
                     : "Pago mediante transferencia bancaria"
                 }
+
+
                 className="
                   relative
                   z-10
@@ -570,7 +583,10 @@ function PagosContenido({
                   duration-700
                   group-hover:scale-[1.05]
                 "
+
               />
+
+
 
 
               {/* ETIQUETA */}
@@ -599,12 +615,19 @@ function PagosContenido({
                   : "Opción 02"
                 }
 
+
               </div>
+
+
 
             </div>
 
 
+
+
+
             {/* CONTENIDO */}
+
 
             <div
               className="
@@ -612,6 +635,8 @@ function PagosContenido({
                 sm:p-9
               "
             >
+
+
 
               <div
                 className="
@@ -622,7 +647,10 @@ function PagosContenido({
                 "
               >
 
+
+
                 <div>
+
 
                   <p
                     className="
@@ -639,7 +667,10 @@ function PagosContenido({
                       : "Medio de pago"
                     }
 
+
                   </p>
+
+
 
 
                   <h2
@@ -657,12 +688,17 @@ function PagosContenido({
                       : "Transferencia bancaria"
                     }
 
+
                   </h2>
+
 
                 </div>
 
 
+
+
                 {/* FLECHA */}
+
 
                 <span
                   className="
@@ -682,33 +718,14 @@ function PagosContenido({
                   "
                 >
 
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-
-                    <path
-                      d="M5 12h14"
-                    />
-
-                    <path
-                      d="m13 6 6 6-6 6"
-                    />
-
-                  </svg>
+                  →
 
                 </span>
 
+
               </div>
 
-
-              {/* DESCRIPCIÓN */}
+                            {/* DESCRIPCIÓN */}
 
               <p
                 className="
@@ -727,6 +744,8 @@ function PagosContenido({
               </p>
 
 
+
+
               {/* ACCIÓN */}
 
               <div
@@ -741,6 +760,8 @@ function PagosContenido({
                 "
               >
 
+
+
                 <span
                   className="
                     text-sm
@@ -750,11 +771,13 @@ function PagosContenido({
                 >
 
                   {isEnglish
-                    ? "Continue"
-                    : "Continuar"
+                    ? "Continue payment"
+                    : "Continuar pago"
                   }
 
                 </span>
+
+
 
 
                 <span
@@ -770,6 +793,7 @@ function PagosContenido({
 
                   MiPagoAmigo
 
+
                   <span
                     className="
                       transition-transform
@@ -777,24 +801,38 @@ function PagosContenido({
                       group-hover:translate-x-1
                     "
                   >
+
                     →
+
                   </span>
+
 
                 </span>
 
+
               </div>
+
+
 
             </div>
 
+
+
           </a>
 
+
+
+
         </div>
+
+
 
 
 
         {/* ====================================================
             MENSAJE INFERIOR
         ==================================================== */}
+
 
         <div
           className="
@@ -805,6 +843,8 @@ function PagosContenido({
           "
         >
 
+
+
           <p
             className="
               text-[13px]
@@ -813,22 +853,37 @@ function PagosContenido({
             "
           >
 
+
             {isEnglish
+
               ? "By continuing, you will be redirected to the corresponding payment platform to complete your payment."
+
               : "Al continuar será redirigido a la plataforma correspondiente para completar su pago."
+
             }
+
+
 
           </p>
 
+
+
         </div>
+
+
 
       </div>
 
+
+
     </section>
+
+
 
   );
 
 }
+
 
 
 export default PagosContenido;

@@ -6,6 +6,7 @@ import InfoContacto from "../components/InfoContacto";
 
 /* ============================================================
    CONTACTANOS
+   PENAGOS
 ============================================================ */
 
 function Contactanos({
@@ -41,15 +42,19 @@ function Contactanos({
       <main>
 
         {/* ====================================================
-            BANNER CONTACTANOS
+            HERO CONTACTANOS
         ==================================================== */}
 
         <section
           className="
+            group
             relative
-            h-[210px]
+            flex
+            min-h-screen
+            w-full
+            items-center
             overflow-hidden
-            md:h-[230px]
+            bg-[#07133d]
           "
         >
 
@@ -71,12 +76,16 @@ function Contactanos({
               w-full
               object-cover
               object-center
+              transition-transform
+              duration-[2000ms]
+              ease-out
+              group-hover:scale-[1.02]
             "
           />
 
 
           {/* ==================================================
-              OVERLAY
+              OVERLAY OSCURO
           ================================================== */}
 
           <div
@@ -89,7 +98,7 @@ function Contactanos({
 
 
           {/* ==================================================
-              DEGRADADO
+              DEGRADADO LATERAL
           ================================================== */}
 
           <div
@@ -97,15 +106,47 @@ function Contactanos({
               absolute
               inset-0
               bg-gradient-to-r
-              from-black/50
-              via-black/20
+              from-[#07133d]/90
+              via-[#07133d]/45
               to-transparent
             "
           />
 
 
           {/* ==================================================
-              CONTENIDO DEL BANNER
+              DEGRADADO INFERIOR
+          ================================================== */}
+
+          <div
+            className="
+              absolute
+              inset-x-0
+              bottom-0
+              h-[50%]
+              bg-gradient-to-t
+              from-[#07133d]/80
+              via-[#07133d]/25
+              to-transparent
+            "
+          />
+
+
+          {/* ==================================================
+              TONALIDAD PENAGOS
+          ================================================== */}
+
+          <div
+            className="
+              absolute
+              inset-0
+              bg-[#302b80]/5
+              mix-blend-multiply
+            "
+          />
+
+
+          {/* ==================================================
+              CONTENIDO HERO
           ================================================== */}
 
           <div
@@ -113,82 +154,325 @@ function Contactanos({
               relative
               z-10
               mx-auto
-              flex
-              h-full
-              max-w-6xl
-              items-center
+              w-full
+              max-w-[1500px]
               px-6
-              md:px-8
+              pb-20
+              pt-32
+              sm:px-10
+              lg:px-16
+              xl:px-20
             "
           >
 
-            <div
-              className="
-                max-w-xl
-                text-white
-              "
-            >
+            <div className="max-w-[780px]">
 
               {/* ==============================================
-                  TÍTULO
-              ============================================== */}
-
-              <h1
-                className="
-                  text-3xl
-                  font-bold
-                  leading-tight
-                  drop-shadow-md
-                  md:text-4xl
-                "
-              >
-                {
-                  isEnglish
-                    ? "Contact Us"
-                    : "Contáctenos"
-                }
-              </h1>
-
-
-              {/* ==============================================
-                  LÍNEA
+                  ETIQUETA
               ============================================== */}
 
               <div
                 className="
-                  mt-3
-                  h-1
-                  w-14
+                  mb-7
+                  flex
+                  items-center
+                  gap-4
+                "
+              >
+
+                <span
+                  className="
+                    h-[3px]
+                    w-14
+                    rounded-full
+                    bg-[#00A4E4]
+                    shadow-[0_0_15px_rgba(0,164,228,0.5)]
+                    transition-all
+                    duration-500
+                    group-hover:w-20
+                    sm:w-16
+                  "
+                />
+
+                <span
+                  className="
+                    text-[10px]
+                    font-bold
+                    uppercase
+                    tracking-[0.35em]
+                    text-white/90
+                    sm:text-xs
+                  "
+                >
+                  {isEnglish
+                    ? "Penagos Contact"
+                    : "Contacto Penagos"}
+                </span>
+
+              </div>
+
+
+              {/* ==============================================
+                  TITULO
+              ============================================== */}
+
+              <h1
+                className="
+                  text-[48px]
+                  font-semibold
+                  leading-[0.96]
+                  tracking-[-0.045em]
+                  text-white
+                  drop-shadow-[0_5px_25px_rgba(0,0,0,0.25)]
+                  sm:text-6xl
+                  md:text-7xl
+                  lg:text-[82px]
+                  xl:text-[92px]
+                "
+              >
+
+                {isEnglish ? (
+
+                  <>
+                    Contact
+                    <br />
+
+                    <span
+                      className="
+                        text-white/75
+                        transition-colors
+                        duration-500
+                        group-hover:text-white/90
+                      "
+                    >
+                      Us
+                    </span>
+                  </>
+
+                ) : (
+
+                  <>
+                    Contáctanos
+                    <br />
+
+                    <span
+                      className="
+                        text-white/75
+                        transition-colors
+                        duration-500
+                        group-hover:text-white/90
+                      "
+                    >
+                      Penagos
+                    </span>
+                  </>
+
+                )}
+
+              </h1>
+
+
+              {/* ==============================================
+                  LINEA
+              ============================================== */}
+
+              <div
+                className="
+                  mt-8
+                  h-[4px]
+                  w-24
                   rounded-full
-                  bg-blue-500
+                  bg-[#00A4E4]
+                  shadow-[0_0_18px_rgba(0,164,228,0.55)]
+                  transition-all
+                  duration-500
+                  group-hover:w-40
+                  sm:w-32
                 "
               />
 
 
               {/* ==============================================
-                  DESCRIPCIÓN
+                  DESCRIPCION
               ============================================== */}
 
               <p
                 className="
-                  mt-3
-                  max-w-lg
-                  text-sm
-                  leading-relaxed
-                  text-white/90
-                  md:text-base
+                  mt-7
+                  max-w-[650px]
+                  text-[15px]
+                  leading-7
+                  text-white/85
+                  transition-colors
+                  duration-500
+                  group-hover:text-white/95
+                  sm:text-base
+                  lg:text-[18px]
+                  lg:leading-8
                 "
               >
-                {
-                  isEnglish
-                    ? "We are ready to provide you with the best service."
-                    : "Estamos atentos a ofrecerte el mejor servicio."
-                }
+                {isEnglish
+                  ? "We are ready to provide you with the best service and support. Contact our team and let us help you find the right solution."
+                  : "Estamos atentos a ofrecerte el mejor servicio y acompañarte. Contáctanos y permítenos ayudarte a encontrar la solución adecuada."}
               </p>
+
+
+              {/* ==============================================
+                  DETALLE INFERIOR
+              ============================================== */}
+
+              <div
+                className="
+                  mt-10
+                  flex
+                  items-center
+                  gap-3
+                "
+              >
+
+                <span
+                  className="
+                    h-2
+                    w-2
+                    rounded-full
+                    bg-[#00A4E4]
+                    shadow-[0_0_12px_rgba(0,164,228,0.8)]
+                  "
+                />
+
+                <span
+                  className="
+                    h-px
+                    w-12
+                    bg-white/30
+                  "
+                />
+
+                <span
+                  className="
+                    text-[9px]
+                    font-bold
+                    uppercase
+                    tracking-[0.25em]
+                    text-white/60
+                  "
+                >
+                  {isEnglish
+                    ? "Contact · Service · Support"
+                    : "Contacto · Servicio · Soporte"}
+                </span>
+
+              </div>
 
             </div>
 
           </div>
+
+
+          {/* ==================================================
+              INDICADOR DERECHA
+          ================================================== */}
+
+          <div
+            className="
+              absolute
+              bottom-12
+              right-8
+              z-20
+              hidden
+              items-center
+              gap-3
+              lg:flex
+            "
+          >
+
+            <span
+              className="
+                text-[9px]
+                font-bold
+                uppercase
+                tracking-[0.3em]
+                text-white/50
+              "
+            >
+              {isEnglish
+                ? "Get in touch"
+                : "Contáctanos"}
+            </span>
+
+            <span
+              className="
+                flex
+                h-9
+                w-9
+                items-center
+                justify-center
+                rounded-full
+                border
+                border-white/25
+                bg-white/5
+                backdrop-blur-sm
+                transition-all
+                duration-300
+                group-hover:border-[#00A4E4]
+                group-hover:bg-[#00A4E4]
+              "
+            >
+
+              <span
+                className="
+                  h-1.5
+                  w-1.5
+                  rotate-45
+                  border-b
+                  border-r
+                  border-white
+                  transition-transform
+                  duration-300
+                  group-hover:translate-y-1
+                "
+              />
+
+            </span>
+
+          </div>
+
+
+          {/* ==================================================
+              LINEA INFERIOR PENAGOS
+          ================================================== */}
+
+          <div
+            className="
+              absolute
+              bottom-0
+              left-0
+              z-20
+              h-[4px]
+              w-full
+              bg-[#00A4E4]
+            "
+          />
+
+
+          {/* ==================================================
+              SOMBRA SUPERIOR
+          ================================================== */}
+
+          <div
+            className="
+              pointer-events-none
+              absolute
+              left-0
+              right-0
+              top-0
+              z-20
+              h-32
+              bg-gradient-to-b
+              from-black/20
+              to-transparent
+            "
+          />
 
         </section>
 
@@ -212,7 +496,7 @@ function Contactanos({
 
 
         {/* ====================================================
-            INFORMACIÓN COMERCIAL - COLOMBIA
+            INFORMACIÓN COMERCIAL
         ==================================================== */}
 
         <InfoContacto
@@ -237,4 +521,3 @@ function Contactanos({
 }
 
 export default Contactanos;
-

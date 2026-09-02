@@ -3,7 +3,6 @@ import {
   ArrowUpRight,
   ChevronLeft,
   ChevronRight,
-  Globe2,
   X,
 } from "lucide-react";
 
@@ -236,11 +235,22 @@ function RostrosMundo({ language = "ES" }) {
   };
 
   // ============================================================
-  // TECLADO LIGHTBOX
+  // BLOQUEAR PÁGINA CUANDO EL LIGHTBOX ESTÁ ABIERTO
   // ============================================================
 
   useEffect(() => {
-    if (!selected) return;
+    if (!selected) {
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
+      document.body.style.top = "";
+      document.documentElement.style.overflow = "";
+
+      return;
+    }
+
+    // Guardar posición actual
+    const scrollY = window.scrollY;
 
     const manejarTeclado = (event) => {
       if (event.key === "Escape") {
@@ -256,13 +266,39 @@ function RostrosMundo({ language = "ES" }) {
       }
     };
 
-    window.addEventListener("keydown", manejarTeclado);
+    // ========================================================
+    // BLOQUEAR COMPLETAMENTE EL SCROLL
+    // ========================================================
 
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.left = "0";
+    document.body.style.right = "0";
+    document.body.style.width = "100%";
     document.body.style.overflow = "hidden";
 
+    document.documentElement.style.overflow = "hidden";
+
+    window.addEventListener("keydown", manejarTeclado);
+
     return () => {
-      window.removeEventListener("keydown", manejarTeclado);
+      // ======================================================
+      // RESTAURAR PÁGINA
+      // ======================================================
+
+      document.body.style.position = "";
+      document.body.style.top = "";
+      document.body.style.left = "";
+      document.body.style.right = "";
+      document.body.style.width = "";
       document.body.style.overflow = "";
+
+      document.documentElement.style.overflow = "";
+
+      window.removeEventListener("keydown", manejarTeclado);
+
+      // Regresar exactamente a la posición anterior
+      window.scrollTo(0, scrollY);
     };
   }, [selected]);
 
@@ -350,17 +386,6 @@ function RostrosMundo({ language = "ES" }) {
         ====================================================== */}
 
         <div className="mb-6">
-          <div
-            className="
-              mb-2
-              flex
-              items-center
-              gap-2
-            "
-          >
-
-          </div>
-
           <div
             className="
               flex
@@ -460,6 +485,7 @@ function RostrosMundo({ language = "ES" }) {
             max-w-[850px]
             transition-all
             duration-300
+
             ${
               changingGallery
                 ? "translate-y-1 opacity-0"
@@ -501,8 +527,6 @@ function RostrosMundo({ language = "ES" }) {
               "
             />
 
-            {/* OVERLAY */}
-
             <div
               className="
                 absolute
@@ -513,8 +537,6 @@ function RostrosMundo({ language = "ES" }) {
                 to-[#07133d]/10
               "
             />
-
-            {/* CONTENIDO */}
 
             <div
               className="
@@ -553,8 +575,6 @@ function RostrosMundo({ language = "ES" }) {
               </div>
             </div>
 
-            {/* MARCA DE AGUA */}
-
             <div
               className="
                 pointer-events-none
@@ -571,8 +591,6 @@ function RostrosMundo({ language = "ES" }) {
             >
               PENAGOS
             </div>
-
-            {/* NUMERO */}
 
             <div
               className="
@@ -630,8 +648,6 @@ function RostrosMundo({ language = "ES" }) {
                   }
                 `}
               >
-                {/* FOTO */}
-
                 <img
                   src={foto.image}
                   alt={foto.country}
@@ -649,8 +665,6 @@ function RostrosMundo({ language = "ES" }) {
                   "
                 />
 
-                {/* DEGRADADO */}
-
                 <div
                   className="
                     absolute
@@ -666,9 +680,7 @@ function RostrosMundo({ language = "ES" }) {
                   "
                 />
 
-                {/* =================================================
-                    MARCA DE AGUA PENAGOS
-                ================================================= */}
+                {/* WATERMARK */}
 
                 <div
                   className="
@@ -744,9 +756,7 @@ function RostrosMundo({ language = "ES" }) {
                           text-white/45
                         "
                       >
-                        {isEnglish
-                          ? "People"
-                          : "Personas"}
+                        {isEnglish ? "People" : "Personas"}
                       </p>
 
                       <p
@@ -852,6 +862,7 @@ function RostrosMundo({ language = "ES" }) {
 
       {/* ========================================================
           LIGHTBOX
+          QUEDA POR ENCIMA DE TODA LA PÁGINA
       ======================================================== */}
 
       {selected && (
@@ -859,11 +870,14 @@ function RostrosMundo({ language = "ES" }) {
           className="
             fixed
             inset-0
-            z-[100]
+            z-[99999]
             flex
+            h-screen
+            w-screen
             items-center
             justify-center
-            bg-[#030712]/90
+            overflow-hidden
+            bg-[#030712]/95
             p-4
             backdrop-blur-md
             animate-[fadeIn_200ms_ease-out]
@@ -881,7 +895,7 @@ function RostrosMundo({ language = "ES" }) {
               absolute
               right-4
               top-4
-              z-[120]
+              z-[100002]
               flex
               h-10
               w-10
@@ -901,11 +915,7 @@ function RostrosMundo({ language = "ES" }) {
               focus:ring-2
               focus:ring-white/30
             "
-            aria-label={
-              isEnglish
-                ? "Close"
-                : "Cerrar"
-            }
+            aria-label={isEnglish ? "Close" : "Cerrar"}
           >
             <X size={17} />
           </button>
@@ -923,7 +933,7 @@ function RostrosMundo({ language = "ES" }) {
             className="
               absolute
               left-3
-              z-[120]
+              z-[100002]
               flex
               h-9
               w-9
@@ -950,12 +960,13 @@ function RostrosMundo({ language = "ES" }) {
           </button>
 
           {/* ====================================================
-              CONTENIDO
+              CONTENIDO PRINCIPAL DEL LIGHTBOX
           ==================================================== */}
 
           <div
             className="
               relative
+              z-[100001]
               flex
               max-h-[88vh]
               max-w-[850px]
@@ -990,7 +1001,7 @@ function RostrosMundo({ language = "ES" }) {
                 "
               />
 
-              {/* WATERMARK LIGHTBOX */}
+              {/* WATERMARK */}
 
               <div
                 className="
@@ -1079,7 +1090,7 @@ function RostrosMundo({ language = "ES" }) {
             className="
               absolute
               right-3
-              z-[120]
+              z-[100002]
               flex
               h-9
               w-9
@@ -1116,6 +1127,7 @@ function RostrosMundo({ language = "ES" }) {
           from {
             opacity: 0;
           }
+
           to {
             opacity: 1;
           }

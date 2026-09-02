@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
 import { Link } from "react-router-dom";
 
 import {
@@ -11,67 +12,72 @@ import {
   X,
 } from "lucide-react";
 
-// ============================================================
-// CHAT PENAGOS
-// ============================================================
-
 import { abrirChatPenagos } from "./ChatPenagos";
-
-// ============================================================
-// HEADER
-// ============================================================
 
 function Header({
   language = "ES",
   changeLanguage = () => {},
 }) {
+  const [scrolled, setScrolled] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  // ============================================================
+  // PRODUCTOS REALES
+  // ============================================================
+
+  const [productos, setProductos] = useState([]);
+  const [cargandoProductos, setCargandoProductos] = useState(false);
 
   const isEnglish = language === "EN";
 
   // ============================================================
-  // RUTAS SEGÚN IDIOMA
+  // RUTAS
   // ============================================================
 
   const rutas = {
     home: isEnglish ? "/en" : "/",
-
-    about: isEnglish
-      ? "/en/about-us"
-      : "/quienes-somos",
+    about: isEnglish ? "/en/about-us" : "/quienes-somos",
 
     farmers: isEnglish
       ? "/en/penagos-farmers"
       : "/agricultores-penagos",
 
+    products: isEnglish ? "/en/products" : "/productos",
+
+    agriculture: isEnglish
+      ? "/en/products/agriculture"
+      : "/productos/agricultura",
+
+    coffee: isEnglish
+      ? "/en/products/coffee"
+      : "/productos/cafe",
+
+    daewoo: isEnglish
+      ? "/en/products/daewoo"
+      : "/productos/daewoo",
+
+    gas: "https://www.penagos.com/fittings/",
+
     support: isEnglish
       ? "/en/technical-support"
       : "/soporte-tecnico",
 
-    payments: isEnglish
-      ? "/en/payments"
-      : "/pagos",
+    payments: isEnglish ? "/en/payments" : "/pagos",
 
-    news: isEnglish
-      ? "/en/news"
-      : "/blog",
+    news: isEnglish ? "/en/news" : "/blog",
 
     contact: isEnglish
       ? "/en/contact-us"
       : "/contactanos",
 
-    dataProtection: isEnglish
-      ? "/en/personal-data-protection"
-      : "/proteccion-de-datos-personales",
-
-    // ========================================================
-    // CENTRALES DE PROCESAMIENTO DE CAFÉ
-    // ========================================================
-
     plants: isEnglish
       ? "/en/coffee-processing-plants"
       : "/centrales-procesamiento-de-cafe",
+
+    sustainability: isEnglish
+      ? "/en/sustainability"
+      : "/sostenibilidad",
   };
 
   // ============================================================
@@ -80,10 +86,6 @@ function Header({
 
   const t = isEnglish
     ? {
-        // ------------------------------------------------------
-        // BARRA SUPERIOR
-        // ------------------------------------------------------
-
         welcome: "Welcome to",
         anniversary: "130 years serving agriculture",
 
@@ -93,64 +95,34 @@ function Header({
         spanish: "Spanish",
         english: "English",
 
-        // ------------------------------------------------------
-        // MENÚ PRINCIPAL
-        // ------------------------------------------------------
-
         about: "About us",
         farmers: "Penagos Farmers",
 
         products: "Products",
+
+        agriculture: "Agriculture",
+        agricultureDescription:
+          "Agricultural machinery for every process.",
+
+        coffee: "Coffee",
+        coffeeDescription:
+          "Solutions for coffee processing.",
+
+        daewoo: "Daewoo Equipment",
+        daewooDescription:
+          "Equipment designed for demanding work.",
+
+        gas: "Domestic Gas",
+        gasDescription:
+          "Accessories for domestic gas installations.",
+
         sustainability: "Sustainability",
-
         plants: "Coffee processing plants",
-
         blog: "News",
-
         contact: "Contact us",
 
-        // ------------------------------------------------------
-        // MEGA MENÚ PRODUCTOS
-        // ------------------------------------------------------
-
-        productsIntro: "Products",
-
-        productivity: "Solutions to drive productivity",
-
-        productsDescription:
-          "Technology and equipment for coffee processing and post-harvest operations.",
-
         viewAll: "View all products",
-        viewProducts: "View products",
-
-        coffeeBenefit: "Coffee processing",
-
-        coffeeBenefitDescription:
-          "Equipment for wet coffee processing.",
-
-        drying: "Coffee drying",
-
-        dryingDescription:
-          "Solutions for efficient coffee drying.",
-
-        threshing: "Coffee hulling",
-
-        threshingDescription:
-          "Technology for high-performance coffee hulling.",
-
-        agricultural: "Agricultural equipment",
-
-        agriculturalDescription:
-          "Machinery and solutions for agricultural operations.",
-
-        spareParts: "Spare parts",
-
-        sparePartsDescription:
-          "Original spare parts and specialized support.",
-
-        // ------------------------------------------------------
-        // BOTONES
-        // ------------------------------------------------------
+        viewProducts: "View product",
 
         talk: "Let's talk",
 
@@ -159,110 +131,427 @@ function Header({
 
         goHome: "Go to home",
         changeLanguage: "Change language",
+
+        loadingProducts: "Loading products...",
+        noProducts: "No products available.",
       }
     : {
-        // ------------------------------------------------------
-        // BARRA SUPERIOR
-        // ------------------------------------------------------
-
         welcome: "Bienvenido a",
-
-        anniversary:
-          "130 años al servicio de la agricultura",
+        anniversary: "130 años al servicio de la agricultura",
 
         support: "Soporte técnico",
-
-        payments: "Pagos en línea",
+        payments: "Pagos",
 
         spanish: "Español",
-
         english: "Inglés",
 
-        // ------------------------------------------------------
-        // MENÚ PRINCIPAL
-        // ------------------------------------------------------
-
         about: "Quiénes somos",
-
         farmers: "Agricultores Penagos",
 
         products: "Productos",
 
+        agriculture: "Agricultura",
+        agricultureDescription:
+          "Maquinaria agrícola para cada proceso.",
+
+        coffee: "Café",
+        coffeeDescription:
+          "Soluciones para el procesamiento de café.",
+
+        daewoo: "Equipos Daewoo",
+        daewooDescription:
+          "Equipos diseñados para trabajos exigentes.",
+
+        gas: "Gas domiciliario",
+        gasDescription:
+          "Accesorios para instalaciones de gas domiciliario.",
+
         sustainability: "Sostenibilidad",
-
-        plants:
-          "Centrales de procesamiento de café",
-
+        plants: "Centrales de procesamiento de café",
         blog: "Noticias",
-
         contact: "Contáctenos",
 
-        // ------------------------------------------------------
-        // MEGA MENÚ PRODUCTOS
-        // ------------------------------------------------------
-
-        productsIntro: "Productos",
-
-        productivity:
-          "Soluciones para impulsar la productividad",
-
-        productsDescription:
-          "Tecnología y equipos para el procesamiento y beneficio del café.",
-
         viewAll: "Ver todos los productos",
-
-        viewProducts: "Ver productos",
-
-        coffeeBenefit: "Beneficio de café",
-
-        coffeeBenefitDescription:
-          "Equipos para beneficio húmedo del café.",
-
-        drying: "Secado de café",
-
-        dryingDescription:
-          "Soluciones para un secado eficiente.",
-
-        threshing: "Trilla de café",
-
-        threshingDescription:
-          "Tecnología para alto rendimiento.",
-
-        agricultural: "Equipos agrícolas",
-
-        agriculturalDescription:
-          "Maquinaria para el trabajo del campo.",
-
-        spareParts: "Repuestos",
-
-        sparePartsDescription:
-          "Repuestos y soporte especializado.",
-
-        // ------------------------------------------------------
-        // BOTONES
-        // ------------------------------------------------------
+        viewProducts: "Ver producto",
 
         talk: "Hablemos",
 
         openMenu: "Abrir menú",
-
         closeMenu: "Cerrar menú",
 
         goHome: "Ir al inicio",
-
         changeLanguage: "Cambiar idioma",
+
+        loadingProducts: "Cargando productos...",
+        noProducts: "No hay productos disponibles.",
       };
 
   // ============================================================
-  // CERRAR MENÚ MOBILE
+  // SCROLL
   // ============================================================
 
-  const cerrarMobile = () => {
-    setMobileOpen(false);
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+
+    handleScroll();
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  // ============================================================
+  // LIMPIAR HTML
+  // ============================================================
+
+  const limpiarTexto = (texto) => {
+    if (!texto) {
+      return "";
+    }
+
+    return String(texto)
+      .replace(/<br\s*\/?>/gi, " ")
+      .replace(/<\/?p>/gi, " ")
+      .replace(/<[^>]*>/g, "")
+      .replace(/&nbsp;/gi, " ")
+      .replace(/&amp;/gi, "&")
+      .replace(/&quot;/gi, '"')
+      .replace(/&#039;/gi, "'")
+      .replace(/&apos;/gi, "'")
+      .replace(/&lt;/gi, "<")
+      .replace(/&gt;/gi, ">")
+      .replace(/[ \t]+/g, " ")
+      .replace(/\n+/g, " ")
+      .trim();
   };
 
   // ============================================================
-  // CERRAR TODO
+  // DETECTAR IDIOMA DEL PRODUCTO
+  // ============================================================
+
+  const obtenerIdiomaProducto = (producto) => {
+    const idiomaDirecto =
+      producto.lang ||
+      producto.locale ||
+      producto.wpml_language ||
+      producto.language_code ||
+      producto.lang_code;
+
+    if (typeof idiomaDirecto === "string") {
+      const idioma = idiomaDirecto.toLowerCase().trim();
+
+      if (
+        idioma === "es" ||
+        idioma === "es-es" ||
+        idioma === "spa" ||
+        idioma === "spanish"
+      ) {
+        return "ES";
+      }
+
+      if (
+        idioma === "en" ||
+        idioma === "en-us" ||
+        idioma === "en-gb" ||
+        idioma === "eng" ||
+        idioma === "english"
+      ) {
+        return "EN";
+      }
+    }
+
+    // ==========================================================
+    // OBJETO LANGUAGE
+    // ==========================================================
+
+    if (
+      producto.language &&
+      typeof producto.language === "object"
+    ) {
+      const idiomaObjeto =
+        producto.language.code ||
+        producto.language.slug ||
+        producto.language.locale ||
+        producto.language.name;
+
+      if (typeof idiomaObjeto === "string") {
+        const idioma = idiomaObjeto.toLowerCase().trim();
+
+        if (
+          idioma === "es" ||
+          idioma === "es-es" ||
+          idioma === "spa" ||
+          idioma === "spanish"
+        ) {
+          return "ES";
+        }
+
+        if (
+          idioma === "en" ||
+          idioma === "en-us" ||
+          idioma === "en-gb" ||
+          idioma === "eng" ||
+          idioma === "english"
+        ) {
+          return "EN";
+        }
+      }
+    }
+
+    // ==========================================================
+    // CATEGORÍAS
+    // ==========================================================
+
+    if (Array.isArray(producto.categories)) {
+      for (const categoria of producto.categories) {
+        const textoCategoria =
+          `${categoria.name || ""} ${
+            categoria.slug || ""
+          }`.toLowerCase();
+
+        if (
+          textoCategoria.includes("español") ||
+          textoCategoria.includes("espanol") ||
+          textoCategoria.includes("spanish") ||
+          textoCategoria === "es"
+        ) {
+          return "ES";
+        }
+
+        if (
+          textoCategoria.includes("english") ||
+          textoCategoria.includes("inglés") ||
+          textoCategoria.includes("ingles") ||
+          textoCategoria === "en"
+        ) {
+          return "EN";
+        }
+      }
+    }
+
+    // ==========================================================
+    // SLUG
+    // ==========================================================
+
+    const slug = (producto.slug || "").toLowerCase();
+
+    const palabrasIngles = [
+      "-english",
+      "-ingles",
+      "-inglés",
+      "_english",
+      "_ingles",
+      "_en",
+      "/en/",
+      "english-",
+      "ingles-",
+      "inglés-",
+    ];
+
+    if (
+      palabrasIngles.some((palabra) =>
+        slug.includes(palabra)
+      )
+    ) {
+      return "EN";
+    }
+
+    const palabrasEspanol = [
+      "-spanish",
+      "-espanol",
+      "-español",
+      "_spanish",
+      "_espanol",
+      "_español",
+      "_es",
+      "/es/",
+      "spanish-",
+      "espanol-",
+      "español-",
+    ];
+
+    if (
+      palabrasEspanol.some((palabra) =>
+        slug.includes(palabra)
+      )
+    ) {
+      return "ES";
+    }
+
+    return null;
+  };
+
+  // ============================================================
+  // CARGAR PRODUCTOS DESDE WOOCOMMERCE
+  // ============================================================
+
+  useEffect(() => {
+    let cancelado = false;
+
+    const controlador = new AbortController();
+
+    const cargarProductos = async () => {
+      try {
+        setCargandoProductos(true);
+
+        const response = await fetch(
+          "https://penagos.com/wp-json/wc/store/v1/products?per_page=100",
+          {
+            signal: controlador.signal,
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error(
+            `Error HTTP ${response.status}`
+          );
+        }
+
+        const data = await response.json();
+
+        if (cancelado) {
+          return;
+        }
+
+        // ======================================================
+        // PRODUCTOS CON IMAGEN
+        // ======================================================
+
+        const productosConImagen = data.filter(
+          (producto) =>
+            Array.isArray(producto.images) &&
+            producto.images.length > 0
+        );
+
+        // ======================================================
+        // FILTRAR POR IDIOMA
+        // ======================================================
+
+        const productosFiltrados =
+          productosConImagen.filter((producto) => {
+            const idiomaProducto =
+              obtenerIdiomaProducto(producto);
+
+            return (
+              idiomaProducto === language ||
+              idiomaProducto === null
+            );
+          });
+
+        // ======================================================
+        // EVITAR DUPLICADOS
+        // ======================================================
+
+        const productosUnicos = [];
+        const ids = new Set();
+
+        for (const producto of productosFiltrados) {
+          if (!ids.has(producto.id)) {
+            ids.add(producto.id);
+            productosUnicos.push(producto);
+          }
+        }
+
+        // ======================================================
+        // SELECCIONAR 5 PRODUCTOS
+        // PRIORIZANDO CATEGORÍAS DIFERENTES
+        // ======================================================
+
+        const categoriasUsadas = new Set();
+        const productosSeleccionados = [];
+
+        for (const producto of productosUnicos) {
+          if (productosSeleccionados.length >= 5) {
+            break;
+          }
+
+          const categoria =
+            Array.isArray(producto.categories) &&
+            producto.categories.length > 0
+              ? producto.categories[0]
+              : null;
+
+          if (!categoria) {
+            continue;
+          }
+
+          const categoriaKey =
+            categoria.id ||
+            categoria.slug ||
+            limpiarTexto(categoria.name);
+
+          if (categoriasUsadas.has(categoriaKey)) {
+            continue;
+          }
+
+          categoriasUsadas.add(categoriaKey);
+          productosSeleccionados.push(producto);
+        }
+
+        // ======================================================
+        // COMPLETAR HASTA 5
+        // ======================================================
+
+        if (productosSeleccionados.length < 5) {
+          for (const producto of productosUnicos) {
+            if (productosSeleccionados.length >= 5) {
+              break;
+            }
+
+            const yaExiste =
+              productosSeleccionados.some(
+                (item) => item.id === producto.id
+              );
+
+            if (!yaExiste) {
+              productosSeleccionados.push(producto);
+            }
+          }
+        }
+
+        // ======================================================
+        // GUARDAR
+        // ======================================================
+
+        if (!cancelado) {
+          setProductos(
+            productosSeleccionados.slice(0, 5)
+          );
+        }
+      } catch (error) {
+        if (error.name === "AbortError") {
+          return;
+        }
+
+        console.error(
+          "Error cargando productos del Header:",
+          error
+        );
+
+        if (!cancelado) {
+          setProductos([]);
+        }
+      } finally {
+        if (!cancelado) {
+          setCargandoProductos(false);
+        }
+      }
+    };
+
+    cargarProductos();
+
+    return () => {
+      cancelado = true;
+      controlador.abort();
+    };
+  }, [language]);
+
+  // ============================================================
+  // CERRAR MENÚS
   // ============================================================
 
   const cerrarMenus = () => {
@@ -271,16 +560,11 @@ function Header({
   };
 
   // ============================================================
-  // ABRIR CHAT PENAGOS
+  // CHAT
   // ============================================================
 
   const abrirChat = () => {
-    console.log("=================================");
-    console.log("ABRIENDO CHAT PENAGOS");
-    console.log("=================================");
-
     cerrarMenus();
-
     abrirChatPenagos();
   };
 
@@ -301,1235 +585,1688 @@ function Header({
       newLanguage
     );
 
-    setLanguageOpen(false);
-    setMobileOpen(false);
-
+    cerrarMenus();
     changeLanguage(newLanguage);
   };
 
   // ============================================================
-  // HEADER
+  // RENDER
   // ============================================================
 
   return (
-    <>
-      <header className="relative z-50 w-full bg-white">
+    <header
+      className={`
+        fixed
+        left-0
+        top-0
+        z-[1000]
+        w-full
+        transition-all
+        duration-300
+        ${
+          scrolled
+            ? "bg-white/95 shadow-[0_8px_30px_rgba(8,15,50,0.08)] backdrop-blur-md"
+            : "bg-transparent"
+        }
+      `}
+    >
+      {/* =====================================================
+          TOP BAR
+      ===================================================== */}
 
-        {/* ========================================================
-            BARRA SUPERIOR
-        ======================================================== */}
-
-        <div className="border-b border-slate-200 bg-[#F1F3F5]">
+      <div
+        className={`
+          hidden
+          md:block
+          transition-all
+          duration-300
+          ${
+            scrolled
+              ? "border-b border-slate-200 bg-[#F1F3F5]"
+              : "bg-transparent"
+          }
+        `}
+      >
+        <div
+          className="
+            mx-auto
+            flex
+            h-[42px]
+            max-w-[1380px]
+            items-center
+            justify-between
+            px-6
+            lg:px-10
+          "
+        >
+          <p
+            className={`
+              text-[12px]
+              tracking-wide
+              ${
+                scrolled
+                  ? "text-[#64748B]"
+                  : "text-white/85"
+              }
+            `}
+          >
+            {t.welcome}{" "}
+            <span
+              className={`
+                font-bold
+                ${
+                  scrolled
+                    ? "text-[#302b80]"
+                    : "text-white"
+                }
+              `}
+            >
+              Penagos
+            </span>
+            , {t.anniversary}
+          </p>
 
           <div
             className="
-              mx-auto
               flex
-              h-[42px]
-              max-w-[1380px]
               items-center
-              justify-between
-              px-6
-              lg:px-10
+              gap-5
+              text-[12px]
+              font-semibold
             "
           >
-
-            {/* MENSAJE */}
-
-            <p
-              className="
-                text-[12px]
-                tracking-wide
-                text-[#64748B]
-              "
-            >
-              {t.welcome}{" "}
-
-              <span className="font-bold text-[#302b80]">
-                Penagos
-              </span>
-
-              , {t.anniversary}
-            </p>
-
-            {/* ACCIONES SUPERIORES */}
-
-            <div
-              className="
-                hidden
-                items-center
-                gap-5
-                text-[12px]
-                font-semibold
-                md:flex
-              "
-            >
-
-              {/* SOPORTE */}
-
-              <Link
-                to={rutas.support}
-                onClick={cerrarMenus}
-                className="
-                  flex
-                  items-center
-                  gap-2
-                  text-[#475569]
-                  transition-all
-                  duration-200
-                  hover:text-[#302b80]
-                "
-              >
-                <Wrench
-                  size={14}
-                  strokeWidth={2}
-                />
-
-                <span>
-                  {t.support}
-                </span>
-              </Link>
-
-              <span className="h-4 w-px bg-slate-300" />
-
-              {/* PAGOS */}
-
-              <Link
-                to={rutas.payments}
-                onClick={cerrarMenus}
-                className="
-                  flex
-                  items-center
-                  gap-2
-                  text-[#475569]
-                  transition-all
-                  duration-200
-                  hover:text-[#302b80]
-                "
-              >
-                <CreditCard
-                  size={14}
-                  strokeWidth={2}
-                />
-
-                <span>
-                  {t.payments}
-                </span>
-              </Link>
-
-              <span className="h-4 w-px bg-slate-300" />
-
-              {/* IDIOMA */}
-
-              <div className="relative">
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    setLanguageOpen(
-                      (prev) => !prev
-                    )
-                  }
-                  className="
-                    flex
-                    cursor-pointer
-                    items-center
-                    gap-2
-                    text-[#475569]
-                    transition-all
-                    duration-200
-                    hover:text-[#302b80]
-                  "
-                  aria-label={t.changeLanguage}
-                  aria-expanded={languageOpen}
-                >
-
-                  <Globe
-                    size={14}
-                    strokeWidth={2}
-                  />
-
-                  <span className="font-bold">
-                    {language}
-                  </span>
-
-                  <ChevronDown
-                    size={12}
-                    strokeWidth={2}
-                    className={`
-                      transition-transform
-                      duration-200
-                      ${
-                        languageOpen
-                          ? "rotate-180"
-                          : ""
-                      }
-                    `}
-                  />
-
-                </button>
-
-                {/* DROPDOWN */}
-
-                {languageOpen && (
-
-                  <div
-                    className="
-                      absolute
-                      right-0
-                      top-7
-                      z-[100]
-                      w-[145px]
-                      overflow-hidden
-                      rounded-xl
-                      border
-                      border-slate-200
-                      bg-white
-                      p-1.5
-                      shadow-[0_15px_40px_rgba(8,15,50,0.15)]
-                    "
-                  >
-
-                    {/* ESPAÑOL */}
-
-                    <button
-                      type="button"
-                      onClick={() =>
-                        seleccionarIdioma("ES")
-                      }
-                      className="
-                        flex
-                        cursor-pointer
-                        w-full
-                        items-center
-                        justify-between
-                        rounded-lg
-                        px-3
-                        py-2.5
-                        text-left
-                        text-xs
-                        font-semibold
-                        text-[#07133d]
-                        transition-all
-                        duration-200
-                        hover:bg-[#F1F3F5]
-                        hover:text-[#302b80]
-                      "
-                    >
-
-                      <span>
-                        {t.spanish}
-                      </span>
-
-                      <span
-                        className={
-                          language === "ES"
-                            ? "font-bold text-[#302b80]"
-                            : "text-slate-400"
-                        }
-                      >
-                        ES
-                      </span>
-
-                    </button>
-
-                    {/* INGLÉS */}
-
-                    <button
-                      type="button"
-                      onClick={() =>
-                        seleccionarIdioma("EN")
-                      }
-                      className="
-                        flex
-                        cursor-pointer
-                        w-full
-                        items-center
-                        justify-between
-                        rounded-lg
-                        px-3
-                        py-2.5
-                        text-left
-                        text-xs
-                        font-semibold
-                        text-[#07133d]
-                        transition-all
-                        duration-200
-                        hover:bg-[#F1F3F5]
-                        hover:text-[#302b80]
-                      "
-                    >
-
-                      <span>
-                        {t.english}
-                      </span>
-
-                      <span
-                        className={
-                          language === "EN"
-                            ? "font-bold text-[#302b80]"
-                            : "text-slate-400"
-                        }
-                      >
-                        EN
-                      </span>
-
-                    </button>
-
-                  </div>
-
-                )}
-
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-        {/* ========================================================
-            HEADER PRINCIPAL
-        ======================================================== */}
-
-        <div className="border-b border-slate-200 bg-white">
-
-          <div
-            className="
-              mx-auto
-              flex
-              min-h-[88px]
-              max-w-[1380px]
-              items-center
-              px-6
-              lg:px-10
-            "
-          >
-
-            {/* ====================================================
-                LOGO
-            ==================================================== */}
+            {/* SOPORTE */}
 
             <Link
-              to={rutas.home}
+              to={rutas.support}
               onClick={cerrarMenus}
-              aria-label={t.goHome}
-              className="
+              className={`
                 flex
-                shrink-0
+                cursor-pointer
                 items-center
-              "
+                gap-2
+                transition-colors
+                ${
+                  scrolled
+                    ? "text-[#475569] hover:text-[#302b80]"
+                    : "text-white/90 hover:text-white"
+                }
+              `}
             >
-
-              <img
-                src="https://penagos.com/wp-content/uploads/2020/03/Logotipo-Penagos-Hermanos-PNG.png"
-                alt="Penagos Hermanos"
-                className="
-                  w-[155px]
-                  object-contain
-                  transition-transform
-                  duration-300
-                  hover:scale-[1.02]
-                  lg:w-[175px]
-                "
-              />
-
+              <Wrench size={14} />
+              {t.support}
             </Link>
 
-            {/* ====================================================
-                NAVEGACIÓN DESKTOP
-            ==================================================== */}
+            <span
+              className={`
+                h-4
+                w-px
+                ${
+                  scrolled
+                    ? "bg-slate-300"
+                    : "hidden"
+                }
+              `}
+            />
 
-            <nav
-              className="
-                ml-auto
-                hidden
+            {/* PAGOS */}
+
+            <Link
+              to={rutas.payments}
+              onClick={cerrarMenus}
+              className={`
+                flex
+                cursor-pointer
                 items-center
-                lg:flex
-              "
+                gap-2
+                transition-colors
+                ${
+                  scrolled
+                    ? "text-[#475569] hover:text-[#302b80]"
+                    : "text-white/90 hover:text-white"
+                }
+              `}
             >
+              <CreditCard size={14} />
+              {t.payments}
+            </Link>
 
-              {/* QUIÉNES SOMOS */}
+            <span
+              className={`
+                h-4
+                w-px
+                ${
+                  scrolled
+                    ? "bg-slate-300"
+                    : "hidden"
+                }
+              `}
+            />
 
-              <Link
-                to={rutas.about}
-                onClick={cerrarMenus}
-                className="
-                  group
-                  relative
-                  px-4
-                  py-8
-                  text-[13px]
-                  font-bold
-                  text-[#10152f]
-                  transition-all
-                  duration-200
-                  hover:text-[#302b80]
-                "
+            {/* IDIOMA */}
+
+            <div className="relative">
+              <button
+                type="button"
+                onClick={() =>
+                  setLanguageOpen((prev) => !prev)
+                }
+                aria-label={t.changeLanguage}
+                className={`
+                  flex
+                  cursor-pointer
+                  items-center
+                  gap-2
+                  transition-colors
+                  ${
+                    scrolled
+                      ? "text-[#475569] hover:text-[#302b80]"
+                      : "text-white/90 hover:text-white"
+                  }
+                `}
               >
+                <Globe size={14} />
 
-                {t.about}
+                <span className="font-bold">
+                  {language}
+                </span>
 
-                <span
-                  className="
-                    absolute
-                    bottom-5
-                    left-4
-                    right-4
-                    h-[2px]
-                    origin-left
-                    scale-x-0
-                    rounded-full
-                    bg-[#302b80]
+                <ChevronDown
+                  size={12}
+                  className={`
                     transition-transform
                     duration-300
-                    group-hover:scale-x-100
-                  "
+                    ${
+                      languageOpen
+                        ? "rotate-180"
+                        : ""
+                    }
+                  `}
                 />
+              </button>
 
-              </Link>
-
-              {/* AGRICULTORES PENAGOS */}
-
-              <Link
-                to={rutas.farmers}
-                onClick={cerrarMenus}
-                className="
-                  group
-                  relative
-                  px-4
-                  py-8
-                  text-[13px]
-                  font-bold
-                  text-[#10152f]
-                  transition-all
-                  duration-200
-                  hover:text-[#302b80]
-                "
-              >
-
-                {t.farmers}
-
-                <span
+              {languageOpen && (
+                <div
                   className="
                     absolute
-                    bottom-5
-                    left-4
-                    right-4
-                    h-[2px]
-                    origin-left
-                    scale-x-0
-                    rounded-full
-                    bg-[#302b80]
-                    transition-transform
-                    duration-300
-                    group-hover:scale-x-100
-                  "
-                />
-
-              </Link>
-
-              {/* PRODUCTOS */}
-
-              <div className="group relative">
-
-                <button
-                  type="button"
-                  className="
-                    flex
-                    items-center
-                    gap-1
-                    px-4
-                    py-8
-                    text-[13px]
-                    font-bold
-                    text-[#10152f]
-                    transition-all
-                    duration-300
-                    group-hover:text-[#302b80]
+                    right-0
+                    top-7
+                    z-[100]
+                    w-[145px]
+                    rounded-xl
+                    border
+                    border-slate-200
+                    bg-white
+                    p-1.5
+                    shadow-[0_15px_40px_rgba(8,15,50,0.15)]
                   "
                 >
+                  <button
+                    type="button"
+                    onClick={() =>
+                      seleccionarIdioma("ES")
+                    }
+                    className="
+                      flex
+                      w-full
+                      cursor-pointer
+                      items-center
+                      justify-between
+                      rounded-lg
+                      px-3
+                      py-2.5
+                      text-left
+                      text-xs
+                      font-semibold
+                      text-[#07133d]
+                      transition-colors
+                      hover:bg-[#F1F3F5]
+                    "
+                  >
+                    <span>{t.spanish}</span>
 
+                    <span
+                      className={
+                        language === "ES"
+                          ? "font-bold text-[#302b80]"
+                          : "text-slate-400"
+                      }
+                    >
+                      ES
+                    </span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      seleccionarIdioma("EN")
+                    }
+                    className="
+                      flex
+                      w-full
+                      cursor-pointer
+                      items-center
+                      justify-between
+                      rounded-lg
+                      px-3
+                      py-2.5
+                      text-left
+                      text-xs
+                      font-semibold
+                      text-[#07133d]
+                      transition-colors
+                      hover:bg-[#F1F3F5]
+                    "
+                  >
+                    <span>{t.english}</span>
+
+                    <span
+                      className={
+                        language === "EN"
+                          ? "font-bold text-[#302b80]"
+                          : "text-slate-400"
+                      }
+                    >
+                      EN
+                    </span>
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* =====================================================
+          MAIN HEADER
+      ===================================================== */}
+
+      <div
+        className={`
+          transition-all
+          duration-300
+          ${
+            scrolled
+              ? "border-b border-slate-200"
+              : "border-none"
+          }
+        `}
+      >
+        <div
+          className="
+            mx-auto
+            flex
+            min-h-[88px]
+            max-w-[1380px]
+            items-center
+            px-6
+            lg:px-10
+          "
+        >
+          {/* LOGO */}
+
+          <Link
+            to={rutas.home}
+            onClick={cerrarMenus}
+            aria-label={t.goHome}
+            className="
+              flex
+              shrink-0
+              cursor-pointer
+              items-center
+            "
+          >
+            <img
+              src="https://penagos.com/wp-content/uploads/2020/03/Logotipo-Penagos-Hermanos-PNG.png"
+              alt="Penagos Hermanos"
+              className={`
+                w-[155px]
+                object-contain
+                transition-all
+                duration-300
+                lg:w-[175px]
+                ${
+                  scrolled
+                    ? ""
+                    : "brightness-0 invert"
+                }
+              `}
+            />
+          </Link>
+
+          {/* =================================================
+              DESKTOP NAV
+          ================================================= */}
+
+          <nav
+            className="
+              ml-auto
+              hidden
+              items-center
+              lg:flex
+            "
+          >
+            <HeaderNavLink
+              to={rutas.about}
+              onClick={cerrarMenus}
+              scrolled={scrolled}
+            >
+              {t.about}
+            </HeaderNavLink>
+
+            <HeaderNavLink
+              to={rutas.farmers}
+              onClick={cerrarMenus}
+              scrolled={scrolled}
+            >
+              {t.farmers}
+            </HeaderNavLink>
+
+            {/* =================================================
+                PRODUCTOS
+            ================================================= */}
+
+            <div className="group relative">
+              <div
+                className={`
+                  flex
+                  items-center
+                  text-[13px]
+                  font-bold
+                  ${
+                    scrolled
+                      ? "text-[#10152f]"
+                      : "text-white"
+                  }
+                `}
+              >
+                <Link
+                  to={rutas.products}
+                  onClick={cerrarMenus}
+                  className="
+                    cursor-pointer
+                    px-4
+                    py-8
+                    transition-colors
+                    hover:text-[#302b80]
+                  "
+                >
                   {t.products}
+                </Link>
 
+                <span className="-ml-3 cursor-pointer px-2 py-8">
                   <ChevronDown
                     size={15}
-                    strokeWidth={2}
                     className="
                       transition-transform
                       duration-300
                       group-hover:rotate-180
                     "
                   />
+                </span>
+              </div>
 
-                </button>
+              {/* =================================================
+                  MEGA MENU PRODUCTOS — MÁS PEQUEÑO
+              ================================================= */}
 
-                {/* MEGA MENU */}
-
+              <div
+                className="
+                  invisible
+                  absolute
+                  left-1/2
+                  top-full
+                  w-[900px]
+                  -translate-x-1/2
+                  translate-y-4
+                  overflow-hidden
+                  rounded-[20px]
+                  border
+                  border-slate-200
+                  bg-white
+                  opacity-0
+                  shadow-[0_25px_70px_rgba(8,15,50,0.18)]
+                  transition-all
+                  duration-300
+                  group-hover:visible
+                  group-hover:translate-y-0
+                  group-hover:opacity-100
+                "
+              >
                 <div
                   className="
-                    invisible
-                    absolute
-                    right-[-280px]
-                    top-[78px]
-                    w-[1050px]
-                    translate-y-3
-                    rounded-2xl
-                    border
-                    border-slate-100
-                    bg-white
-                    p-7
-                    opacity-0
-                    shadow-[0_25px_70px_rgba(8,15,50,0.15)]
-                    transition-all
-                    duration-300
-                    group-hover:visible
-                    group-hover:translate-y-0
-                    group-hover:opacity-100
+                    grid
+                    grid-cols-[210px_1fr]
                   "
                 >
+                  {/* =================================================
+                      COLUMNA IZQUIERDA
+                  ================================================= */}
 
                   <div
                     className="
-                      grid
-                      grid-cols-[210px_1fr]
-                      gap-8
+                      relative
+                      flex
+                      min-h-[250px]
+                      items-center
+                      justify-center
+                      overflow-hidden
+                      bg-[#07133d]
+                      p-5
                     "
                   >
-
-                    {/* INTRO */}
+                    {/* DECORACIÓN */}
 
                     <div
                       className="
-                        border-r
-                        border-slate-100
-                        pr-7
+                        absolute
+                        -right-16
+                        -top-16
+                        h-32
+                        w-32
+                        rounded-full
+                        bg-[#302b80]/40
+                        blur-3xl
+                      "
+                    />
+
+                    <div
+                      className="
+                        absolute
+                        -bottom-16
+                        -left-16
+                        h-36
+                        w-36
+                        rounded-full
+                        bg-cyan-400/10
+                        blur-3xl
+                      "
+                    />
+
+                    {/* LÍNEAS */}
+
+                    <div
+                      className="
+                        absolute
+                        left-5
+                        top-5
+                        h-px
+                        w-12
+                        bg-white/20
+                      "
+                    />
+
+                    <div
+                      className="
+                        absolute
+                        bottom-5
+                        right-5
+                        h-px
+                        w-12
+                        bg-white/20
+                      "
+                    />
+
+                    {/* CÍRCULOS */}
+
+                    <div
+                      className="
+                        absolute
+                        left-1/2
+                        top-1/2
+                        h-[170px]
+                        w-[170px]
+                        -translate-x-1/2
+                        -translate-y-1/2
+                        rounded-full
+                        border
+                        border-white/[0.06]
+                      "
+                    />
+
+                    <div
+                      className="
+                        absolute
+                        left-1/2
+                        top-1/2
+                        h-[130px]
+                        w-[130px]
+                        -translate-x-1/2
+                        -translate-y-1/2
+                        rounded-full
+                        border
+                        border-white/[0.05]
+                      "
+                    />
+
+                    {/* LOGO */}
+
+                    <div
+                      className="
+                        relative
+                        z-10
+                        flex
+                        h-[140px]
+                        w-[175px]
+                        items-center
+                        justify-center
+                        rounded-[22px]
+                        border
+                        border-white/10
+                        bg-white/[0.04]
+                        shadow-[0_15px_45px_rgba(0,0,0,0.18)]
+                        backdrop-blur-sm
                       "
                     >
+                      <img
+                        src="https://penagos.com/wp-content/uploads/2020/03/Logotipo-Penagos-Hermanos-PNG.png"
+                        alt="Penagos Hermanos"
+                        className="
+                          w-[145px]
+                          object-contain
+                          brightness-0
+                          invert
+                          transition-transform
+                          duration-500
+                          hover:scale-105
+                        "
+                      />
+                    </div>
+                  </div>
+
+                  {/* =================================================
+                      CATEGORÍAS
+                  ================================================= */}
+
+                  <div className="p-5">
+                    <div
+                      className="
+                        mb-4
+                        flex
+                        items-end
+                        justify-between
+                      "
+                    >
+                      <div>
+                        <p
+                          className="
+                            text-[9px]
+                            font-bold
+                            uppercase
+                            tracking-[0.18em]
+                            text-[#302b80]
+                          "
+                        >
+                          {t.products}
+                        </p>
+
+                        <h3
+                          className="
+                            mt-1
+                            text-lg
+                            font-extrabold
+                            tracking-tight
+                            text-[#07133d]
+                          "
+                        >
+                          {t.viewAll}
+                        </h3>
+                      </div>
 
                       <span
                         className="
-                          text-[11px]
-                          font-bold
-                          uppercase
-                          tracking-[0.15em]
-                          text-[#302b80]
+                          text-[9px]
+                          font-semibold
+                          text-slate-400
                         "
                       >
-                        {t.productsIntro}
+                        04{" "}
+                        {isEnglish
+                          ? "categories"
+                          : "categorías"}
                       </span>
-
-                      <h3
-                        className="
-                          mt-4
-                          text-2xl
-                          font-extrabold
-                          leading-tight
-                          text-[#07133d]
-                        "
-                      >
-                        {t.productivity}
-                      </h3>
-
-                      <p
-                        className="
-                          mt-4
-                          text-sm
-                          leading-6
-                          text-slate-500
-                        "
-                      >
-                        {t.productsDescription}
-                      </p>
-
-                      <a
-                        href={
-                          isEnglish
-                            ? "/en#productos"
-                            : "/#productos"
-                        }
-                        className="
-                          mt-6
-                          inline-flex
-                          items-center
-                          gap-2
-                          text-sm
-                          font-bold
-                          text-[#302b80]
-                          transition-all
-                          duration-200
-                          hover:gap-3
-                          hover:text-[#1f1b65]
-                        "
-                      >
-
-                        {t.viewAll}
-
-                        <ArrowRight
-                          size={16}
-                        />
-
-                      </a>
-
                     </div>
 
-                    {/* PRODUCTOS */}
+                    <div className="grid grid-cols-2 gap-3">
+
+                      {/* =================================================
+                          AGRICULTURA
+                      ================================================= */}
+
+                      <Link
+                        to={rutas.agriculture}
+                        onClick={cerrarMenus}
+                        className="
+                          group/card
+                          relative
+                          min-h-[105px]
+                          overflow-hidden
+                          rounded-[17px]
+                          border
+                          border-slate-200
+                          bg-gradient-to-br
+                          from-white
+                          via-white
+                          to-slate-50
+                          p-4
+                          transition-all
+                          duration-300
+                          hover:-translate-y-1
+                          hover:border-[#302b80]/30
+                          hover:shadow-[0_15px_35px_rgba(8,15,50,0.10)]
+                        "
+                      >
+                        <div
+                          className="
+                            absolute
+                            -right-7
+                            -top-7
+                            h-20
+                            w-20
+                            rounded-full
+                            bg-[#302b80]/5
+                            transition-transform
+                            duration-500
+                            group-hover/card:scale-150
+                          "
+                        />
+
+                        <div
+                          className="
+                            relative
+                            z-10
+                            flex
+                            items-start
+                            justify-between
+                          "
+                        >
+                          <span
+                            className="
+                              flex
+                              h-8
+                              w-8
+                              items-center
+                              justify-center
+                              rounded-xl
+                              bg-[#302b80]
+                              text-[10px]
+                              font-extrabold
+                              text-white
+                              shadow-sm
+                            "
+                          >
+                            01
+                          </span>
+
+                          <span
+                            className="
+                              flex
+                              h-7
+                              w-7
+                              items-center
+                              justify-center
+                              rounded-full
+                              border
+                              border-slate-200
+                              bg-white
+                              text-[#302b80]
+                              transition-all
+                              duration-300
+                              group-hover/card:translate-x-1
+                              group-hover/card:bg-[#302b80]
+                              group-hover/card:text-white
+                            "
+                          >
+                            <ArrowRight size={13} />
+                          </span>
+                        </div>
+
+                        <div className="relative z-10 mt-3">
+                          <h4
+                            className="
+                              text-[14px]
+                              font-extrabold
+                              text-[#07133d]
+                              transition-colors
+                              duration-300
+                              group-hover/card:text-[#302b80]
+                            "
+                          >
+                            {t.agriculture}
+                          </h4>
+
+                          <p
+                            className="
+                              mt-1
+                              max-w-[210px]
+                              text-[9px]
+                              font-medium
+                              leading-4
+                              text-slate-500
+                            "
+                          >
+                            {t.agricultureDescription}
+                          </p>
+                        </div>
+
+                        <div
+                          className="
+                            absolute
+                            bottom-0
+                            left-0
+                            h-1
+                            w-0
+                            bg-[#302b80]
+                            transition-all
+                            duration-300
+                            group-hover/card:w-full
+                          "
+                        />
+                      </Link>
+
+                      {/* =================================================
+                          CAFÉ
+                      ================================================= */}
+
+                      <Link
+                        to={rutas.coffee}
+                        onClick={cerrarMenus}
+                        className="
+                          group/card
+                          relative
+                          min-h-[105px]
+                          overflow-hidden
+                          rounded-[17px]
+                          border
+                          border-slate-200
+                          bg-gradient-to-br
+                          from-white
+                          via-white
+                          to-slate-50
+                          p-4
+                          transition-all
+                          duration-300
+                          hover:-translate-y-1
+                          hover:border-[#302b80]/30
+                          hover:shadow-[0_15px_35px_rgba(8,15,50,0.10)]
+                        "
+                      >
+                        <div
+                          className="
+                            absolute
+                            -right-7
+                            -top-7
+                            h-20
+                            w-20
+                            rounded-full
+                            bg-[#302b80]/5
+                            transition-transform
+                            duration-500
+                            group-hover/card:scale-150
+                          "
+                        />
+
+                        <div
+                          className="
+                            relative
+                            z-10
+                            flex
+                            items-start
+                            justify-between
+                          "
+                        >
+                          <span
+                            className="
+                              flex
+                              h-8
+                              w-8
+                              items-center
+                              justify-center
+                              rounded-xl
+                              bg-[#07133d]
+                              text-[10px]
+                              font-extrabold
+                              text-white
+                              shadow-sm
+                            "
+                          >
+                            02
+                          </span>
+
+                          <span
+                            className="
+                              flex
+                              h-7
+                              w-7
+                              items-center
+                              justify-center
+                              rounded-full
+                              border
+                              border-slate-200
+                              bg-white
+                              text-[#302b80]
+                              transition-all
+                              duration-300
+                              group-hover/card:translate-x-1
+                              group-hover/card:bg-[#302b80]
+                              group-hover/card:text-white
+                            "
+                          >
+                            <ArrowRight size={13} />
+                          </span>
+                        </div>
+
+                        <div className="relative z-10 mt-3">
+                          <h4
+                            className="
+                              text-[14px]
+                              font-extrabold
+                              text-[#07133d]
+                              transition-colors
+                              duration-300
+                              group-hover/card:text-[#302b80]
+                            "
+                          >
+                            {t.coffee}
+                          </h4>
+
+                          <p
+                            className="
+                              mt-1
+                              max-w-[210px]
+                              text-[9px]
+                              font-medium
+                              leading-4
+                              text-slate-500
+                            "
+                          >
+                            {t.coffeeDescription}
+                          </p>
+                        </div>
+
+                        <div
+                          className="
+                            absolute
+                            bottom-0
+                            left-0
+                            h-1
+                            w-0
+                            bg-[#302b80]
+                            transition-all
+                            duration-300
+                            group-hover/card:w-full
+                          "
+                        />
+                      </Link>
+
+                      {/* =================================================
+                          DAEWOO
+                      ================================================= */}
+
+                      <Link
+                        to={rutas.daewoo}
+                        onClick={cerrarMenus}
+                        className="
+                          group/card
+                          relative
+                          min-h-[105px]
+                          overflow-hidden
+                          rounded-[17px]
+                          border
+                          border-slate-200
+                          bg-gradient-to-br
+                          from-white
+                          via-white
+                          to-slate-50
+                          p-4
+                          transition-all
+                          duration-300
+                          hover:-translate-y-1
+                          hover:border-[#302b80]/30
+                          hover:shadow-[0_15px_35px_rgba(8,15,50,0.10)]
+                        "
+                      >
+                        <div
+                          className="
+                            absolute
+                            -right-7
+                            -top-7
+                            h-20
+                            w-20
+                            rounded-full
+                            bg-[#302b80]/5
+                            transition-transform
+                            duration-500
+                            group-hover/card:scale-150
+                          "
+                        />
+
+                        <div
+                          className="
+                            relative
+                            z-10
+                            flex
+                            items-start
+                            justify-between
+                          "
+                        >
+                          <span
+                            className="
+                              flex
+                              h-8
+                              w-8
+                              items-center
+                              justify-center
+                              rounded-xl
+                              bg-[#302b80]
+                              text-[10px]
+                              font-extrabold
+                              text-white
+                              shadow-sm
+                            "
+                          >
+                            03
+                          </span>
+
+                          <span
+                            className="
+                              flex
+                              h-7
+                              w-7
+                              items-center
+                              justify-center
+                              rounded-full
+                              border
+                              border-slate-200
+                              bg-white
+                              text-[#302b80]
+                              transition-all
+                              duration-300
+                              group-hover/card:translate-x-1
+                              group-hover/card:bg-[#302b80]
+                              group-hover/card:text-white
+                            "
+                          >
+                            <ArrowRight size={13} />
+                          </span>
+                        </div>
+
+                        <div className="relative z-10 mt-3">
+                          <h4
+                            className="
+                              text-[14px]
+                              font-extrabold
+                              text-[#07133d]
+                              transition-colors
+                              duration-300
+                              group-hover/card:text-[#302b80]
+                            "
+                          >
+                            {t.daewoo}
+                          </h4>
+
+                          <p
+                            className="
+                              mt-1
+                              max-w-[210px]
+                              text-[9px]
+                              font-medium
+                              leading-4
+                              text-slate-500
+                            "
+                          >
+                            {t.daewooDescription}
+                          </p>
+                        </div>
+
+                        <div
+                          className="
+                            absolute
+                            bottom-0
+                            left-0
+                            h-1
+                            w-0
+                            bg-[#302b80]
+                            transition-all
+                            duration-300
+                            group-hover/card:w-full
+                          "
+                        />
+                      </Link>
+
+                      {/* =================================================
+                          GAS
+                      ================================================= */}
+
+                      <Link
+                        to={rutas.gas}
+                        onClick={cerrarMenus}
+                        className="
+                          group/card
+                          relative
+                          min-h-[105px]
+                          overflow-hidden
+                          rounded-[17px]
+                          border
+                          border-slate-200
+                          bg-gradient-to-br
+                          from-white
+                          via-white
+                          to-slate-50
+                          p-4
+                          transition-all
+                          duration-300
+                          hover:-translate-y-1
+                          hover:border-[#302b80]/30
+                          hover:shadow-[0_15px_35px_rgba(8,15,50,0.10)]
+                        "
+                      >
+                        <div
+                          className="
+                            absolute
+                            -right-7
+                            -top-7
+                            h-20
+                            w-20
+                            rounded-full
+                            bg-[#302b80]/5
+                            transition-transform
+                            duration-500
+                            group-hover/card:scale-150
+                          "
+                        />
+
+                        <div
+                          className="
+                            relative
+                            z-10
+                            flex
+                            items-start
+                            justify-between
+                          "
+                        >
+                          <span
+                            className="
+                              flex
+                              h-8
+                              w-8
+                              items-center
+                              justify-center
+                              rounded-xl
+                              bg-[#07133d]
+                              text-[10px]
+                              font-extrabold
+                              text-white
+                              shadow-sm
+                            "
+                          >
+                            04
+                          </span>
+
+                          <span
+                            className="
+                              flex
+                              h-7
+                              w-7
+                              items-center
+                              justify-center
+                              rounded-full
+                              border
+                              border-slate-200
+                              bg-white
+                              text-[#302b80]
+                              transition-all
+                              duration-300
+                              group-hover/card:translate-x-1
+                              group-hover/card:bg-[#302b80]
+                              group-hover/card:text-white
+                            "
+                          >
+                            <ArrowRight size={13} />
+                          </span>
+                        </div>
+
+                        <div className="relative z-10 mt-3">
+                          <h4
+                            className="
+                              text-[14px]
+                              font-extrabold
+                              text-[#07133d]
+                              transition-colors
+                              duration-300
+                              group-hover/card:text-[#302b80]
+                            "
+                          >
+                            {t.gas}
+                          </h4>
+
+                          <p
+                            className="
+                              mt-1
+                              max-w-[210px]
+                              text-[9px]
+                              font-medium
+                              leading-4
+                              text-slate-500
+                            "
+                          >
+                            {t.gasDescription}
+                          </p>
+                        </div>
+
+                        <div
+                          className="
+                            absolute
+                            bottom-0
+                            left-0
+                            h-1
+                            w-0
+                            bg-[#302b80]
+                            transition-all
+                            duration-300
+                            group-hover/card:w-full
+                          "
+                        />
+                      </Link>
+                    </div>
+
+                    {/* VER TODOS */}
 
                     <div
                       className="
-                        grid
-                        grid-cols-5
-                        gap-4
+                        mt-4
+                        flex
+                        justify-end
+                        border-t
+                        border-slate-100
+                        pt-3
                       "
                     >
+                      <Link
+                        to={rutas.products}
+                        onClick={cerrarMenus}
+                        className="
+                          group/all
+                          inline-flex
+                          items-center
+                          gap-2
+                          text-[10px]
+                          font-bold
+                          text-[#302b80]
+                          transition-colors
+                          hover:text-[#242060]
+                        "
+                      >
+                        {t.viewAll}
 
-                      <ProductItem
-                        title={t.coffeeBenefit}
-                        description={
-                          t.coffeeBenefitDescription
-                        }
-                        viewText={
-                          t.viewProducts
-                        }
-                      />
-
-                      <ProductItem
-                        title={t.drying}
-                        description={
-                          t.dryingDescription
-                        }
-                        viewText={
-                          t.viewProducts
-                        }
-                      />
-
-                      <ProductItem
-                        title={t.threshing}
-                        description={
-                          t.threshingDescription
-                        }
-                        viewText={
-                          t.viewProducts
-                        }
-                      />
-
-                      <ProductItem
-                        title={t.agricultural}
-                        description={
-                          t.agriculturalDescription
-                        }
-                        viewText={
-                          t.viewProducts
-                        }
-                      />
-
-                      <ProductItem
-                        title={t.spareParts}
-                        description={
-                          t.sparePartsDescription
-                        }
-                        viewText={
-                          t.viewProducts
-                        }
-                      />
-
+                        <span
+                          className="
+                            flex
+                            h-6
+                            w-6
+                            items-center
+                            justify-center
+                            rounded-full
+                            bg-[#302b80]/10
+                            transition-all
+                            duration-300
+                            group-hover/all:translate-x-1
+                            group-hover/all:bg-[#302b80]/15
+                          "
+                        >
+                          <ArrowRight size={12} />
+                        </span>
+                      </Link>
                     </div>
-
                   </div>
-
                 </div>
-
               </div>
+            </div>
 
-              {/* SOSTENIBILIDAD */}
+            {/* SOSTENIBILIDAD */}
 
-              <NavLink
-                href={
-                  isEnglish
-                    ? "/en#sostenibilidad"
-                    : "/#sostenibilidad"
+            <HeaderNavLink
+              to={rutas.sustainability}
+              onClick={cerrarMenus}
+              scrolled={scrolled}
+            >
+              {t.sustainability}
+            </HeaderNavLink>
+
+            {/* CENTRALES */}
+
+            <Link
+              to={rutas.plants}
+              onClick={cerrarMenus}
+              className={`
+                group
+                relative
+                cursor-pointer
+                px-4
+                py-8
+                text-center
+                text-[13px]
+                font-bold
+                leading-4
+                transition-colors
+                ${
+                  scrolled
+                    ? "text-[#10152f] hover:text-[#302b80]"
+                    : "text-white hover:text-white"
                 }
-              >
-                {t.sustainability}
-              </NavLink>
+              `}
+            >
+              {isEnglish ? (
+                <>
+                  Coffee
+                  <br />
+                  processing plants
+                </>
+              ) : (
+                <>
+                  Centrales de
+                  <br />
+                  procesamiento de café
+                </>
+              )}
 
-              {/* ==================================================
-                  CENTRALES DE PROCESAMIENTO
-              ================================================== */}
-
-              <Link
-                to={rutas.plants}
-                onClick={cerrarMenus}
+              <span
                 className="
-                  group
-                  relative
-                  px-4
-                  py-8
-                  text-center
-                  text-[13px]
-                  font-bold
-                  leading-4
-                  text-[#10152f]
-                  transition-all
-                  duration-200
-                  hover:text-[#302b80]
+                  absolute
+                  bottom-5
+                  left-4
+                  right-4
+                  h-[2px]
+                  origin-left
+                  scale-x-0
+                  rounded-full
+                  bg-[#302b80]
+                  transition-transform
+                  duration-300
+                  group-hover:scale-x-100
                 "
-              >
+              />
+            </Link>
 
-                {isEnglish ? (
-                  <>
-                    Coffee
-                    <br />
-                    processing plants
-                  </>
-                ) : (
-                  <>
-                    Centrales de
-                    <br />
-                    procesamiento de café
-                  </>
-                )}
+            {/* NOTICIAS */}
 
-                <span
-                  className="
-                    absolute
-                    bottom-5
-                    left-4
-                    right-4
-                    h-[2px]
-                    origin-left
-                    scale-x-0
-                    rounded-full
-                    bg-[#302b80]
-                    transition-transform
-                    duration-300
-                    group-hover:scale-x-100
-                  "
-                />
+            <HeaderNavLink
+              to={rutas.news}
+              onClick={cerrarMenus}
+              scrolled={scrolled}
+            >
+              {t.blog}
+            </HeaderNavLink>
 
-              </Link>
+            {/* CONTACTO */}
 
-              {/* NOTICIAS */}
+            <HeaderNavLink
+              to={rutas.contact}
+              onClick={cerrarMenus}
+              scrolled={scrolled}
+            >
+              {t.contact}
+            </HeaderNavLink>
+          </nav>
 
-              <Link
-                to={rutas.news}
-                onClick={cerrarMenus}
-                className="
-                  group
-                  relative
-                  px-4
-                  py-8
-                  text-[13px]
-                  font-bold
-                  text-[#10152f]
-                  transition-all
-                  duration-200
-                  hover:text-[#302b80]
-                "
-              >
+          {/* =================================================
+              HABLEMOS
+          ================================================= */}
 
-                {t.blog}
-
-                <span
-                  className="
-                    absolute
-                    bottom-5
-                    left-4
-                    right-4
-                    h-[2px]
-                    origin-left
-                    scale-x-0
-                    rounded-full
-                    bg-[#302b80]
-                    transition-transform
-                    duration-300
-                    group-hover:scale-x-100
-                  "
-                />
-
-              </Link>
-
-              {/* CONTACTO */}
-
-              <Link
-                to={rutas.contact}
-                onClick={cerrarMenus}
-                className="
-                  group
-                  relative
-                  px-4
-                  py-8
-                  text-[13px]
-                  font-bold
-                  text-[#10152f]
-                  transition-all
-                  duration-200
-                  hover:text-[#302b80]
-                "
-              >
-
-                {t.contact}
-
-                <span
-                  className="
-                    absolute
-                    bottom-5
-                    left-4
-                    right-4
-                    h-[2px]
-                    origin-left
-                    scale-x-0
-                    rounded-full
-                    bg-[#302b80]
-                    transition-transform
-                    duration-300
-                    group-hover:scale-x-100
-                  "
-                />
-
-              </Link>
-
-            </nav>
-
-            {/* ====================================================
-                BOTÓN HABLEMOS DESKTOP
-            ==================================================== */}
-
-            <div
+          <div
+            className="
+              ml-5
+              hidden
+              items-center
+              lg:flex
+            "
+          >
+            <button
+              type="button"
+              onClick={abrirChat}
               className="
-                ml-5
-                hidden
+                group
+                flex
+                cursor-pointer
                 items-center
                 gap-3
-                lg:flex
+                rounded-full
+                bg-[#302b80]
+                px-5
+                py-3
+                text-[13px]
+                font-bold
+                text-white
+                shadow-sm
+                transition-all
+                duration-300
+                hover:-translate-y-0.5
+                hover:bg-[#242060]
+                hover:shadow-lg
               "
             >
+              {t.talk}
+
+              <span
+                className="
+                  flex
+                  h-6
+                  w-6
+                  items-center
+                  justify-center
+                  rounded-full
+                  bg-white/15
+                  transition-transform
+                  duration-300
+                  group-hover:translate-x-1
+                "
+              >
+                <ArrowRight size={14} />
+              </span>
+            </button>
+          </div>
+
+          {/* =================================================
+              MOBILE BUTTON
+          ================================================= */}
+
+          <button
+            type="button"
+            onClick={() =>
+              setMobileOpen((prev) => !prev)
+            }
+            className={`
+              ml-auto
+              flex
+              h-11
+              w-11
+              cursor-pointer
+              items-center
+              justify-center
+              rounded-lg
+              border
+              lg:hidden
+              ${
+                scrolled
+                  ? "border-slate-200 text-[#07133d]"
+                  : "border-white/30 text-white"
+              }
+            `}
+            aria-label={
+              mobileOpen
+                ? t.closeMenu
+                : t.openMenu
+            }
+          >
+            {mobileOpen ? (
+              <X size={22} />
+            ) : (
+              <Menu size={22} />
+            )}
+          </button>
+        </div>
+
+        {/* =====================================================
+            MOBILE MENU
+        ===================================================== */}
+
+        {mobileOpen && (
+          <div
+            className="
+              border-t
+              border-slate-100
+              bg-white
+              px-6
+              py-5
+              shadow-xl
+              lg:hidden
+            "
+          >
+            <div className="flex flex-col">
+              <MobileLink
+                to={rutas.about}
+                onClick={cerrarMenus}
+              >
+                {t.about}
+              </MobileLink>
+
+              <MobileLink
+                to={rutas.farmers}
+                onClick={cerrarMenus}
+              >
+                {t.farmers}
+              </MobileLink>
+
+              <MobileLink
+                to={rutas.products}
+                onClick={cerrarMenus}
+              >
+                {t.products}
+              </MobileLink>
+
+              {/* CATEGORÍAS */}
+
+              <MobileLink
+                to={rutas.agriculture}
+                onClick={cerrarMenus}
+              >
+                {t.agriculture}
+              </MobileLink>
+
+              <MobileLink
+                to={rutas.coffee}
+                onClick={cerrarMenus}
+              >
+                {t.coffee}
+              </MobileLink>
+
+              <MobileLink
+                to={rutas.daewoo}
+                onClick={cerrarMenus}
+              >
+                {t.daewoo}
+              </MobileLink>
+
+              <MobileLink
+                to={rutas.gas}
+                onClick={cerrarMenus}
+              >
+                {t.gas}
+              </MobileLink>
+
+              <MobileLink
+                to={rutas.sustainability}
+                onClick={cerrarMenus}
+              >
+                {t.sustainability}
+              </MobileLink>
+
+              <MobileLink
+                to={rutas.plants}
+                onClick={cerrarMenus}
+              >
+                {t.plants}
+              </MobileLink>
+
+              <MobileLink
+                to={rutas.support}
+                onClick={cerrarMenus}
+              >
+                {t.support}
+              </MobileLink>
+
+              <MobileLink
+                to={rutas.payments}
+                onClick={cerrarMenus}
+              >
+                {t.payments}
+              </MobileLink>
+
+              <MobileLink
+                to={rutas.news}
+                onClick={cerrarMenus}
+              >
+                {t.blog}
+              </MobileLink>
+
+              <MobileLink
+                to={rutas.contact}
+                onClick={cerrarMenus}
+              >
+                {t.contact}
+              </MobileLink>
+
+              {/* CHAT */}
 
               <button
                 type="button"
                 onClick={abrirChat}
                 className="
-                  group
+                  mt-5
                   flex
+                  w-full
                   cursor-pointer
                   items-center
+                  justify-center
                   gap-3
-                  rounded-full
+                  rounded-xl
                   bg-[#302b80]
                   px-5
-                  py-3
-                  text-[13px]
+                  py-3.5
+                  text-sm
                   font-bold
                   text-white
-                  shadow-sm
                   transition-all
                   duration-300
-                  hover:-translate-y-0.5
                   hover:bg-[#242060]
-                  hover:shadow-lg
                 "
               >
-
                 {t.talk}
 
-                <span
-                  className="
-                    flex
-                    h-6
-                    w-6
-                    items-center
-                    justify-center
-                    rounded-full
-                    bg-white/15
-                    transition-transform
-                    duration-300
-                    group-hover:translate-x-1
-                  "
-                >
-
-                  <ArrowRight
-                    size={14}
-                  />
-
-                </span>
-
+                <ArrowRight size={16} />
               </button>
 
-            </div>
+              {/* IDIOMA */}
 
-            {/* ====================================================
-                BOTÓN MOBILE
-            ==================================================== */}
-
-            <button
-              type="button"
-              onClick={() =>
-                setMobileOpen(
-                  (prev) => !prev
-                )
-              }
-              className="
-                ml-auto
-                flex
-                h-11
-                w-11
-                items-center
-                justify-center
-                rounded-lg
-                border
-                border-slate-200
-                text-[#07133d]
-                transition-all
-                duration-200
-                hover:border-[#302b80]
-                hover:bg-[#F1F3F5]
-                hover:text-[#302b80]
-                lg:hidden
-              "
-              aria-label={
-                mobileOpen
-                  ? t.closeMenu
-                  : t.openMenu
-              }
-            >
-
-              {mobileOpen ? (
-                <X size={22} />
-              ) : (
-                <Menu size={22} />
-              )}
-
-            </button>
-
-          </div>
-
-          {/* ========================================================
-              MENÚ MOBILE
-          ======================================================== */}
-
-          {mobileOpen && (
-
-            <div
-              className="
-                border-t
-                border-slate-100
-                bg-white
-                px-6
-                py-5
-                shadow-xl
-                lg:hidden
-              "
-            >
-
-              <div className="flex flex-col">
-
-                {/* QUIÉNES SOMOS */}
-
-                <Link
-                  to={rutas.about}
-                  onClick={cerrarMobile}
-                  className="
-                    border-b
-                    border-slate-100
-                    py-4
-                    text-sm
-                    font-bold
-                    text-[#07133d]
-                    transition-all
-                    hover:pl-2
-                    hover:text-[#302b80]
-                  "
-                >
-                  {t.about}
-                </Link>
-
-                {/* AGRICULTORES PENAGOS */}
-
-                <Link
-                  to={rutas.farmers}
-                  onClick={cerrarMobile}
-                  className="
-                    border-b
-                    border-slate-100
-                    py-4
-                    text-sm
-                    font-bold
-                    text-[#07133d]
-                    transition-all
-                    hover:pl-2
-                    hover:text-[#302b80]
-                  "
-                >
-                  {t.farmers}
-                </Link>
-
-                {/* PRODUCTOS */}
-
-                <MobileLink
-                  href={
-                    isEnglish
-                      ? "/en#productos"
-                      : "/#productos"
-                  }
-                  onClick={cerrarMobile}
-                >
-                  {t.products}
-                </MobileLink>
-
-                {/* SOSTENIBILIDAD */}
-
-                <MobileLink
-                  href={
-                    isEnglish
-                      ? "/en#sostenibilidad"
-                      : "/#sostenibilidad"
-                  }
-                  onClick={cerrarMobile}
-                >
-                  {t.sustainability}
-                </MobileLink>
-
-                {/* SOPORTE */}
-
-                <Link
-                  to={rutas.support}
-                  onClick={cerrarMobile}
-                  className="
-                    border-b
-                    border-slate-100
-                    py-4
-                    text-sm
-                    font-bold
-                    text-[#07133d]
-                    transition-all
-                    hover:pl-2
-                    hover:text-[#302b80]
-                  "
-                >
-                  {t.support}
-                </Link>
-
-                {/* ==================================================
-                    CENTRALES
-                ================================================== */}
-
-                <Link
-                  to={rutas.plants}
-                  onClick={cerrarMobile}
-                  className="
-                    border-b
-                    border-slate-100
-                    py-4
-                    text-sm
-                    font-bold
-                    text-[#07133d]
-                    transition-all
-                    hover:pl-2
-                    hover:text-[#302b80]
-                  "
-                >
-                  {t.plants}
-                </Link>
-
-                {/* NOTICIAS */}
-
-                <Link
-                  to={rutas.news}
-                  onClick={cerrarMobile}
-                  className="
-                    border-b
-                    border-slate-100
-                    py-4
-                    text-sm
-                    font-bold
-                    text-[#07133d]
-                    transition-all
-                    hover:pl-2
-                    hover:text-[#302b80]
-                  "
-                >
-                  {t.blog}
-                </Link>
-
-                {/* CONTACTO */}
-
-                <Link
-                  to={rutas.contact}
-                  onClick={cerrarMobile}
-                  className="
-                    border-b
-                    border-slate-100
-                    py-4
-                    text-sm
-                    font-bold
-                    text-[#07133d]
-                    transition-all
-                    hover:pl-2
-                    hover:text-[#302b80]
-                  "
-                >
-                  {t.contact}
-                </Link>
-
-                {/* HABLEMOS */}
-
+              <div
+                className="
+                  mt-4
+                  border-t
+                  border-slate-100
+                  pt-4
+                "
+              >
                 <button
                   type="button"
-                  onClick={abrirChat}
+                  onClick={() =>
+                    seleccionarIdioma(
+                      language === "ES"
+                        ? "EN"
+                        : "ES"
+                    )
+                  }
+                  aria-label={t.changeLanguage}
                   className="
-                    mt-5
                     flex
                     w-full
                     cursor-pointer
                     items-center
-                    justify-center
-                    gap-3
+                    justify-between
                     rounded-xl
-                    bg-[#302b80]
-                    px-5
-                    py-3.5
+                    bg-[#F1F3F5]
+                    px-4
+                    py-3
                     text-sm
                     font-bold
-                    text-white
-                    shadow-sm
+                    text-[#07133d]
                     transition-all
                     duration-300
-                    hover:bg-[#242060]
-                    hover:shadow-lg
+                    hover:bg-[#e7e9ec]
                   "
                 >
-
-                  {t.talk}
-
-                  <ArrowRight
-                    size={16}
-                  />
-
-                </button>
-
-                {/* IDIOMA MOBILE */}
-
-                <div
-                  className="
-                    mt-4
-                    border-t
-                    border-slate-100
-                    pt-4
-                  "
-                >
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      seleccionarIdioma(
-                        language === "ES"
-                          ? "EN"
-                          : "ES"
-                      )
-                    }
+                  <span
                     className="
                       flex
-                      w-full
                       items-center
-                      justify-between
-                      rounded-xl
-                      bg-[#F1F3F5]
-                      px-4
-                      py-3
-                      text-sm
-                      font-bold
-                      text-[#07133d]
-                      transition-all
-                      hover:bg-slate-200
+                      gap-2
                     "
                   >
+                    <Globe size={16} />
 
-                    <span
-                      className="
-                        flex
-                        items-center
-                        gap-2
-                      "
-                    >
+                    {language === "ES"
+                      ? t.english
+                      : t.spanish}
+                  </span>
 
-                      <Globe size={16} />
-
-                      {language === "ES"
-                        ? t.english
-                        : t.spanish}
-
-                    </span>
-
-                    <span className="text-[#302b80]">
-
-                      {language === "ES"
-                        ? "EN"
-                        : "ES"}
-
-                    </span>
-
-                  </button>
-
-                </div>
-
+                  <span className="text-[#302b80]">
+                    {language === "ES"
+                      ? "EN"
+                      : "ES"}
+                  </span>
+                </button>
               </div>
-
             </div>
-
-          )}
-
-        </div>
-
-      </header>
-    </>
+          </div>
+        )}
+      </div>
+    </header>
   );
 }
 
 // ============================================================
-// NAV LINK
+// HEADER NAV LINK
 // ============================================================
 
-function NavLink({
-  href,
+function HeaderNavLink({
+  to,
   children,
+  onClick,
+  scrolled,
+  active = false,
 }) {
   return (
-    <a
-      href={href}
-      className="
+    <Link
+      to={to}
+      onClick={onClick}
+      className={`
         group
         relative
+        cursor-pointer
         px-4
         py-8
         text-[13px]
         font-bold
-        text-[#10152f]
-        transition-all
-        duration-200
-        hover:text-[#302b80]
-      "
+        transition-colors
+        duration-300
+        ${
+          scrolled
+            ? "text-[#10152f] hover:text-[#302b80]"
+            : "text-white hover:text-white"
+        }
+      `}
     >
-
       {children}
 
       <span
-        className="
+        className={`
           absolute
           bottom-5
           left-4
           right-4
           h-[2px]
           origin-left
-          scale-x-0
           rounded-full
           bg-[#302b80]
           transition-transform
           duration-300
-          group-hover:scale-x-100
-        "
+          ${
+            active
+              ? "scale-x-100"
+              : "scale-x-0 group-hover:scale-x-100"
+          }
+        `}
       />
-
-    </a>
+    </Link>
   );
 }
 
@@ -1538,15 +2275,16 @@ function NavLink({
 // ============================================================
 
 function MobileLink({
-  href,
+  to,
   children,
   onClick,
 }) {
   return (
-    <a
-      href={href}
+    <Link
+      to={to}
       onClick={onClick}
       className="
+        cursor-pointer
         border-b
         border-slate-100
         py-4
@@ -1554,123 +2292,192 @@ function MobileLink({
         font-bold
         text-[#07133d]
         transition-all
+        duration-300
         hover:pl-2
         hover:text-[#302b80]
       "
     >
-
       {children}
-
-    </a>
+    </Link>
   );
 }
 
 // ============================================================
-// PRODUCT ITEM
+// PRODUCT ITEM DINÁMICO
 // ============================================================
 
 function ProductItem({
-  title,
-  description,
+  producto,
   viewText,
+  onClick,
+  limpiarTexto,
 }) {
+  const imagen = producto?.images?.[0];
+
+  const nombre = limpiarTexto(producto?.name);
+
+  const categoria =
+    Array.isArray(producto?.categories) &&
+    producto.categories.length > 0
+      ? limpiarTexto(
+          producto.categories[0]?.name
+        )
+      : "";
+
+  // ==========================================================
+  // URL REAL DE WOOCOMMERCE
+  // ==========================================================
+
+  const urlProducto =
+    producto?.permalink ||
+    `https://penagos.com/producto/${producto?.slug}/`;
+
   return (
     <a
-      href="#productos"
+      href={urlProducto}
+      onClick={onClick}
+      target="_self"
       className="
         group
-        rounded-xl
+        relative
+        block
+        overflow-hidden
+        rounded-2xl
+        border
+        border-slate-100
+        bg-white
         p-3
         transition-all
         duration-300
         hover:-translate-y-1
-        hover:bg-slate-50
+        hover:border-slate-200
+        hover:shadow-[0_15px_35px_rgba(8,15,50,0.10)]
       "
     >
+      {/* IMAGEN */}
 
       <div
         className="
-          mb-4
+          relative
+          mb-3
           flex
-          h-12
-          w-12
+          h-[108px]
+          w-full
           items-center
           justify-center
-          rounded-full
-          border
-          border-[#302b80]/20
-          bg-[#302b80]/5
-          transition-all
-          duration-300
-          group-hover:border-[#302b80]/40
-          group-hover:bg-[#302b80]/10
+          overflow-hidden
+          rounded-xl
+          bg-slate-50
         "
       >
+        {imagen?.src ? (
+          <img
+            src={imagen.src}
+            alt={imagen.alt || nombre}
+            loading="lazy"
+            decoding="async"
+            className="
+              h-full
+              w-full
+              object-contain
+              p-3
+              transition-transform
+              duration-500
+              group-hover:scale-110
+            "
+          />
+        ) : (
+          <div
+            className="
+              flex
+              h-full
+              w-full
+              items-center
+              justify-center
+              text-xs
+              text-slate-400
+            "
+          >
+            Penagos
+          </div>
+        )}
+
+        {/* INDICADOR */}
 
         <span
           className="
-            text-xl
+            absolute
+            right-2
+            top-2
+            h-1.5
+            w-1.5
+            rounded-full
+            bg-[#302b80]
+            opacity-70
+          "
+        />
+      </div>
+
+      {/* CATEGORÍA */}
+
+      {categoria && (
+        <p
+          className="
+            mb-1
+            line-clamp-1
+            text-[8px]
+            font-bold
+            uppercase
+            tracking-[0.12em]
             text-[#302b80]
-            transition-transform
-            duration-300
-            group-hover:rotate-12
           "
         >
-          ✦
-        </span>
+          {categoria}
+        </p>
+      )}
 
-      </div>
+      {/* NOMBRE */}
 
       <h4
         className="
-          text-sm
-          font-bold
+          line-clamp-2
+          min-h-[40px]
+          text-[12px]
+          font-extrabold
           leading-5
           text-[#07133d]
           transition-colors
-          duration-200
+          duration-300
           group-hover:text-[#302b80]
         "
       >
-        {title}
+        {nombre}
       </h4>
 
-      <p
-        className="
-          mt-2
-          text-xs
-          leading-5
-          text-slate-500
-        "
-      >
-        {description}
-      </p>
+      {/* VER PRODUCTO */}
 
       <span
         className="
-          mt-4
+          mt-3
           flex
           items-center
-          gap-1
-          text-xs
+          gap-1.5
+          text-[10px]
           font-bold
           text-[#302b80]
         "
       >
-
         {viewText}
 
         <ArrowRight
-          size={13}
+          size={11}
           className="
             transition-transform
-            duration-200
+            duration-300
             group-hover:translate-x-1
           "
         />
-
       </span>
-
     </a>
   );
 }

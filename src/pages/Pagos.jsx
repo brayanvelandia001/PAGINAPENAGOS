@@ -3,7 +3,7 @@ import {
   useState
 } from "react";
 
-import Header from "../components/Header";
+import Header from "../components/Headerfijo";
 import Footer from "../components/Footer";
 import PagosContenido from "../components/PagosContenido";
 

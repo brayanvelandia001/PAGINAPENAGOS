@@ -1,0 +1,13 @@
+<IfModule mod_rewrite.c>
+
+  RewriteEngine On
+
+  # No modificar archivos o carpetas reales
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Todas las rutas de React vuelven a index.html
+  RewriteRule ^ index.html [L]
+
+</IfModule>

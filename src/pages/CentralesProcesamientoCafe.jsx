@@ -5,6 +5,8 @@ import Footer from "../components/Footer";
 
 import CentralesHero from "../components/CentralesHero";
 import CentralesEtapas from "../components/CentralesEtapas";
+import Centrales from "../components/Centrales";
+import FormularioCafe from "../components/FormularioCafe";
 
 // ============================================================
 // PÁGINA
@@ -44,6 +46,15 @@ function CentralesProcesamientoCafe({
         />
 
         <CentralesEtapas
+          language={language}
+        />
+
+        
+        <Centrales
+          language={language}
+        />
+
+        <FormularioCafe
           language={language}
         />
 

@@ -155,6 +155,44 @@ function BotonCredito({
 
 
   // ==========================================================
+  // CERRAR CON ESCAPE
+  // ==========================================================
+
+  useEffect(() => {
+
+    const manejarEscape = (event) => {
+
+      if (
+        event.key === "Escape" &&
+        abierto
+      ) {
+
+        setAbierto(false);
+
+      }
+
+    };
+
+
+    document.addEventListener(
+      "keydown",
+      manejarEscape
+    );
+
+
+    return () => {
+
+      document.removeEventListener(
+        "keydown",
+        manejarEscape
+      );
+
+    };
+
+  }, [abierto]);
+
+
+  // ==========================================================
   // SI NO ES COLOMBIA
   // ==========================================================
 
@@ -194,15 +232,16 @@ function BotonCredito({
           bottom-6
           left-6
           z-[9990]
+
           flex
           flex-col
           items-start
           gap-4
+
           sm:bottom-8
           sm:left-8
         "
       >
-
 
         {/* ====================================================
             TARJETA DE INFORMACIÓN
@@ -213,18 +252,25 @@ function BotonCredito({
           <div
             className="
               relative
+
               w-[310px]
+
               overflow-hidden
+
               rounded-2xl
+
               border
               border-slate-200
+
               bg-white
+
               shadow-2xl
+
               animate-[creditoEntrada_0.35s_ease-out]
+
               sm:w-[370px]
             "
           >
-
 
             {/* ==================================================
                 BOTÓN CERRAR
@@ -232,30 +278,46 @@ function BotonCredito({
 
             <button
               type="button"
+
               onClick={cerrar}
+
               aria-label={
                 esIngles
                   ? "Close credit information"
                   : "Cerrar información de crédito"
               }
+
               className="
                 absolute
+
                 right-3
                 top-3
+
                 z-20
+
                 flex
+
                 h-8
                 w-8
+
                 cursor-pointer
+
                 items-center
                 justify-center
+
                 rounded-full
+
                 bg-slate-100
+
                 text-slate-500
+
                 transition-all
                 duration-300
+
                 hover:scale-105
+
                 hover:bg-slate-200
+
                 hover:text-slate-800
               "
             >
@@ -274,6 +336,7 @@ function BotonCredito({
             <div
               className="
                 bg-[#07133d]
+
                 px-6
                 py-6
               "
@@ -287,7 +350,6 @@ function BotonCredito({
                 "
               >
 
-
                 {/* ==================================================
                     LOGO BANCO AGRARIO
                 ================================================== */}
@@ -295,24 +357,34 @@ function BotonCredito({
                 <div
                   className="
                     flex
+
                     h-16
                     w-16
+
                     shrink-0
+
                     items-center
                     justify-center
+
                     overflow-hidden
+
                     rounded-xl
+
                     bg-white
+
                     p-1.5
                   "
                 >
 
                   <img
                     src={logoBanco}
+
                     alt="Banco Agrario de Colombia"
+
                     className="
                       h-full
                       w-full
+
                       object-contain
                     "
                   />
@@ -329,9 +401,13 @@ function BotonCredito({
                   <p
                     className="
                       text-[10px]
+
                       font-bold
+
                       uppercase
+
                       tracking-widest
+
                       text-white/60
                     "
                   >
@@ -347,8 +423,11 @@ function BotonCredito({
                   <h3
                     className="
                       mt-1
+
                       text-lg
+
                       font-extrabold
+
                       text-white
                     "
                   >
@@ -382,24 +461,31 @@ function BotonCredito({
               <h4
                 className="
                   text-xl
+
                   font-extrabold
+
                   leading-tight
+
                   text-[#07133d]
                 "
               >
 
                 {esIngles ? (
+
                   <>
                     Do you need to finance
                     <br />
                     your project?
                   </>
+
                 ) : (
+
                   <>
                     ¿Necesitas financiar
                     <br />
                     tu proyecto?
                   </>
+
                 )}
 
               </h4>
@@ -412,8 +498,11 @@ function BotonCredito({
               <p
                 className="
                   mt-3
+
                   text-sm
+
                   leading-6
+
                   text-slate-500
                 "
               >
@@ -432,27 +521,44 @@ function BotonCredito({
 
               <a
                 href={enlaceCredito}
+
                 target="_blank"
+
                 rel="noopener noreferrer"
+
                 className="
                   mt-5
+
                   flex
                   w-full
+
                   cursor-pointer
+
                   items-center
                   justify-center
+
                   gap-2
+
                   rounded-xl
+
                   bg-[#302b80]
+
                   px-5
                   py-3.5
+
                   text-sm
+
                   font-extrabold
+
                   text-white
+
                   transition-all
                   duration-300
+
                   hover:-translate-y-0.5
+
                   hover:bg-[#07133d]
+
                   hover:shadow-lg
                 "
               >
@@ -483,38 +589,54 @@ function BotonCredito({
 
           <button
             type="button"
+
             onClick={() =>
               setAbierto(true)
             }
+
             aria-label={
               esIngles
                 ? "Apply for credit with Banco Agrario"
                 : "Solicita tu crédito con Banco Agrario"
             }
+
             className="
               group
+
               relative
+
               flex
+
               h-[95px]
               w-[95px]
+
               cursor-pointer
+
               items-center
               justify-center
+
               overflow-visible
+
               rounded-full
+
               border-4
               border-white
+
               bg-white
+
               shadow-xl
+
               transition-all
               duration-300
+
               hover:scale-105
+
               hover:shadow-2xl
+
               sm:h-[110px]
               sm:w-[110px]
             "
           >
-
 
             {/* ==================================================
                 ANILLO ANIMADO
@@ -523,10 +645,15 @@ function BotonCredito({
             <span
               className="
                 absolute
+
                 inset-[-6px]
+
                 rounded-full
+
                 border-2
+
                 border-[#302b80]/30
+
                 animate-ping
               "
             />
@@ -539,24 +666,34 @@ function BotonCredito({
             <div
               className="
                 relative
+
                 flex
+
                 h-full
                 w-full
+
                 items-center
                 justify-center
+
                 overflow-hidden
+
                 rounded-full
+
                 bg-white
+
                 p-2.5
               "
             >
 
               <img
                 src={logoBanco}
+
                 alt="Banco Agrario de Colombia"
+
                 className="
                   h-full
                   w-full
+
                   object-contain
                 "
               />
@@ -571,21 +708,35 @@ function BotonCredito({
             <span
               className="
                 pointer-events-none
+
                 absolute
+
                 bottom-[-10px]
+
                 left-1/2
+
                 -translate-x-1/2
+
                 whitespace-nowrap
+
                 rounded-full
+
                 bg-[#302b80]
+
                 px-4
                 py-1.5
+
                 text-[11px]
+
                 font-extrabold
+
                 text-white
+
                 shadow-md
+
                 transition-all
                 duration-300
+
                 group-hover:bg-[#07133d]
               "
             >
@@ -614,13 +765,23 @@ function BotonCredito({
           @keyframes creditoEntrada {
 
             0% {
+
               opacity: 0;
-              transform: translateY(12px) scale(0.96);
+
+              transform:
+                translateY(12px)
+                scale(0.96);
+
             }
 
             100% {
+
               opacity: 1;
-              transform: translateY(0) scale(1);
+
+              transform:
+                translateY(0)
+                scale(1);
+
             }
 
           }
@@ -636,3 +797,4 @@ function BotonCredito({
 
 
 export default BotonCredito;
+
